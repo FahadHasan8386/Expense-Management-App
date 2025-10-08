@@ -4,6 +4,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Register Services
+
+// Register Repositories
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
