@@ -4,6 +4,7 @@ namespace ExpenseManagement.Api.Interfaces.IServices
 {
     public interface IDepositsService
     {
-        //Task<List<Deposits>> GetDepositsAsync();
+        Task<List<Deposits>> GetAllDepositsAsync();
+        
     }
 }

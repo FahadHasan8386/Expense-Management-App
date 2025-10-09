@@ -16,11 +16,11 @@ namespace ExpenseManagement.Api.Controllers
             _DepositsService = depositService;
         }
 
-        //[HttpGet("GetAllDeposits")]
-        //public async Task<IActionResult> GetAllDepositsAsync()
-        //{
-        //    return Ok(await _DepositsService.GetAllDepositsAsync());
-        //}
+        [HttpGet("GetAllDeposits")]
+        public async Task<IActionResult> GetAllDepositsAsync()
+        {
+            return Ok(await _DepositsService.GetAllDepositsAsync());
+        }
 
         //[HttpPost("NewDeposits")]
         //public async Task<IActionResult> NewDepositsAsync([FromBody] )
