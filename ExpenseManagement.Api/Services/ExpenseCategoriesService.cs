@@ -1,23 +1,40 @@
 ﻿using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Interfaces.IServices;
 using ExpenseManagement.Api.Models.Entities;
-using ExpenseManagement.Api.Repository;
 
 namespace ExpenseManagement.Api.Services
 {
     public class ExpenseCategoriesService : IExpenseCategoriesService
     {
-        public readonly IExpenseCategoriesRepository _expenseCategoriesRepository;
+        private readonly IExpenseCategoriesRepository _expenseCategoriesRepository;
 
-        public ExpenseCategoriesService (IExpenseCategoriesRepository expenseCategoriesRepository)
+        public ExpenseCategoriesService(IExpenseCategoriesRepository expenseCategoriesRepository)
         {
             _expenseCategoriesRepository = expenseCategoriesRepository;
         }
 
+        // Get all
         public async Task<List<ExpenseCategories>> AllExpenseCategoriesAsync()
         {
-            var response = await _expenseCategoriesRepository.AllExpenseCategoriesAsync();
-            return response;
+            return await _expenseCategoriesRepository.AllExpenseCategoriesAsync();
+        }
+
+        // Add new
+        public async Task<ExpenseCategories> AddExpenseCategoriesAsync(ExpenseCategories category)
+        {
+            return await _expenseCategoriesRepository.AddExpenseCategoriesAsync(category);
+        }
+
+        // Update
+        public async Task<int> UpdateExpenseCategoriesAsync(ExpenseCategories category)
+        {
+            return await _expenseCategoriesRepository.UpdateExpenseCategoriesAsync(category);
+        }
+
+        // Delete
+        public async Task<int> DeleteExpenseCategoriesAsync(long expenseCategoryId)
+        {
+            return await _expenseCategoriesRepository.DeleteExpenseCategoriesAsync(expenseCategoryId);
         }
     }
 }

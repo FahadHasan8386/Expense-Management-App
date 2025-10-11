@@ -5,5 +5,6 @@
         public long ExpenseCategoryId { get; set; }
         public string ExpenseCategoryName { get; set; } = string.Empty;
         public string? Remarks { get; set; }
+        
     }
 }

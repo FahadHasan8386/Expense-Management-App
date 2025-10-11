@@ -13,10 +13,36 @@ namespace ExpenseManagement.Api.Services
             _depositsRepository = depositsRepository;
         }
 
+        // GET all
         public async Task<List<Deposits>> GetAllDepositsAsync()
         {
-            var response = await _depositsRepository.GetAllDepositsAsync();
-            return response;
+            return await _depositsRepository.GetAllDepositsAsync();
+        }
+
+        // POST
+        public async Task<Deposits> AddDepositsAsync(Deposits deposit)
+        {
+            return await _depositsRepository.AddDepositsAsync(deposit);
+        }
+
+        // PUT
+        public async Task<Deposits> UpdateDepositsAsync(Deposits deposit)
+        {
+            var result = await _depositsRepository.UpdateDepositsAsync(deposit);
+            if (result > 0)
+                return deposit;
+            else
+                throw new Exception("Update failed");
+        }
+
+        // DELETE
+        public async Task<Deposits> DeleteDepositsAsync(Deposits deposit)
+        {
+            var result = await _depositsRepository.DeleteDepositsAsync(deposit.DepositId);
+            if (result > 0)
+                return deposit;
+            else
+                throw new Exception("Delete failed");
         }
     }
 }

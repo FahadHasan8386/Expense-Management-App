@@ -14,14 +14,71 @@ namespace ExpenseManagement.Api.Repository
             _connection = connection;
         }
 
+        //GET
         public async Task<List<ExpenseCategories>> AllExpenseCategoriesAsync()
         {
-            var sql = @"SELECT * From ExpenseCategories";
+            const string sql = @"SELECT * FROM ExpenseCategories";
+
             _connection.Open();
-            var expenseCategory = await _connection.QueryAsync <ExpenseCategories>(sql);
+            var expenseCategories = await _connection.QueryAsync<ExpenseCategories>(sql);
             _connection.Close();
-            var response = expenseCategory.ToList();
-            return response;
+
+            return expenseCategories.ToList();
+        }
+
+        // POST
+        public async Task<ExpenseCategories> AddExpenseCategoriesAsync(ExpenseCategories category)
+        {
+            var sql = @"
+                INSERT INTO ExpenseCategories (ExpenseCategoryName, Remarks)
+                OUTPUT INSERTED.ExpenseCategoryId, INSERTED.ExpenseCategoryName, INSERTED.Remarks
+                VALUES (@ExpenseCategoryName, @Remarks)";
+
+            _connection.Open();
+            var result = await _connection.QuerySingleAsync<ExpenseCategories>(sql, new
+            {
+                category.ExpenseCategoryName,
+                category.Remarks
+            });
+            _connection.Close();
+
+            return result; 
+        }
+
+        //PUT 
+        public async Task<int> UpdateExpenseCategoriesAsync(ExpenseCategories category)
+        {
+            var sql = @"
+                UPDATE ExpenseCategories
+                SET ExpenseCategoryName = @ExpenseCategoryName,
+                    Remarks = @Remarks
+                WHERE ExpenseCategoryId = @ExpenseCategoryId";
+
+            _connection.Open();
+            var result = await _connection.ExecuteAsync(sql, new
+            {
+                category.ExpenseCategoryName,
+                category.Remarks,
+                category.ExpenseCategoryId
+            });
+            _connection.Close();
+
+            return result; 
+        }
+
+        //DELETE
+        public async Task<int> DeleteExpenseCategoriesAsync(long expenseCategoryId)
+        {
+            var sql = @"DELETE FROM ExpenseCategories WHERE ExpenseCategoryId = @ExpenseCategoryId";
+
+            _connection.Open();
+            var result = await _connection.ExecuteAsync(sql, new
+            {
+                ExpenseCategoryId = expenseCategoryId
+            });
+            _connection.Close();
+
+            return result; 
         }
     }
 }
