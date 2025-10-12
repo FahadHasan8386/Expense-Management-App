@@ -1,5 +1,6 @@
 ﻿using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Interfaces.IServices;
+using ExpenseManagement.Api.Models.Dtos;
 using ExpenseManagement.Api.Models.Entities;
 
 namespace ExpenseManagement.Api.Services
@@ -20,13 +21,13 @@ namespace ExpenseManagement.Api.Services
         }
 
         // Add new
-        public async Task<ExpenseCategories> AddExpenseCategoriesAsync(ExpenseCategories category)
+        public async Task<ExpenseCategories> AddExpenseCategoriesAsync(ExpenseCategoriesDto category)
         {
             return await _expenseCategoriesRepository.AddExpenseCategoriesAsync(category);
         }
 
         // Update
-        public async Task<int> UpdateExpenseCategoriesAsync(ExpenseCategories category)
+        public async Task<int> UpdateExpenseCategoriesAsync(ExpenseCategoriesDto category)
         {
             return await _expenseCategoriesRepository.UpdateExpenseCategoriesAsync(category);
         }

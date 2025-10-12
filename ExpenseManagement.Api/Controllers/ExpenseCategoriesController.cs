@@ -23,13 +23,13 @@ namespace ExpenseManagement.Api.Controllers
         }
 
         [HttpPost("AddExpenseCategories")]
-        public async Task<IActionResult> AddExpenseCategoriesAsync([FromBody] ExpenseCategories category)
+        public async Task<IActionResult> AddExpenseCategoriesAsync([FromBody] ExpenseCategoriesDto category)
         {
             return Ok(await _ExpenseCategoriesService.AddExpenseCategoriesAsync());
         }
 
         [HttpPut("UpdateExpenseCategories")]
-        public async Task<IActionResult> UpdateExpenseCategoriesAsync([FromBody] ExpenseCategories category)
+        public async Task<IActionResult> UpdateExpenseCategoriesAsync([FromBody] ExpenseCategoriesDto category)
         {
             return Ok(await _ExpenseCategoriesService.UpdateExpenseCategoriesAsync());
         }

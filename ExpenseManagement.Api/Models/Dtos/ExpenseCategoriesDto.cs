@@ -2,7 +2,7 @@
 
 namespace ExpenseManagement.Api.Models.Dtos
 {
-    public class ExpenseCategories
+    public class ExpenseCategoriesDto
     {
         public long ExpenseCategoryId { get; set; }
         [Required(ErrorMessage = "Category Name is required.")]

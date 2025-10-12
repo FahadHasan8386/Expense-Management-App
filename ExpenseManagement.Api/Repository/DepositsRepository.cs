@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Dapper;
 using ExpenseManagement.Api.Interfaces.IRepositories;
+using ExpenseManagement.Api.Models.Dtos;
 using ExpenseManagement.Api.Models.Entities;
 
 namespace ExpenseManagement.Api.Repository
@@ -14,7 +15,7 @@ namespace ExpenseManagement.Api.Repository
             _connection = connection;
         }
 
-        
+
         public async Task<List<Deposits>> GetAllDepositsAsync()
         {
             var sql = @"SELECT * FROM Deposits";
@@ -24,16 +25,14 @@ namespace ExpenseManagement.Api.Repository
             return deposits.ToList();
         }
 
-      
-        public async Task<Deposits> AddDepositsAsync(Deposits deposit)
+        public async Task<long> AddDepositsAsync(DepositDto deposit)
         {
-            var sql = @"
-                INSERT INTO Deposits (DepositAmount, DepositDate, Remarks)
-                OUTPUT INSERTED.DepositId, INSERTED.DepositAmount, INSERTED.DepositDate, INSERTED.Remarks
-                VALUES (@DepositAmount, @DepositDate, @Remarks)";
+            var sql = @"INSERT INTO Deposits (DepositAmount, DepositDate, Remarks)
+                        OUTPUT INSERTED.DepositId
+                        VALUES (@DepositAmount, @DepositDate, @Remarks)";
 
             _connection.Open();
-            var result = await _connection.QuerySingleAsync<Deposits>(sql, new
+            var result = await _connection.ExecuteScalarAsync<long>(sql, new
             {
                 deposit.DepositAmount,
                 deposit.DepositDate,
@@ -44,8 +43,7 @@ namespace ExpenseManagement.Api.Repository
             return result;
         }
 
-       
-        public async Task<int> UpdateDepositsAsync(Deposits deposit)
+        public async Task<int> UpdateDepositsAsync(DepositDto deposit)
         {
             var sql = @"
                 UPDATE Deposits
@@ -67,7 +65,7 @@ namespace ExpenseManagement.Api.Repository
             return result;
         }
 
-        
+
         public async Task<int> DeleteDepositsAsync(long DepositId)
         {
             var sql = @"DELETE FROM Deposits WHERE DepositId = @DepositId";

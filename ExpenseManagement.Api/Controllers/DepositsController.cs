@@ -1,4 +1,5 @@
 ﻿using ExpenseManagement.Api.Interfaces.IServices;
+using ExpenseManagement.Api.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseManagement.Api.Controllers
@@ -16,16 +17,39 @@ namespace ExpenseManagement.Api.Controllers
             _DepositsService = depositService;
         }
 
+
         [HttpGet("GetAllDeposits")]
         public async Task<IActionResult> GetAllDepositsAsync()
         {
             return Ok(await _DepositsService.GetAllDepositsAsync());
         }
 
-        //[HttpPost("NewDeposits")]
-        //public async Task<IActionResult> NewDepositsAsync([FromBody] )
-        //{
-        //    return Ok(await _DepositsService.NewDepositsAsync());
-        //}
+
+        [HttpPost("AddDeposits")]
+        public async Task<IActionResult> AddDepositsAsync([FromBody] DepositDto depositDto)
+        {
+            if (depositDto == null)
+                return BadRequest();
+
+            return Ok(await _DepositsService.AddDepositsAsync(depositDto));
+        }
+
+
+        [HttpPut("UpdateDeposits")]
+        public async Task<IActionResult> UpdateDepositsAsync([FromBody] DepositDto depositDto)
+        {
+            if(depositDto == null)
+                return BadRequest();
+            return Ok(await _DepositsService.UpdateDeposits(depositDto));
+        }
+
+
+        [HttpDelete("DeleteDeposits")]
+        public async Task<IActionResult> DeleteDepositsAsync(long DepositId)
+        {
+            if(DepositId == 0)
+                return BadRequest();
+            return Ok(await _DepositsService.DeleteDepositsAsync(DepositId));
+        }
     }
 }
