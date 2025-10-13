@@ -2,7 +2,7 @@
 
 namespace ExpenseManagement.Api.Models.Dtos
 {
-    public class DepositDto 
+    public class DepositDto : BaseModel
     {
         public long DepositId { get; set; }
 

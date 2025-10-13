@@ -25,40 +25,42 @@ namespace ExpenseManagement.Api.Repository
             return deposits.ToList();
         }
 
-        public async Task<long> AddDepositsAsync(DepositDto deposit)
+        public async Task<long> AddDepositsAsync(DepositDto depositDto)
         {
-            var sql = @"INSERT INTO Deposits (DepositAmount, DepositDate, Remarks)
+            var sql = @"INSERT INTO Deposits (DepositAmount, DepositDate, Remarks, CreatedBy)
                         OUTPUT INSERTED.DepositId
-                        VALUES (@DepositAmount, @DepositDate, @Remarks)";
+                        VALUES (@DepositAmount, @DepositDate, @Remarks, @CreatedBy)";
 
             _connection.Open();
             var result = await _connection.ExecuteScalarAsync<long>(sql, new
             {
-                deposit.DepositAmount,
-                deposit.DepositDate,
-                deposit.Remarks
+                @DepositAmount = depositDto.DepositAmount,
+                @DepositDate = depositDto.DepositDate,
+                @Remarks = depositDto.Remarks,
+                @CreatedBy = depositDto.CreatedBy
             });
             _connection.Close();
 
             return result;
         }
 
-        public async Task<int> UpdateDepositsAsync(DepositDto deposit)
+        public async Task<int> UpdateDepositsAsync(DepositDto depositDto)
         {
             var sql = @"
                 UPDATE Deposits
                 SET DepositAmount = @DepositAmount,
-                    DepositDate = @DepositDate,
-                    Remarks = @Remarks
+                    Remarks = @Remarks,
+                    ModifiedBy = @ModifiedBy,
+                    ModifiedAt = GETDATE()
                 WHERE DepositId = @DepositId";
 
             _connection.Open();
             var result = await _connection.ExecuteAsync(sql, new
             {
-                deposit.DepositAmount,
-                deposit.DepositDate,
-                deposit.Remarks,
-                deposit.DepositId
+                @DepositId =  depositDto.DepositId,
+                @DepositAmount = depositDto.DepositAmount,
+                @Remarks = depositDto.Remarks,
+                @ModifiedBy = depositDto.CreatedBy
             });
             _connection.Close();
 
