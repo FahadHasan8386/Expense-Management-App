@@ -46,13 +46,11 @@ namespace ExpenseManagement.Api.Repository
 
         public async Task<int> UpdateDepositsAsync(DepositDto depositDto)
         {
-            var sql = @"
-                UPDATE Deposits
-                SET DepositAmount = @DepositAmount,
-                    Remarks = @Remarks,
-                    ModifiedBy = @ModifiedBy,
-                    ModifiedAt = GETDATE()
-                WHERE DepositId = @DepositId";
+            var sql = @"UPDATE Deposits SET DepositAmount = @DepositAmount,
+                         Remarks = @Remarks,
+                         ModifiedBy = @ModifiedBy,
+                         ModifiedAt = GETDATE()
+                        WHERE DepositId = @DepositId";
 
             _connection.Open();
             var result = await _connection.ExecuteAsync(sql, new

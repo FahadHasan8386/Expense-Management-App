@@ -35,8 +35,8 @@ namespace ExpenseManagement.Api.Controllers
         }
 
 
-        [HttpPut("UpdateDeposits")]
-        public async Task<IActionResult> UpdateDepositsAsync([FromBody] DepositDto depositDto)
+        [HttpPut("UpdateDeposits/{id}")]
+        public async Task<IActionResult> UpdateDepositsAsync(long id ,[FromBody] DepositDto depositDto)
         {
             if(depositDto == null)
                 return BadRequest();
@@ -45,7 +45,7 @@ namespace ExpenseManagement.Api.Controllers
         }
 
 
-        [HttpDelete("DeleteDeposits")]
+        [HttpDelete("DeleteDeposits/{DepositId}")]
         public async Task<IActionResult> DeleteDepositsAsync(long DepositId)
         {
             if(DepositId == 0)

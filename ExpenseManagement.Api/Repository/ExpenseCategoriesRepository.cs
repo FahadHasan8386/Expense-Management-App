@@ -37,8 +37,8 @@ namespace ExpenseManagement.Api.Repository
             _connection.Open();
             var result = await _connection.QuerySingleAsync<long>(sql, new
             {
-                categoryDto.ExpenseCategoryName,
-                categoryDto.Remarks
+                @ExpenseCategoryName = categoryDto.ExpenseCategoryName,
+                @Remarks = categoryDto.Remarks
             });
             _connection.Close();
 
@@ -56,9 +56,9 @@ namespace ExpenseManagement.Api.Repository
             _connection.Open();
             var result = await _connection.ExecuteAsync(sql, new
             {
-                categoryDto.ExpenseCategoryName,
-                categoryDto.Remarks,
-                categoryDto.ExpenseCategoryId
+                @ExpenseCategoryId = categoryDto.ExpenseCategoryId,
+                @ExpenseCategoryName = categoryDto.ExpenseCategoryName,
+                @Remarks = categoryDto.Remarks               
             });
             _connection.Close();
 
