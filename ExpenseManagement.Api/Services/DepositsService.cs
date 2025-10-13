@@ -9,7 +9,7 @@ using ExpenseManagement.Api.Models.Entities;
 namespace ExpenseManagement.Api.Services
 {
     public class DepositsService : IDepositsService
-    {
+    { 
         private readonly IDepositsRepository _depositsRepository;
 
         public DepositsService(IDepositsRepository depositsRepository)
@@ -17,7 +17,7 @@ namespace ExpenseManagement.Api.Services
             _depositsRepository = depositsRepository;
         }
 
-        // GET all
+        // GET
         public async Task<List<Deposits>> GetAllDepositsAsync()
         {
             return await _depositsRepository.GetAllDepositsAsync();
@@ -82,6 +82,7 @@ namespace ExpenseManagement.Api.Services
         }
 
 
+        //Put
         public async Task<ResponseModel> UpdateDepositsAsync(DepositDto depositDto)
         {
             try
@@ -95,6 +96,7 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
+              
                 if (depositDto.DepositAmount <= 0)
                 {
                     return new ResponseModel
@@ -149,11 +151,44 @@ namespace ExpenseManagement.Api.Services
         }
 
 
-
+        //Delete
         public async Task<ResponseModel> DeleteDepositsAsync(long DepositId)
         {
             try
             {
+                if (DepositId <= 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Invalid deposit ID."
+                    };
+                }
+
+                int result ;
+
+                using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    result = await _depositsRepository.DeleteDepositsAsync(DepositId);
+                    transactionScope.Complete();
+                }
+
+                if (result > 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status200OK,
+                        Message = "Delete Sucessfull."
+                    };
+                }
+                else
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Message = "Deposit not found."
+                    };
+                }
 
             }
             catch (Exception ex)

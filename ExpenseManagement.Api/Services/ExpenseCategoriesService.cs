@@ -1,7 +1,10 @@
-﻿using ExpenseManagement.Api.Interfaces.IRepositories;
+﻿using System.Transactions;
+using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Interfaces.IServices;
+using ExpenseManagement.Api.Models;
 using ExpenseManagement.Api.Models.Dtos;
 using ExpenseManagement.Api.Models.Entities;
+using ExpenseManagement.Api.Repository;
 
 namespace ExpenseManagement.Api.Services
 {
@@ -14,28 +17,183 @@ namespace ExpenseManagement.Api.Services
             _expenseCategoriesRepository = expenseCategoriesRepository;
         }
 
-        // Get all
+        // Get all 
         public async Task<List<ExpenseCategories>> AllExpenseCategoriesAsync()
         {
             return await _expenseCategoriesRepository.AllExpenseCategoriesAsync();
         }
 
         // Add new
-        public async Task<ExpenseCategories> AddExpenseCategoriesAsync(ExpenseCategoriesDto category)
+        public async Task<ResponseModel> AddExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto)
         {
-            return await _expenseCategoriesRepository.AddExpenseCategoriesAsync(category);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(categoryDto.ExpenseCategoryName))
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Category name is required."
+                    };
+                }
+
+                if (string.IsNullOrWhiteSpace(categoryDto.Remarks))
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Remarks is required."
+                    };
+                }
+
+                long result;
+                using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    result = await _expenseCategoriesRepository.AddExpenseCategoriesAsync(categoryDto);
+                    transactionScope.Complete();
+                }
+
+                if (result > 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status201Created,
+                        Message = "Expense category created successfully."
+                    };
+                }
+                else
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Failed to create expense category."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 500,
+                    Message = ex.Message
+                };
+            }
         }
 
+
         // Update
-        public async Task<int> UpdateExpenseCategoriesAsync(ExpenseCategoriesDto category)
+        public async Task<ResponseModel> UpdateExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto)
         {
-            return await _expenseCategoriesRepository.UpdateExpenseCategoriesAsync(category);
+            try
+            {
+                if (categoryDto.ExpenseCategoryId <= 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Invalid deposit ID."
+                    };
+                }
+
+                if (string.IsNullOrWhiteSpace(categoryDto.ExpenseCategoryName))
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Category Name is Required."
+                    };
+                }
+
+                if (string.IsNullOrWhiteSpace(categoryDto.Remarks))
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Remarks is Required."
+                    };
+                }
+
+                int result;
+                using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    result = await _expenseCategoriesRepository.UpdateExpenseCategoriesAsync(categoryDto);
+                    transactionScope.Complete();
+                }
+
+                if (result > 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status200OK,
+                        Message = "Expense category updated successfully."
+                    };
+                }
+                else
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Message = "Category not found or no changes made."
+                    };
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 500,
+                    Message = ex.Message
+                };
+            }
         }
 
         // Delete
-        public async Task<int> DeleteExpenseCategoriesAsync(long expenseCategoryId)
+        public async Task<ResponseModel> DeleteExpenseCategoriesAsync(long expenseCategoryId)
         {
-            return await _expenseCategoriesRepository.DeleteExpenseCategoriesAsync(expenseCategoryId);
+            try
+            {
+                if (expenseCategoryId > 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = 400,
+                        Message = "Invaild Id."
+                    };
+                }
+                int result;
+
+                using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    result = await _expenseCategoriesRepository.DeleteExpenseCategoriesAsync(expenseCategoryId);
+                    transactionScope.Complete();
+                }
+
+                if (result > 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status200OK,
+                        Message = "Delete Sucessfully."
+                    };
+                }
+                else
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Message = "Expense Category not found."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 500,
+                    Message = ex.Message
+                };
+            }
         }
     }
 }

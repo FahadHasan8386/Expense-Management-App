@@ -16,28 +16,40 @@ namespace ExpenseManagement.Api.Controllers
             _ExpenseCategoriesService = expenseCategoriesService;
         }
 
-        [HttpGet("AllExpenseCategories")]
+        [HttpGet("ExpenseCategories")]
         public async Task<IActionResult> AllExpenseCategoriesAsync()
         {
             return Ok(await _ExpenseCategoriesService.AllExpenseCategoriesAsync());
         }
 
+
         [HttpPost("AddExpenseCategories")]
-        public async Task<IActionResult> AddExpenseCategoriesAsync([FromBody] ExpenseCategoriesDto category)
+        public async Task<IActionResult> AddExpenseCategoriesAsync([FromBody] ExpenseCategoriesDto categoryDto)
         {
-            return Ok(await _ExpenseCategoriesService.AddExpenseCategoriesAsync());
+            if (categoryDto == null)
+                return BadRequest();
+
+            return Ok(await _ExpenseCategoriesService.AddExpenseCategoriesAsync(categoryDto));
         }
+
 
         [HttpPut("UpdateExpenseCategories")]
-        public async Task<IActionResult> UpdateExpenseCategoriesAsync([FromBody] ExpenseCategoriesDto category)
+        public async Task<IActionResult> UpdateExpenseCategoriesAsync([FromBody] ExpenseCategoriesDto categoryDto)
         {
-            return Ok(await _ExpenseCategoriesService.UpdateExpenseCategoriesAsync());
+            if (categoryDto == null)
+                return BadRequest();
+
+            return Ok(await _ExpenseCategoriesService.UpdateExpenseCategoriesAsync(categoryDto));
         }
 
+
         [HttpDelete("DeleteExpenseCategories")]
-        public async Task<IActionResult> DeleteExpenseCategoriesAsync([FromBody] long expenseCategoryId)
+        public async Task<IActionResult> DeleteExpenseCategoriesAsync(long expenseCategoryId)
         {
-            return Ok(await _ExpenseCategoriesService.DeleteExpenseCategoriesAsync());
+            if (expenseCategoryId == 0)
+                return BadRequest();
+
+            return Ok(await _ExpenseCategoriesService.DeleteExpenseCategoriesAsync(expenseCategoryId));
         }
     }
 }

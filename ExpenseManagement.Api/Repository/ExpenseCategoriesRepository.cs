@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Dapper;
 using ExpenseManagement.Api.Interfaces.IRepositories;
+using ExpenseManagement.Api.Models.Dtos;
 using ExpenseManagement.Api.Models.Entities;
 
 namespace ExpenseManagement.Api.Repository
@@ -27,18 +28,17 @@ namespace ExpenseManagement.Api.Repository
         }
 
         // POST
-        public async Task<ExpenseCategories> AddExpenseCategoriesAsync(ExpenseCategories category)
+        public async Task<long> AddExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto)
         {
-            var sql = @"
-                INSERT INTO ExpenseCategories (ExpenseCategoryName, Remarks)
-                OUTPUT INSERTED.ExpenseCategoryId, INSERTED.ExpenseCategoryName, INSERTED.Remarks
-                VALUES (@ExpenseCategoryName, @Remarks)";
+            var sql = @"INSERT INTO ExpenseCategories (ExpenseCategoryName, Remarks)
+                        OUTPUT INSERTED.ExpenseCategoryId
+                        VALUES (@ExpenseCategoryName, @Remarks)";
 
             _connection.Open();
-            var result = await _connection.QuerySingleAsync<ExpenseCategories>(sql, new
+            var result = await _connection.QuerySingleAsync<long>(sql, new
             {
-                category.ExpenseCategoryName,
-                category.Remarks
+                categoryDto.ExpenseCategoryName,
+                categoryDto.Remarks
             });
             _connection.Close();
 
@@ -46,20 +46,19 @@ namespace ExpenseManagement.Api.Repository
         }
 
         //PUT 
-        public async Task<int> UpdateExpenseCategoriesAsync(ExpenseCategories category)
+        public async Task<int> UpdateExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto)
         {
-            var sql = @"
-                UPDATE ExpenseCategories
-                SET ExpenseCategoryName = @ExpenseCategoryName,
-                    Remarks = @Remarks
-                WHERE ExpenseCategoryId = @ExpenseCategoryId";
+            var sql = @"UPDATE ExpenseCategories
+                        SET ExpenseCategoryName = @ExpenseCategoryName,
+                        Remarks = @Remarks
+                        WHERE ExpenseCategoryId = @ExpenseCategoryId";
 
             _connection.Open();
             var result = await _connection.ExecuteAsync(sql, new
             {
-                category.ExpenseCategoryName,
-                category.Remarks,
-                category.ExpenseCategoryId
+                categoryDto.ExpenseCategoryName,
+                categoryDto.Remarks,
+                categoryDto.ExpenseCategoryId
             });
             _connection.Close();
 

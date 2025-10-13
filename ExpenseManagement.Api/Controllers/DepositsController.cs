@@ -40,7 +40,8 @@ namespace ExpenseManagement.Api.Controllers
         {
             if(depositDto == null)
                 return BadRequest();
-            return Ok(await _DepositsService.UpdateDeposits(depositDto));
+
+            return Ok(await _DepositsService.UpdateDepositsAsync(depositDto));
         }
 
 
@@ -49,6 +50,7 @@ namespace ExpenseManagement.Api.Controllers
         {
             if(DepositId == 0)
                 return BadRequest();
+
             return Ok(await _DepositsService.DeleteDepositsAsync(DepositId));
         }
     }
