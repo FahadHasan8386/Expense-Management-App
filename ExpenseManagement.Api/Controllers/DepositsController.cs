@@ -7,7 +7,7 @@ namespace ExpenseManagement.Api.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-
+      
     public class DepositsController : ControllerBase
     {
         public readonly IDepositsService _DepositsService;

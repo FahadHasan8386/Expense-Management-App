@@ -16,7 +16,7 @@ namespace ExpenseManagement.Api.Repository
         }
 
         //GET
-        public async Task<List<ExpenseCategories>> AllExpenseCategoriesAsync()
+        public async Task<List<ExpenseCategories>> AllExpenseCategoriesAsync()  
         {
             const string sql = @"SELECT * FROM ExpenseCategories";
 
@@ -30,15 +30,16 @@ namespace ExpenseManagement.Api.Repository
         // POST
         public async Task<long> AddExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto)
         {
-            var sql = @"INSERT INTO ExpenseCategories (ExpenseCategoryName, Remarks)
+            var sql = @"INSERT INTO ExpenseCategories (ExpenseCategoryName, Remarks, CreatedBy)
                         OUTPUT INSERTED.ExpenseCategoryId
-                        VALUES (@ExpenseCategoryName, @Remarks)";
+                        VALUES (@ExpenseCategoryName, @Remarks, @CreatedBy)";
 
             _connection.Open();
             var result = await _connection.QuerySingleAsync<long>(sql, new
             {
                 @ExpenseCategoryName = categoryDto.ExpenseCategoryName,
-                @Remarks = categoryDto.Remarks
+                @Remarks = categoryDto.Remarks,
+                @CreatedBy = categoryDto.@CreatedBy
             });
             _connection.Close();
 
@@ -48,9 +49,11 @@ namespace ExpenseManagement.Api.Repository
         //PUT 
         public async Task<int> UpdateExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto)
         {
-            var sql = @"UPDATE ExpenseCategories
-                        SET ExpenseCategoryName = @ExpenseCategoryName,
-                        Remarks = @Remarks
+            var sql = @"UPDATE ExpenseCategories SET 
+                        ExpenseCategoryName = @ExpenseCategoryName,
+                        Remarks = @Remarks,
+                        ModifiedBy = @ModifiedBy,
+                        ModifiedAt = GETDATE()
                         WHERE ExpenseCategoryId = @ExpenseCategoryId";
 
             _connection.Open();
@@ -58,7 +61,9 @@ namespace ExpenseManagement.Api.Repository
             {
                 @ExpenseCategoryId = categoryDto.ExpenseCategoryId,
                 @ExpenseCategoryName = categoryDto.ExpenseCategoryName,
-                @Remarks = categoryDto.Remarks               
+                @Remarks = categoryDto.Remarks,
+                @ModifiedBy = categoryDto.CreatedBy
+
             });
             _connection.Close();
 
@@ -71,10 +76,7 @@ namespace ExpenseManagement.Api.Repository
             var sql = @"DELETE FROM ExpenseCategories WHERE ExpenseCategoryId = @ExpenseCategoryId";
 
             _connection.Open();
-            var result = await _connection.ExecuteAsync(sql, new
-            {
-                ExpenseCategoryId = expenseCategoryId
-            });
+            var result = await _connection.ExecuteAsync(sql, new{expenseCategoryId});
             _connection.Close();
 
             return result; 

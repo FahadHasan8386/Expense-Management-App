@@ -17,7 +17,7 @@ namespace ExpenseManagement.Api.Repository
 
 
         public async Task<List<Deposits>> GetAllDepositsAsync()
-        {
+        {  
             var sql = @"SELECT * FROM Deposits";
             _connection.Open();
             var deposits = await _connection.QueryAsync<Deposits>(sql);

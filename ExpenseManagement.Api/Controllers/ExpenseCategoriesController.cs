@@ -1,11 +1,12 @@
-﻿using ExpenseManagement.Api.Interfaces.IServices;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using ExpenseManagement.Api.Interfaces.IServices;
 using ExpenseManagement.Api.Models.Dtos;
 using ExpenseManagement.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseManagement.Api.Controllers
 {
-    [Route("api[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ExpenseCategoriesController : ControllerBase
     {
@@ -16,7 +17,7 @@ namespace ExpenseManagement.Api.Controllers
             _ExpenseCategoriesService = expenseCategoriesService;
         }
 
-        [HttpGet("ExpenseCategories")]
+        [HttpGet("AllExpenseCategories")]
         public async Task<IActionResult> AllExpenseCategoriesAsync()
         {
             return Ok(await _ExpenseCategoriesService.AllExpenseCategoriesAsync());
@@ -33,8 +34,8 @@ namespace ExpenseManagement.Api.Controllers
         }
 
 
-        [HttpPut("UpdateExpenseCategories")]
-        public async Task<IActionResult> UpdateExpenseCategoriesAsync([FromBody] ExpenseCategoriesDto categoryDto)
+        [HttpPut("UpdateExpenseCategories/{id}")]
+        public async Task<IActionResult> UpdateExpenseCategoriesAsync(long id ,[FromBody] ExpenseCategoriesDto categoryDto)
         {
             if (categoryDto == null)
                 return BadRequest();
@@ -43,7 +44,7 @@ namespace ExpenseManagement.Api.Controllers
         }
 
 
-        [HttpDelete("DeleteExpenseCategories")]
+        [HttpDelete("DeleteExpenseCategories/{expenseCategoryId}")]
         public async Task<IActionResult> DeleteExpenseCategoriesAsync(long expenseCategoryId)
         {
             if (expenseCategoryId == 0)

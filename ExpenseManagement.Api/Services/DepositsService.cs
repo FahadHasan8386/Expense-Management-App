@@ -16,7 +16,7 @@ namespace ExpenseManagement.Api.Services
         {
             _depositsRepository = depositsRepository;
         }
-
+          
         // GET
         public async Task<List<Deposits>> GetAllDepositsAsync()
         {
@@ -46,7 +46,7 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
-                long result = 0;
+                long result;
 
                 using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
                 {

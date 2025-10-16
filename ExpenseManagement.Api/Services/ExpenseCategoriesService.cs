@@ -17,7 +17,7 @@ namespace ExpenseManagement.Api.Services
             _expenseCategoriesRepository = expenseCategoriesRepository;
         }
 
-        // Get all 
+        // Get all  
         public async Task<List<ExpenseCategories>> AllExpenseCategoriesAsync()
         {
             return await _expenseCategoriesRepository.AllExpenseCategoriesAsync();
@@ -33,7 +33,7 @@ namespace ExpenseManagement.Api.Services
                     return new ResponseModel
                     {
                         Code = StatusCodes.Status400BadRequest,
-                        Message = "Category name is required."
+                        Message = "Category Name is required."
                     };
                 }
 
@@ -153,7 +153,7 @@ namespace ExpenseManagement.Api.Services
         {
             try
             {
-                if (expenseCategoryId > 0)
+                if (expenseCategoryId <= 0)
                 {
                     return new ResponseModel
                     {
