@@ -1,8 +1,90 @@
-﻿using ExpenseManagement.Api.Interfaces.IRepositories;
+﻿using System.Data;
+using Dapper;
+using ExpenseManagement.Api.Interfaces.IRepositories;
+using ExpenseManagement.Api.Models.Dtos;
+using ExpenseManagement.Api.Models.Entities;
 
 namespace ExpenseManagement.Api.Repository
 {
     public class ExpensesRepository : IExpensesRepository
     {
+        private readonly IDbConnection _connection;
+
+        public ExpensesRepository (IDbConnection connection)
+        {
+            _connection = connection;
+        }
+
+        public async Task<List<Expenses>> AllExpensesAsync()
+        {
+            const string sql = @"SELECT * FROM Expenses";
+            _connection.Open();
+            var expenses = await _connection.QueryAsync<Expenses>(sql);
+            _connection.Close();
+
+            return expenses.ToList();
+        }
+
+        public async Task<long> AddExpensesAsync(ExpensesDto expensesDto)
+        {
+            var sql = @"INSERT INTO Expenses 
+                (ExpenseCategoryId, ExpenseAmount, ExpenseDate, PaymentMethod, Remarks, CreatedBy)
+                OUTPUT INSERTED.ExpenseId
+                VALUES (@ExpenseCategoryId, @ExpenseAmount, @ExpenseDate, @PaymentMethod, @Remarks, @CreatedBy)";
+
+            _connection.Open();
+            var result = await _connection.QuerySingleAsync<long>(sql, new
+            {
+                ExpenseCategoryId = expensesDto.ExpenseCategoryId,
+                ExpenseAmount = expensesDto.ExpenseAmount,
+                ExpenseDate = expensesDto.ExpenseDate,
+                PaymentMethod = expensesDto.PaymentMethod,
+                Remarks = expensesDto.Remarks,
+                CreatedBy = expensesDto.CreatedBy
+            });
+            _connection.Close();
+
+            return result;
+        }
+
+
+        public async Task<long> UpdateExpensesAsync(ExpensesDto expensesDto)
+        {
+            var sql = @"UPDATE Expenses SET
+
+                ExpenseCategoryId = @ExpenseCategoryId,
+                ExpenseAmount = @ExpenseAmount,
+                ExpenseDate = @ExpenseDate,
+                PaymentMethod = @PaymentMethod,
+                Remarks = @Remarks,
+                ModifiedBy = @ModifiedBy,
+                ModifiedAt = GETDATE()
+               WHERE ExpensesId = @ExpensesId";
+
+            _connection.Open();
+            var result = await _connection.QuerySingleAsync<long>(sql, new
+            {
+                ExpenseCategoryId = expensesDto.ExpenseCategoryId,
+                ExpenseAmount = expensesDto.ExpenseAmount,
+                ExpenseDate = expensesDto.ExpenseDate,
+                PaymentMethod = expensesDto.PaymentMethod,
+                Remarks = expensesDto.Remarks,
+                @ModifiedBy = expensesDto.CreatedBy
+            });
+            _connection.Close();
+
+            return result;
+        }
+
+        public async Task<int> DeleteExpensesAsync(long expensesId)
+        {
+            var sql = @"DELETE FROM Expenses WHERE ExpensesId = @ExpensesId";
+            _connection.Open();
+            var result = await _connection.ExecuteAsync(sql , new { expensesId });
+            _connection.Close();
+
+            return result;
+        }
+
     }
 }
