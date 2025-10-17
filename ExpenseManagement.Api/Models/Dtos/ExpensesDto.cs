@@ -6,7 +6,7 @@ namespace ExpenseManagement.Api.Models.Dtos
     {
         public long ExpenseId { get; set; }
 
-        [Required(ErrorMessage = "Id is Required")]
+        [Required(ErrorMessage = "Expense Category is Required")]
         public long ExpenseCategoryId { get; set; }
 
         [Required(ErrorMessage = "Expense Amount is Required")]

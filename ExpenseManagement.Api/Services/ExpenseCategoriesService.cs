@@ -91,7 +91,7 @@ namespace ExpenseManagement.Api.Services
                     return new ResponseModel
                     {
                         Code = StatusCodes.Status400BadRequest,
-                        Message = "Invalid deposit ID."
+                        Message = "Invalid Expense Category Id."
                     };
                 }
 

@@ -17,10 +17,12 @@ builder.Services.AddScoped<System.Data.IDbConnection>(sp =>
 // Register Services
 builder.Services.AddScoped<IDepositsService, DepositsService>();
 builder.Services.AddScoped<IExpenseCategoriesService, ExpenseCategoriesService>();
+builder.Services.AddScoped<IExpensesService, ExpensesService>();
 
 // Register Repositories
 builder.Services.AddScoped<IDepositsRepository, DepositsRepository>();
 builder.Services.AddScoped<IExpenseCategoriesRepository, ExpenseCategoriesRepository>();
+builder.Services.AddScoped<IExpensesRepository, ExpensesRepository>();
 
 var app = builder.Build();
 

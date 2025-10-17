@@ -10,11 +10,12 @@ namespace ExpenseManagement.Api.Repository
     {
         private readonly IDbConnection _connection;
 
-        public ExpensesRepository (IDbConnection connection)
+        public ExpensesRepository(IDbConnection connection)
         {
             _connection = connection;
         }
 
+        // Get all Expenses
         public async Task<List<Expenses>> AllExpensesAsync()
         {
             const string sql = @"SELECT * FROM Expenses";
@@ -25,66 +26,67 @@ namespace ExpenseManagement.Api.Repository
             return expenses.ToList();
         }
 
+        //Add
         public async Task<long> AddExpensesAsync(ExpensesDto expensesDto)
         {
             var sql = @"INSERT INTO Expenses 
-                (ExpenseCategoryId, ExpenseAmount, ExpenseDate, PaymentMethod, Remarks, CreatedBy)
-                OUTPUT INSERTED.ExpenseId
-                VALUES (@ExpenseCategoryId, @ExpenseAmount, @ExpenseDate, @PaymentMethod, @Remarks, @CreatedBy)";
+                        (ExpenseCategoryId, ExpenseAmount, ExpenseDate, PaymentMethod, Remarks, CreatedBy)
+                        OUTPUT INSERTED.ExpenseId
+                        VALUES (@ExpenseCategoryId, @ExpenseAmount, @ExpenseDate, @PaymentMethod, @Remarks, @CreatedBy)";
 
             _connection.Open();
             var result = await _connection.QuerySingleAsync<long>(sql, new
             {
-                ExpenseCategoryId = expensesDto.ExpenseCategoryId,
-                ExpenseAmount = expensesDto.ExpenseAmount,
-                ExpenseDate = expensesDto.ExpenseDate,
-                PaymentMethod = expensesDto.PaymentMethod,
-                Remarks = expensesDto.Remarks,
-                CreatedBy = expensesDto.CreatedBy
+                @ExpenseCategoryId = expensesDto.ExpenseCategoryId,
+                @ExpenseAmount = expensesDto.ExpenseAmount,
+                @ExpenseDate = expensesDto.ExpenseDate,
+                @PaymentMethod = expensesDto.PaymentMethod,
+                @Remarks = expensesDto.Remarks,
+                @CreatedBy = expensesDto.CreatedBy
             });
             _connection.Close();
 
             return result;
         }
 
-
-        public async Task<long> UpdateExpensesAsync(ExpensesDto expensesDto)
+        //Update
+        public async Task<int> UpdateExpensesAsync(ExpensesDto expensesDto)
         {
             var sql = @"UPDATE Expenses SET
-
-                ExpenseCategoryId = @ExpenseCategoryId,
-                ExpenseAmount = @ExpenseAmount,
-                ExpenseDate = @ExpenseDate,
-                PaymentMethod = @PaymentMethod,
-                Remarks = @Remarks,
-                ModifiedBy = @ModifiedBy,
-                ModifiedAt = GETDATE()
-               WHERE ExpensesId = @ExpensesId";
+                        ExpenseCategoryId = @ExpenseCategoryId,
+                        ExpenseAmount = @ExpenseAmount,
+                        ExpenseDate = @ExpenseDate,
+                        PaymentMethod = @PaymentMethod,
+                        Remarks = @Remarks,
+                        ModifiedBy = @ModifiedBy,
+                        ModifiedAt = GETDATE()
+                        WHERE ExpenseId = @ExpenseId";
 
             _connection.Open();
-            var result = await _connection.QuerySingleAsync<long>(sql, new
+            var result = await _connection.ExecuteAsync(sql, new
             {
-                ExpenseCategoryId = expensesDto.ExpenseCategoryId,
-                ExpenseAmount = expensesDto.ExpenseAmount,
-                ExpenseDate = expensesDto.ExpenseDate,
-                PaymentMethod = expensesDto.PaymentMethod,
-                Remarks = expensesDto.Remarks,
-                @ModifiedBy = expensesDto.CreatedBy
+                @ExpenseCategoryId = expensesDto.ExpenseCategoryId,
+                @ExpenseAmount = expensesDto.ExpenseAmount,
+                @ExpenseDate = expensesDto.ExpenseDate,
+                @PaymentMethod = expensesDto.PaymentMethod,
+                @Remarks = expensesDto.Remarks,
+                @ModifiedBy = expensesDto.ModifiedBy,
+                @ExpenseId = expensesDto.ExpenseId
             });
             _connection.Close();
 
             return result;
         }
 
-        public async Task<int> DeleteExpensesAsync(long expensesId)
+        //Delete
+        public async Task<int> DeleteExpensesAsync(long expenseId)
         {
-            var sql = @"DELETE FROM Expenses WHERE ExpensesId = @ExpensesId";
+            var sql = @"DELETE FROM Expenses WHERE ExpenseId = @ExpenseId";
             _connection.Open();
-            var result = await _connection.ExecuteAsync(sql , new { expensesId });
+            var result = await _connection.ExecuteAsync(sql, new { ExpenseId = expenseId });
             _connection.Close();
 
             return result;
         }
-
     }
 }
