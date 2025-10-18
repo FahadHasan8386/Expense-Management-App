@@ -3,7 +3,7 @@ using System.Transactions;
 using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Interfaces.IServices;
 using ExpenseManagement.Api.Models;
-using ExpenseManagement.Api.Models.Dtos;
+using ExpenseManagement.Api.Models.Dtos.DepositDto;
 using ExpenseManagement.Api.Models.Entities;
 
 namespace ExpenseManagement.Api.Services
@@ -21,6 +21,12 @@ namespace ExpenseManagement.Api.Services
         public async Task<List<Deposits>> GetAllDepositsAsync()
         {
             return await _depositsRepository.GetAllDepositsAsync();
+        }
+
+        //Get By Id
+        public async Task<List<Deposits>> GetDepositsByIdAsync(long depositId)
+        { 
+            return await _depositsRepository.GetDepositsByIdAsync(depositId);
         }
 
         // POST
@@ -83,11 +89,11 @@ namespace ExpenseManagement.Api.Services
 
 
         //Put
-        public async Task<ResponseModel> UpdateDepositsAsync(DepositDto depositDto)
+        public async Task<ResponseModel> UpdateDepositsAsync(UpdateDepositDto updateDepositDto)
         {
             try
             {
-                if (depositDto.DepositId <= 0)
+                if (updateDepositDto.DepositId <= 0)
                 {
                     return new ResponseModel
                     {
@@ -97,7 +103,7 @@ namespace ExpenseManagement.Api.Services
                 }
 
               
-                if (depositDto.DepositAmount <= 0)
+                if (updateDepositDto.DepositAmount <= 0)
                 {
                     return new ResponseModel
                     {
@@ -106,20 +112,11 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
-                if (depositDto.DepositDate is null)
-                {
-                    return new ResponseModel
-                    {
-                        Code = StatusCodes.Status400BadRequest,
-                        Message = "Deposit date is required."
-                    };
-                }
-
                 int result;
 
                 using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    result = await _depositsRepository.UpdateDepositsAsync(depositDto);
+                    result = await _depositsRepository.UpdateDepositsAsync(updateDepositDto);
                     transactionScope.Complete();
                 }
 
@@ -178,7 +175,7 @@ namespace ExpenseManagement.Api.Services
                     return new ResponseModel
                     {
                         Code = StatusCodes.Status200OK,
-                        Message = "Delete Sucessfull."
+                        Message = "Delete Sucessfully."
                     };
                 }
                 else

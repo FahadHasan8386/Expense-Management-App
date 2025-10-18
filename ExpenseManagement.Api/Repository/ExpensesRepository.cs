@@ -26,6 +26,22 @@ namespace ExpenseManagement.Api.Repository
             return expenses.ToList();
         }
 
+        // Get Expenses By Id
+        public async Task<List<Expenses>> ExpensesByIdAsync(long expenseId)
+        {
+            const string sql = @"SELECT * FROM Expenses WHERE ExpenseId = @ExpenseId";
+
+            if (_connection.State == ConnectionState.Closed)
+                _connection.Open();
+
+            // Pass the expenseId parameter to Dapper
+            var expenses = await _connection.QueryAsync<Expenses>(sql, new { ExpenseId = expenseId });
+
+            _connection.Close();
+            return expenses.ToList();
+        }
+
+
         //Add
         public async Task<long> AddExpensesAsync(ExpensesDto expensesDto)
         {

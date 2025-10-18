@@ -27,7 +27,22 @@ namespace ExpenseManagement.Api.Repository
             return expenseCategories.ToList();
         }
 
-        // POST
+        //Get By Id Expense Category
+        public async Task<List<ExpenseCategories>> GetExpenseCategoriesByIdAsync(long expenseCategoryId)
+        {
+            const string sql = @"SELECT * FROM ExpenseCategories WHERE ExpenseCategoryId = @ExpenseCategoryId";
+
+            if (_connection.State == ConnectionState.Closed)
+                _connection.Open();
+
+            var categories = await _connection.QueryAsync<ExpenseCategories>(sql, new { ExpenseCategoryId = expenseCategoryId });
+
+            _connection.Close();
+            return categories.ToList();
+        }
+
+
+        // POST or Add
         public async Task<long> AddExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto)
         {
             var sql = @"INSERT INTO ExpenseCategories (ExpenseCategoryName, Remarks, CreatedBy)
@@ -46,7 +61,7 @@ namespace ExpenseManagement.Api.Repository
             return result; 
         }
 
-        //PUT 
+        //PUT or Update
         public async Task<int> UpdateExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto)
         {
             var sql = @"UPDATE ExpenseCategories SET 

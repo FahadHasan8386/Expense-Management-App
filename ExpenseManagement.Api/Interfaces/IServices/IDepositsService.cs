@@ -1,5 +1,6 @@
-﻿using ExpenseManagement.Api.Models;
-using ExpenseManagement.Api.Models.Dtos;
+﻿using ExpenseManagement.Api.Interfaces.IRepositories;
+using ExpenseManagement.Api.Models;
+using ExpenseManagement.Api.Models.Dtos.DepositDto;
 using ExpenseManagement.Api.Models.Entities;
 
 namespace ExpenseManagement.Api.Interfaces.IServices
@@ -7,8 +8,9 @@ namespace ExpenseManagement.Api.Interfaces.IServices
     public interface IDepositsService
     {
         Task<List<Deposits>> GetAllDepositsAsync();
+        Task<List<Deposits>> GetDepositsByIdAsync(long depositId);
         Task<ResponseModel> AddDepositsAsync(DepositDto depositDto);
-        Task<ResponseModel> UpdateDepositsAsync(DepositDto depositDto);
+        Task<ResponseModel> UpdateDepositsAsync(UpdateDepositDto updateDepositDto);
         Task<ResponseModel> DeleteDepositsAsync(long DepositId);
         
     }

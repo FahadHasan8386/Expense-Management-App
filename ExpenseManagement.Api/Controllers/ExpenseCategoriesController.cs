@@ -23,6 +23,13 @@ namespace ExpenseManagement.Api.Controllers
             return Ok(await _ExpenseCategoriesService.AllExpenseCategoriesAsync());
         }
 
+        [HttpGet("GetExpenseCategoriesById/{expenseCategoryId}")]
+        public async Task<IActionResult> GetExpenseCategoriesByIdAsync(long expenseCategoryId)
+        {
+            return Ok(await _ExpenseCategoriesService.GetExpenseCategoriesByIdAsync(expenseCategoryId));
+        }
+
+
 
         [HttpPost("AddExpenseCategories")]
         public async Task<IActionResult> AddExpenseCategoriesAsync([FromBody] ExpenseCategoriesDto categoryDto)

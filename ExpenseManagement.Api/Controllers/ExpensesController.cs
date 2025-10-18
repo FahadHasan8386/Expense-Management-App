@@ -1,5 +1,6 @@
 ﻿using ExpenseManagement.Api.Interfaces.IServices;
 using ExpenseManagement.Api.Models.Dtos;
+using ExpenseManagement.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseManagement.Api.Controllers
@@ -21,6 +22,12 @@ namespace ExpenseManagement.Api.Controllers
         {
             var result = await _expensesService.AllExpensesAsync();
             return Ok(result);
+        }
+
+        [HttpGet("ExpensesById/{expenseId}")]
+        public async Task<IActionResult> ExpensesByIdAsync(long expenseId)
+        {
+            return Ok(await _expensesService.ExpensesByIdAsync(expenseId));
         }
 
         // Add new expense

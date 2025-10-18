@@ -23,6 +23,13 @@ namespace ExpenseManagement.Api.Services
             return await _expensesRepository.AllExpensesAsync();
         }
 
+        //GetBy ID
+        public async Task<List<Expenses>> ExpensesByIdAsync(long expenseId)
+        {
+            return await _expensesRepository.ExpensesByIdAsync(expenseId);
+        }
+
+
         // Add
         public async Task<ResponseModel> AddExpensesAsync(ExpensesDto expensesDto)
         {
@@ -220,5 +227,7 @@ namespace ExpenseManagement.Api.Services
                 };
             }
         }
+
+        
     }
 }
