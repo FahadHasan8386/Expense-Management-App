@@ -1,0 +1,12 @@
+﻿@page "/"
+
+@code {
+
+	protected override void OnInitialized()
+	{
+
+		if (NavigationManager.Uri.EndsWith("/"))
+			NavigationManager.NavigateTo("/app/home", true);
+	}
+
+}

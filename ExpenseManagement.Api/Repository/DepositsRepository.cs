@@ -59,7 +59,7 @@ namespace ExpenseManagement.Api.Repository
             return result;
         }
 
-        public async Task<int> UpdateDepositsAsync(UpdateDepositDto updateDepositDto)
+        public async Task<int> UpdateDepositsAsync(DepositDto DepositDto)
         {
             var sql = @"UPDATE Deposits SET DepositAmount = @DepositAmount,
                          Remarks = @Remarks,
@@ -70,10 +70,10 @@ namespace ExpenseManagement.Api.Repository
             _connection.Open();
             var result = await _connection.ExecuteAsync(sql, new
             {
-                @DepositId = updateDepositDto.DepositId,
-                @DepositAmount = updateDepositDto.DepositAmount,
-                @Remarks = updateDepositDto.Remarks,
-                @ModifiedBy = updateDepositDto.CreatedBy
+                @DepositId = DepositDto.DepositId,
+                @DepositAmount = DepositDto.DepositAmount,
+                @Remarks = DepositDto.Remarks,
+                @ModifiedBy = DepositDto.CreatedBy
             });
             _connection.Close();
 

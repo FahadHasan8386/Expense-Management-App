@@ -89,11 +89,11 @@ namespace ExpenseManagement.Api.Services
 
 
         //Put
-        public async Task<ResponseModel> UpdateDepositsAsync(UpdateDepositDto updateDepositDto)
+        public async Task<ResponseModel> UpdateDepositsAsync(DepositDto DepositDto)
         {
             try
             {
-                if (updateDepositDto.DepositId <= 0)
+                if (DepositDto.DepositId <= 0)
                 {
                     return new ResponseModel
                     {
@@ -103,7 +103,7 @@ namespace ExpenseManagement.Api.Services
                 }
 
               
-                if (updateDepositDto.DepositAmount <= 0)
+                if (DepositDto.DepositAmount <= 0)
                 {
                     return new ResponseModel
                     {
@@ -116,7 +116,7 @@ namespace ExpenseManagement.Api.Services
 
                 using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    result = await _depositsRepository.UpdateDepositsAsync(updateDepositDto);
+                    result = await _depositsRepository.UpdateDepositsAsync(DepositDto);
                     transactionScope.Complete();
                 }
 

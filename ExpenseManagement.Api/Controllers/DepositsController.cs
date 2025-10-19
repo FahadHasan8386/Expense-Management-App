@@ -44,12 +44,12 @@ namespace ExpenseManagement.Api.Controllers
 
 
         [HttpPut("UpdateDeposits/{id}")]
-        public async Task<IActionResult> UpdateDepositsAsync(long id ,[FromBody] UpdateDepositDto updateDepositDto)
+        public async Task<IActionResult> UpdateDepositsAsync(long id ,[FromBody] DepositDto DepositDto)
         {
-            if(updateDepositDto == null)
+            if(DepositDto == null)
                 return BadRequest();
 
-            return Ok(await _DepositsService.UpdateDepositsAsync(updateDepositDto));
+            return Ok(await _DepositsService.UpdateDepositsAsync(DepositDto));
         }
 
 

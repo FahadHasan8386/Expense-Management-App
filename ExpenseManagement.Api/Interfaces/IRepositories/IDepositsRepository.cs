@@ -8,7 +8,7 @@ namespace ExpenseManagement.Api.Interfaces.IRepositories
         Task<List<Deposits>> GetAllDepositsAsync();
         Task<List<Deposits>> GetDepositsByIdAsync(long depositId);
         Task<long> AddDepositsAsync(DepositDto deposit);
-        Task<int> UpdateDepositsAsync(UpdateDepositDto updateDepositDto);
+        Task<int> UpdateDepositsAsync(DepositDto DepositDto);
         Task<int> DeleteDepositsAsync(long DepositId);
       
     }

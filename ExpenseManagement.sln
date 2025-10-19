@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseManagement.Api", "ExpenseManagement.Api\ExpenseManagement.Api.csproj", "{B58056D8-D2C2-4D77-B77E-425C53EB02DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseManagement.Web", "ExpenseManagement.Web\ExpenseManagement.Web.csproj", "{A26B1E8C-23B9-4BBA-A7CF-93B41491EC3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B58056D8-D2C2-4D77-B77E-425C53EB02DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B58056D8-D2C2-4D77-B77E-425C53EB02DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B58056D8-D2C2-4D77-B77E-425C53EB02DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A26B1E8C-23B9-4BBA-A7CF-93B41491EC3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A26B1E8C-23B9-4BBA-A7CF-93B41491EC3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A26B1E8C-23B9-4BBA-A7CF-93B41491EC3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A26B1E8C-23B9-4BBA-A7CF-93B41491EC3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
