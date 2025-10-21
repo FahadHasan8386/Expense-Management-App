@@ -1,8 +1,6 @@
-﻿using ExpenseManagement.Shared.Models;
-
-namespace ExpenseManagement.Api.Models.Entities
+﻿namespace ExpenseManagement.Shared.Models.ViewModel
 {
-    public sealed class Deposits : BaseModel
+    public sealed class DepositViewModel : BaseModel
     {
         public long DepositId { get; set; }
         public decimal DepositAmount { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ExpenseManagement.Api.Models.Dtos.DepositDto
+namespace ExpenseManagement.Shared.Models.DtoModels.DepositDto
 {
     public class DepositDto : BaseModel
     {

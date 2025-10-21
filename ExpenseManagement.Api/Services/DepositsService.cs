@@ -1,22 +1,21 @@
-﻿using System.Data.Common;
-using System.Transactions;
+﻿using System.Transactions;
 using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Interfaces.IServices;
 using ExpenseManagement.Api.Models;
-using ExpenseManagement.Api.Models.Dtos.DepositDto;
 using ExpenseManagement.Api.Models.Entities;
+using ExpenseManagement.Shared.Models.DtoModels.DepositDto;
 
 namespace ExpenseManagement.Api.Services
 {
     public class DepositsService : IDepositsService
-    { 
+    {
         private readonly IDepositsRepository _depositsRepository;
 
         public DepositsService(IDepositsRepository depositsRepository)
         {
             _depositsRepository = depositsRepository;
         }
-          
+
         // GET
         public async Task<List<Deposits>> GetAllDepositsAsync()
         {
@@ -25,7 +24,7 @@ namespace ExpenseManagement.Api.Services
 
         //Get By Id
         public async Task<List<Deposits>> GetDepositsByIdAsync(long depositId)
-        { 
+        {
             return await _depositsRepository.GetDepositsByIdAsync(depositId);
         }
 
@@ -102,7 +101,7 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
-              
+
                 if (DepositDto.DepositAmount <= 0)
                 {
                     return new ResponseModel
@@ -162,7 +161,7 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
-                int result ;
+                int result;
 
                 using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
                 {

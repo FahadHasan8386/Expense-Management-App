@@ -1,4 +1,6 @@
-﻿namespace ExpenseManagement.Api.Models.Entities
+﻿using ExpenseManagement.Shared.Models;
+
+namespace ExpenseManagement.Api.Models.Entities
 {
     public sealed class Expenses : BaseModel
     {

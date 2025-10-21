@@ -1,5 +1,6 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using ExpenseManagement.Web.Services
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -8,5 +9,8 @@
 @using Microsoft.JSInterop
 @using ExpenseManagement.Web
 @using ExpenseManagement.Web.Layout
+@using ExpenseManagement.Shared.Models.ViewModel
 
 @inject NavigationManager NavigationManager
+
+@inject DepositApiService DepositApiService

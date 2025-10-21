@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ExpenseManagement.Shared\ExpenseManagement.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

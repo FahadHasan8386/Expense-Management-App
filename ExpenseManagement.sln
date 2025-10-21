@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseManagement.Api", "Ex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseManagement.Web", "ExpenseManagement.Web\ExpenseManagement.Web.csproj", "{A26B1E8C-23B9-4BBA-A7CF-93B41491EC3A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseManagement.Shared", "ExpenseManagement.Shared\ExpenseManagement.Shared.csproj", "{6C56A95A-C98E-464C-A3B8-4EB097DAB78A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A26B1E8C-23B9-4BBA-A7CF-93B41491EC3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A26B1E8C-23B9-4BBA-A7CF-93B41491EC3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A26B1E8C-23B9-4BBA-A7CF-93B41491EC3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C56A95A-C98E-464C-A3B8-4EB097DAB78A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C56A95A-C98E-464C-A3B8-4EB097DAB78A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C56A95A-C98E-464C-A3B8-4EB097DAB78A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C56A95A-C98E-464C-A3B8-4EB097DAB78A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

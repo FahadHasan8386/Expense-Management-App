@@ -1,5 +1,5 @@
 ﻿using ExpenseManagement.Api.Interfaces.IServices;
-using ExpenseManagement.Api.Models.Dtos.DepositDto;
+using ExpenseManagement.Shared.Models.DtoModels.DepositDto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseManagement.Api.Controllers
@@ -44,9 +44,9 @@ namespace ExpenseManagement.Api.Controllers
 
 
         [HttpPut("UpdateDeposits/{id}")]
-        public async Task<IActionResult> UpdateDepositsAsync(long id ,[FromBody] DepositDto DepositDto)
+        public async Task<IActionResult> UpdateDepositsAsync(long id, [FromBody] DepositDto DepositDto)
         {
-            if(DepositDto == null)
+            if (DepositDto == null)
                 return BadRequest();
 
             return Ok(await _DepositsService.UpdateDepositsAsync(DepositDto));
@@ -56,7 +56,7 @@ namespace ExpenseManagement.Api.Controllers
         [HttpDelete("DeleteDeposits/{DepositId}")]
         public async Task<IActionResult> DeleteDepositsAsync(long DepositId)
         {
-            if(DepositId == 0)
+            if (DepositId == 0)
                 return BadRequest();
 
             return Ok(await _DepositsService.DeleteDepositsAsync(DepositId));

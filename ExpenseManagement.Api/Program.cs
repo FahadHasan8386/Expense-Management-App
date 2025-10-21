@@ -6,6 +6,17 @@ using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -25,6 +36,8 @@ builder.Services.AddScoped<IExpenseCategoriesRepository, ExpenseCategoriesReposi
 builder.Services.AddScoped<IExpensesRepository, ExpensesRepository>();
 
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();

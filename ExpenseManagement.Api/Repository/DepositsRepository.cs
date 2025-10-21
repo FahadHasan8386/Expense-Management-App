@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using Dapper;
 using ExpenseManagement.Api.Interfaces.IRepositories;
-using ExpenseManagement.Api.Models.Dtos.DepositDto;
 using ExpenseManagement.Api.Models.Entities;
+using ExpenseManagement.Shared.Models.DtoModels.DepositDto;
 
 namespace ExpenseManagement.Api.Repository
 {
@@ -17,7 +17,7 @@ namespace ExpenseManagement.Api.Repository
 
 
         public async Task<List<Deposits>> GetAllDepositsAsync()
-        {  
+        {
             var sql = @"SELECT * FROM Deposits";
             _connection.Open();
             var deposits = await _connection.QueryAsync<Deposits>(sql);

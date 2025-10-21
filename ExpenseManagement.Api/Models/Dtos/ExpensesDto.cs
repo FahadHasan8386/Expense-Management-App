@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ExpenseManagement.Shared.Models;
 
 namespace ExpenseManagement.Api.Models.Dtos
 {
@@ -10,7 +11,7 @@ namespace ExpenseManagement.Api.Models.Dtos
         public long ExpenseCategoryId { get; set; }
 
         [Required(ErrorMessage = "Expense Amount is Required")]
-        [Range(1 ,Double.MaxValue, ErrorMessage = "Expense amount id must be grater than 0 .")]
+        [Range(1, Double.MaxValue, ErrorMessage = "Expense amount id must be grater than 0 .")]
         public decimal ExpenseAmount { get; set; }
 
         [Required(ErrorMessage = "ExpenseDate is Required")]

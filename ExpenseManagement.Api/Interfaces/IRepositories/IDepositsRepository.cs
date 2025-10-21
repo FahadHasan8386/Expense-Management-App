@@ -1,5 +1,5 @@
-﻿using ExpenseManagement.Api.Models.Dtos.DepositDto;
-using ExpenseManagement.Api.Models.Entities;
+﻿using ExpenseManagement.Api.Models.Entities;
+using ExpenseManagement.Shared.Models.DtoModels.DepositDto;
 
 namespace ExpenseManagement.Api.Interfaces.IRepositories
 {
@@ -10,6 +10,6 @@ namespace ExpenseManagement.Api.Interfaces.IRepositories
         Task<long> AddDepositsAsync(DepositDto deposit);
         Task<int> UpdateDepositsAsync(DepositDto DepositDto);
         Task<int> DeleteDepositsAsync(long DepositId);
-      
+
     }
 }
