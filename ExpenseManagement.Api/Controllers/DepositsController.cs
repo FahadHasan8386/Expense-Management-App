@@ -1,5 +1,5 @@
 ﻿using ExpenseManagement.Api.Interfaces.IServices;
-using ExpenseManagement.Shared.Models.DtoModels.DepositDto;
+using ExpenseManagement.Shared.Models.DtoModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseManagement.Api.Controllers

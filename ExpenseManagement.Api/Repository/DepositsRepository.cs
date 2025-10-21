@@ -2,7 +2,7 @@
 using Dapper;
 using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Models.Entities;
-using ExpenseManagement.Shared.Models.DtoModels.DepositDto;
+using ExpenseManagement.Shared.Models.DtoModels;
 
 namespace ExpenseManagement.Api.Repository
 {
@@ -25,20 +25,14 @@ namespace ExpenseManagement.Api.Repository
             return deposits.ToList();
         }
 
-        public async Task<List<Deposits>> GetDepositsByIdAsync(long depositId)
+        public async Task<Deposits?> GetDepositsByIdAsync(long depositId)
         {
-            const string sql = @"SELECT * FROM Deposits WHERE DepositId = @DepositId";
-
-            if (_connection.State == ConnectionState.Closed)
-                _connection.Open();
-
-            var deposits = await _connection.QueryAsync<Deposits>(sql, new { DepositId = depositId });
-
+            const string sql = @"SELECT TOP 1 * FROM Deposits WHERE DepositId = @DepositId";
+            _connection.Open();
+            var deposits = await _connection.QueryAsync<Deposits>(sql, new { @DepositId = depositId });
             _connection.Close();
-            return deposits.ToList();
+            return deposits.FirstOrDefault();
         }
-
-
 
         public async Task<long> AddDepositsAsync(DepositDto depositDto)
         {

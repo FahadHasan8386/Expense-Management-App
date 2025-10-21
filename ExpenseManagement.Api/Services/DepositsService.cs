@@ -3,7 +3,7 @@ using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Interfaces.IServices;
 using ExpenseManagement.Api.Models;
 using ExpenseManagement.Api.Models.Entities;
-using ExpenseManagement.Shared.Models.DtoModels.DepositDto;
+using ExpenseManagement.Shared.Models.DtoModels;
 
 namespace ExpenseManagement.Api.Services
 {
@@ -23,7 +23,7 @@ namespace ExpenseManagement.Api.Services
         }
 
         //Get By Id
-        public async Task<List<Deposits>> GetDepositsByIdAsync(long depositId)
+        public async Task<Deposits?> GetDepositsByIdAsync(long depositId)
         {
             return await _depositsRepository.GetDepositsByIdAsync(depositId);
         }

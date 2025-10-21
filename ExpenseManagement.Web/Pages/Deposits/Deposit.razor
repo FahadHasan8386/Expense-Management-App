@@ -8,8 +8,8 @@
 			<h4 class="mb-0">
 				<i class="bi bi-list-ul me-2"></i> Deposit List
 			</h4>
-			<button class="btn btn-light btn-sm" onclick="@OnClickAddDeposit">
-				<i class="bi bi-plus-circle me-1"></i> Add Deposit 
+			<button class="btn btn-light btn-sm" @onclick="OnClickCreateDeposit">
+				<i class="bi bi-plus-circle me-1"></i> Add Deposit
 			</button>
 		</div>
 
@@ -39,7 +39,7 @@
 									<button class="btn btn-sm btn-outline-info me-2">
 										<i class="bi bi-eye"></i>
 									</button>
-									<button class="btn btn-sm btn-outline-primary me-2">
+									<button class="btn btn-sm btn-outline-primary me-2" @onclick="() => OnClickUpdateDeposit(item.DepositId)">
 										<i class="bi bi-pencil"></i>
 									</button>
 									<button class="btn btn-sm btn-outline-danger">
@@ -65,8 +65,13 @@
 		DepositViewModels = await DepositApiService.GetDepositAsync();
 	}
 
-	protected void OnClickAddDeposit()
+	protected void OnClickCreateDeposit()
 	{
-		NavigationManager.NavigateTo($"/app/deposit-form/{10000}");
+		NavigationManager.NavigateTo($"/app/deposit-form/{0}");
+	}
+
+	protected void OnClickUpdateDeposit(long depositId)
+	{
+		NavigationManager.NavigateTo($"/app/deposit-form/{depositId}");
 	}
 }

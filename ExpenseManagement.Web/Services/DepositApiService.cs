@@ -16,7 +16,14 @@ namespace ExpenseManagement.Web.Services
         {
             var response = await _httpClient.GetFromJsonAsync<List<DepositViewModel>>("Deposits/GetAllDeposits");
 
-            return response is null ? new List<DepositViewModel>() : response.ToList();
+            return response is null ? [] : response.ToList();
+        }
+
+        public async Task<DepositViewModel> GetDepositByIdAsync(long depositId)
+        {
+            var response = await _httpClient.GetFromJsonAsync<DepositViewModel>($"Deposits/GetDepositsById/{depositId}");
+
+            return response is null ? new() : response;
         }
 
     }
