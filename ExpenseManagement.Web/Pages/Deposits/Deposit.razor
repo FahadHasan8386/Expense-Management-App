@@ -42,7 +42,7 @@
 									<button class="btn btn-sm btn-outline-primary me-2" @onclick="() => OnClickUpdateDeposit(item.DepositId)">
 										<i class="bi bi-pencil"></i>
 									</button>
-									<button class="btn btn-sm btn-outline-danger">
+									<button class="btn btn-sm btn-outline-danger" @onclick="() => OnClickDeleteDeposit(item.DepositId)">
 										<i class="bi bi-trash"></i>
 									</button>
 								</td>
@@ -74,4 +74,13 @@
 	{
 		NavigationManager.NavigateTo($"/app/deposit-form/{depositId}");
 	}
+
+	protected async Task OnClickDeleteDeposit(long depositId)
+	{
+
+		await DepositApiService.DeleteDepositsAsync(depositId);
+		
+	}
+
+
 }
