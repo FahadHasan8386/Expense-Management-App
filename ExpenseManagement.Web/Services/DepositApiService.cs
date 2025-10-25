@@ -26,10 +26,10 @@ namespace ExpenseManagement.Web.Services
             return response is null ? new() : response;
         }
 
-        public async Task<DepositViewModel> DeleteDepositsAsync(long depositId)
+        public async Task<bool> DeleteDepositsAsync(long depositId)
         {
-            var response = await _httpClient.GetFromJsonAsync<DepositViewModel>($"Deposits/DeleteDeposits/{depositId}");
-            return response is null ? new() : response;
+            var response = await _httpClient.DeleteAsync($"Deposits/DeleteDeposits/{depositId}");
+            return response.IsSuccessStatusCode; 
         }
     }
 }
