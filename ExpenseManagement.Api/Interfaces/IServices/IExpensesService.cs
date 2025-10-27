@@ -1,6 +1,6 @@
-﻿using ExpenseManagement.Api.Models;
-using ExpenseManagement.Api.Models.Dtos;
+﻿using ExpenseManagement.Api.Models.Dtos;
 using ExpenseManagement.Api.Models.Entities;
+using ExpenseManagement.Shared.Models;
 
 namespace ExpenseManagement.Api.Interfaces.IServices
 {

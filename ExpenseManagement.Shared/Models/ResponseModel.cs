@@ -1,4 +1,4 @@
-﻿namespace ExpenseManagement.Api.Models
+﻿namespace ExpenseManagement.Shared.Models
 {
     public class ResponseModel
     {

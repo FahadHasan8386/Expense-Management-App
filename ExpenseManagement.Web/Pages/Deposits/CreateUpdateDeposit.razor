@@ -1,6 +1,6 @@
 ﻿@page "/app/deposit-form/{DepositId:long}"
 
-<PageTitle>Deposit Create </PageTitle>
+<PageTitle>Deposit Create</PageTitle>
 
 <div class="container mt-4">
 	<div class="card shadow-lg border-0">
@@ -12,7 +12,7 @@
 				}
 				else
 				{
-					<span><i class="bi bi-pencil-square"></i> Create Deposit</span>
+					<span><i class="bi bi-pencil-square"></i> Edit Deposit</span>
 				}
 			</h4>
 			<a href="/app/deposits" class="btn btn-light btn-sm">
@@ -21,59 +21,36 @@
 		</div>
 
 		<div class="card-body">
-			<EditForm Model="@DepositDto">
-				<DataAnnotationsValidator />
-				<ValidationSummary />
-
-				@if (DepositId > 0)
-				{
-					<div class="row mb-3">
+			<div>
+				<div class="row mb-3">
+					@if (DepositId > 0)
+					{
 						<div class="col-md-4">
 							<label class="form-label fw-semibold">Deposit ID</label>
-							<InputNumber @bind-Value="DepositDto.DepositId" class="form-control disabled" readonly />
+							<InputNumber @bind-Value="DepositDto.DepositId" class="form-control" readonly />
 						</div>
-						<div class="col-md-4">
-							<label class="form-label fw-semibold">Deposit Date</label>
-							<InputDate @bind-Value="DepositDto.DepositDate" class="form-control disabled" readonly />
-						</div>
-						<div class="col-md-4">
-							<label class="form-label fw-semibold">Deposit Amount</label>
-							<InputNumber @bind-Value="DepositDto.DepositAmount" class="form-control" placeholder="Enter deposit amount" />
-						</div>
-						<div class="col-md-12">
-							<label class="form-label fw-semibold">Remarks</label>
-							<InputTextArea @bind-Value="DepositDto.Remarks" class="form-control" rows="3" placeholder="Write remarks..." />
-						</div>
-					</div>
-				}
-				else
-				{
-					<div class="row mb-3">
-						<div class="col-md-6">
-							<label class="form-label fw-semibold">Deposit Date</label>
-							<InputDate @bind-Value="DepositDto.DepositDate" class="form-control" />
-						</div>
-						<div class="col-md-6">
-							<label class="form-label fw-semibold">Deposit Amount</label>
-							<InputNumber @bind-Value="DepositDto.DepositAmount" class="form-control" placeholder="Enter deposit amount" />
-						</div>
-						<div class="col-md-12">
-							<label class="form-label fw-semibold">Remarks</label>
-							<InputTextArea @bind-Value="DepositDto.Remarks" class="form-control" rows="3" placeholder="Write remarks..." />
-						</div>
-					</div>
-				}
+					}
 
-				<div class="d-flex justify-content-end mt-4">
-					<button type="button" class="btn btn-success me-2">
-						<i class="bi bi-check-circle"></i> @((DepositId == 0) ? "Save" : "Update")
-					</button>
+					<div class="col-md-4">
+						<label class="form-label fw-semibold">Deposit Date</label>
+						<InputDate @bind-Value="DepositDto.DepositDate" class="form-control" />
+					</div>
 
-					<a href="/app/deposits" class="btn btn-secondary">
-						<i class="bi bi-x-circle"></i> Cancel
-					</a>
+					<div class="col-md-4">
+						<label class="form-label fw-semibold">Deposit Amount</label>
+						<InputNumber @bind-Value="DepositDto.DepositAmount" class="form-control" placeholder="Enter deposit amount" />
+					</div>
+
+					<div class="col-md-12">
+						<label class="form-label fw-semibold">Remarks</label>
+						<InputTextArea @bind-Value="DepositDto.Remarks" class="form-control" rows="3" placeholder="Write remarks..." />
+					</div>
 				</div>
-			</EditForm>
+
+				<button class="btn btn-success" @onclick="OnSaveClickAsync">
+					@((DepositId == 0) ? "Save" : "Update")
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -81,6 +58,7 @@
 @code {
 	[Parameter]
 	public long DepositId { get; set; }
+
 	private DepositDto DepositDto { get; set; } = new();
 	private DepositViewModel DepositViewModel { get; set; } = new();
 
@@ -89,11 +67,8 @@
 		if (DepositId > 0)
 		{
 			DepositViewModel = await DepositApiService.GetDepositByIdAsync(DepositId);
-
 			SetDepositData();
 		}
-
-
 	}
 
 	private void SetDepositData()
@@ -104,4 +79,17 @@
 		DepositDto.Remarks = DepositViewModel.Remarks;
 	}
 
+	private async Task OnSaveClickAsync()
+	{
+		if (DepositId == 0)
+		{
+			await DepositApiService.AddDepositAsync(DepositDto);
+		}
+		else
+		{
+			await DepositApiService.UpdateDepositAsync(DepositDto);
+		}
+
+		NavigationManager.NavigateTo("/app/deposits");
+	}
 }

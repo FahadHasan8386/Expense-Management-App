@@ -57,41 +57,46 @@
 </div>
 
 @code{
-    [Parameter]
-    public long DepositId { get; set; }
-    private long SL { get; set; } = 1;
+	[Parameter]
+	public long DepositId { get; set; }
+	private long SL { get; set; } = 1;
 
-    private List<DepositViewModel> DepositViewModels { get; set; } = [];
+	private List<DepositViewModel> DepositViewModels { get; set; } = [];
 
-    protected async override Task OnInitializedAsync()
-    {
-        DepositViewModels = await DepositApiService.GetDepositAsync();
-    }
+	protected async override Task OnInitializedAsync()
+	{
+		await LoadDepositsAsync();
+	}
 
-    protected void OnClickCreateDeposit()
-    {
-        NavigationManager.NavigateTo($"/app/deposit-form/{0}");
-    }
+	private async Task LoadDepositsAsync()
+	{
+		DepositViewModels = await DepositApiService.GetDepositAsync();
+	} 
 
-    protected void OnClickUpdateDeposit(long depositId)
-    {
-        NavigationManager.NavigateTo($"/app/deposit-form/{depositId}");
-    }
+	private void OnClickCreateDeposit()
+	{
+		NavigationManager.NavigateTo($"/app/deposit-form/{0}");
+	}
 
-    
+	private void OnClickUpdateDeposit(long depositId)
+	{
+		NavigationManager.NavigateTo($"/app/deposit-form/{depositId}");
+	}
 
-    protected async Task OnClickDeleteDeposit(long depositId)
-    {
-		bool isDeleted = await DepositApiService.DeleteDepositsAsync(depositId);
+	private async Task OnClickDeleteDeposit(long depositId)
+	{
+		var response = await DepositApiService.DeleteDepositsAsync(depositId);
 
-		if(isDeleted)
+		if (response.Code is 200)
 		{
-			Console.WriteLine("Delete Successfully .");
+			await LoadDepositsAsync();
+			Console.WriteLine(response.Message);
 		}
 		else
 		{
-			Console.WriteLine("Data Not Found ! ");
+			Console.WriteLine(response.Message);
 		}
+		StateHasChanged();
 	}
 }
 

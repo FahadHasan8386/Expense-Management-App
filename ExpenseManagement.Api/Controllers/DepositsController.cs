@@ -33,8 +33,8 @@ namespace ExpenseManagement.Api.Controllers
 
 
 
-        [HttpPost("AddDeposits")]
-        public async Task<IActionResult> AddDepositsAsync([FromBody] DepositDto depositDto)
+        [HttpPost("CreateDeposit")]
+        public async Task<IActionResult> CreateDepositsAsync([FromBody] DepositDto depositDto)
         {
             if (depositDto == null)
                 return BadRequest();
@@ -43,8 +43,8 @@ namespace ExpenseManagement.Api.Controllers
         }
 
 
-        [HttpPut("UpdateDeposits/{id}")]
-        public async Task<IActionResult> UpdateDepositsAsync(long id, [FromBody] DepositDto DepositDto)
+        [HttpPut("UpdateDeposit")]
+        public async Task<IActionResult> UpdateDepositsAsync([FromBody] DepositDto DepositDto)
         {
             if (DepositDto == null)
                 return BadRequest();
