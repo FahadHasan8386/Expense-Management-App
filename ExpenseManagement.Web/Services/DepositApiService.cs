@@ -25,7 +25,7 @@ namespace ExpenseManagement.Web.Services
             var response = await _httpClient.GetFromJsonAsync<DepositViewModel>($"Deposits/GetDepositsById/{depositId}");
             return response ?? new();
         }
-
+         
         public async Task<ResponseModel> AddDepositAsync(DepositDto depositDto)
         {
             var response = await _httpClient.PostAsJsonAsync("Deposits/CreateDeposit", depositDto);

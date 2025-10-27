@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ExpenseManagement.Shared.Models;
 
-namespace ExpenseManagement.Api.Models.Dtos
+namespace ExpenseManagement.Shared.Models.DtoModels
 {
     public class ExpenseCategoriesDto : BaseModel
     {

@@ -1,0 +1,75 @@
+﻿@page "/app/expenseCategory-form/{ExpenseCategoryId:long}"
+
+
+<PageTitle>Create Expense Category</PageTitle>
+
+<div class="container mt-4">
+	<div class="card shadow-lg border-0">
+		<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+			<h4 class="mb-0">
+			@if (ExpenseCategoryId == 0)
+				{
+					<span><i class="bi bi-plus-circle"></i> Create Expense Category</span>
+				}
+				else
+				{
+				<span><i class="bi bi-pencil-square"></i> Edit Expense Category</span>
+				}
+			</h4>
+			<a href="/app/expense-categories" class="btn btn-light btn-sm">
+				<i class="bi bi-arrow-left"></i> Back to List
+			</a>
+		</div> 
+
+		<div class="card-body">
+			<div>
+				<div class="row mb-3"> 
+				@if (ExpenseCategoryId > 0)
+					{
+						<div class="col-md-4">
+						<label class="form-label fw-semibold">ExpenseCategoryId</label>
+						<InputNumber @bind-Value="ExpenseCategoriesDto.ExpenseCategoryId" class="form-control" readonly />
+						</div>
+					}
+
+					<div class="col-md-4">
+						<label class="form-label fw-semibold">Expense Category Name</label>
+						<InputTextArea @bind-Value="ExpenseCategoriesDto.ExpenseCategoryName" class="form-control" placeholder="Write Name..." />
+					</div>
+
+					<div class="col-md-12">
+						<label class="form-label fw-semibold">Remarks</label>
+						<InputTextArea @bind-Value="ExpenseCategoriesDto.Remarks" class="form-control" rows="3" placeholder="Write remarks..." />
+					</div>
+				</div>
+
+				<button class="btn btn-success">
+				@((ExpenseCategoryId == 0) ? "Save" : "Update")
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@code{
+	[Parameter]
+	public long ExpenseCategoryId{ get; set; }
+	private ExpenseCategoriesDto ExpenseCategoriesDto { get; set; } = new();
+	private ExpenseCategoriesViewModel ExpenseCategoriesViewModel { get; set; } = new();
+
+	protected async override Task OnInitializedAsync()
+	{
+		if (ExpenseCategoryId > 0)
+		{
+			ExpenseCategoriesViewModel = await ExpenseCategoryApiService.GetExpenseCategoryByIdAsync(ExpenseCategoryId);
+			SetExpenseCategoryData();
+		}
+	}
+	private void SetExpenseCategoryData()
+	{
+		ExpenseCategoriesDto.ExpenseCategoryId = ExpenseCategoriesViewModel.ExpenseCategoryId;
+		ExpenseCategoriesDto.ExpenseCategoryName = ExpenseCategoriesViewModel.ExpenseCategoryName;
+		ExpenseCategoriesDto.Remarks = ExpenseCategoriesViewModel.Remarks;
+	}
+}
