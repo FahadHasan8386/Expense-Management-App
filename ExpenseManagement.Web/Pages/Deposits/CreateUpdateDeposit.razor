@@ -17,12 +17,12 @@
 			</h4>
 			<a href="/app/deposits" class="btn btn-light btn-sm">
 				<i class="bi bi-arrow-left"></i> Back to List
-			</a>
+			</a> 
 		</div> 
 
 		<div class="card-body">
 			<div> 
-				<div class="row mb-3">
+				<div class="row mb-3"> 
 					@if (DepositId > 0)
 					{
 						<div class="col-md-4">
@@ -86,7 +86,7 @@
 			await DepositApiService.AddDepositAsync(DepositDto);
 		}
 		else
-		{
+		{ 
 			await DepositApiService.UpdateDepositAsync(DepositDto);
 		}
 

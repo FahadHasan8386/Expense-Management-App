@@ -1,0 +1,72 @@
+﻿@page "/app/depositView-form/{DepositId:long}"
+
+
+<PageTitle>Deposit Details</PageTitle>
+
+<div class="container mt-4">
+	<div class="card shadow-lg border-0">
+		<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+			<h5 class="mb-0"><i class="bi bi-eye me-2"></i> Deposit Details</h5>
+			<a href="/app/deposits" class="btn btn-light btn-sm">
+				<i class="bi bi-arrow-left"></i> Back to List
+			</a>
+		</div>
+
+		<div class="card-body">
+			
+				<table class="table table-bordered table-striped">
+					<tbody>
+						<tr><th>Deposit ID</th><td>@DepositDto.DepositId</td></tr>
+
+						<tr><th>Amount</th><td>@DepositDto.DepositAmount</td></tr>
+
+						<tr><th>Date</th><td>@DepositDto.DepositDate?.ToString("dd MMM, yyyy")</td></tr>
+
+						<tr><th>Remarks</th><td>@DepositDto.Remarks</td></tr>
+
+						<tr><th>Created By</th><td>@DepositDto.CreatedBy</td></tr>
+
+						<tr><th>Created At</th><td>@DepositDto.CreatedAt.ToString("dd MMM, yyyy hh:mm tt")</td></tr>
+
+						<tr><th>Modified By</th><td>@DepositDto.ModifiedBy</td></tr>
+
+						<tr><th>Modified At</th><td>@(DepositDto.ModifiedAt?.ToString("dd MMM, yyyy hh:mm tt") ?? "N/A")</td></tr>
+
+						<tr><th>Status</th><td>@DepositDto.InActive </td></tr>
+					</tbody>
+				</table>
+			
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public long DepositId { get; set; }
+
+	private DepositDto DepositDto { get; set; } = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (DepositId > 0)
+		{
+			var result = await DepositApiService.GetDepositByIdAsync(DepositId);
+			if (result != null)
+			{
+				SetDepositData(result);
+			}
+		}
+	}
+
+	private void SetDepositData(DepositViewModel depositViewModel)
+	{
+		DepositDto.DepositId = depositViewModel.DepositId;
+		DepositDto.DepositDate = depositViewModel.DepositDate;
+		DepositDto.DepositAmount = depositViewModel.DepositAmount;
+		DepositDto.Remarks = depositViewModel.Remarks;
+		DepositDto.CreatedBy = depositViewModel.CreatedBy;
+		DepositDto.CreatedAt = depositViewModel.CreatedAt;
+		DepositDto.ModifiedBy = depositViewModel.ModifiedBy;
+		DepositDto.ModifiedAt = depositViewModel.ModifiedAt;
+		DepositDto.InActive = depositViewModel.InActive;
+	}
+}

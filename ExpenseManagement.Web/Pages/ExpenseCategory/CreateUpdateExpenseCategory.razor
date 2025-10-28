@@ -19,15 +19,15 @@
 			<a href="/app/expense-categories" class="btn btn-light btn-sm">
 				<i class="bi bi-arrow-left"></i> Back to List
 			</a>
-		</div> 
+		</div>  
 
 		<div class="card-body">
 			<div>
 				<div class="row mb-3"> 
-				@if (ExpenseCategoryId > 0)
+					@if (ExpenseCategoryId > 0)
 					{
 						<div class="col-md-4">
-						<label class="form-label fw-semibold">ExpenseCategoryId</label>
+						<label class="form-label fw-semibold">ExpenseCategory Id</label>
 						<InputNumber @bind-Value="ExpenseCategoriesDto.ExpenseCategoryId" class="form-control" readonly />
 						</div>
 					}
@@ -43,7 +43,7 @@
 					</div>
 				</div>
 
-				<button class="btn btn-success">
+				<button class="btn btn-success" @onclick="OnSaveClickAsync">
 				@((ExpenseCategoryId == 0) ? "Save" : "Update")
 				</button>
 			</div>
@@ -55,6 +55,7 @@
 @code{
 	[Parameter]
 	public long ExpenseCategoryId{ get; set; }
+
 	private ExpenseCategoriesDto ExpenseCategoriesDto { get; set; } = new();
 	private ExpenseCategoriesViewModel ExpenseCategoriesViewModel { get; set; } = new();
 
@@ -72,4 +73,18 @@
 		ExpenseCategoriesDto.ExpenseCategoryName = ExpenseCategoriesViewModel.ExpenseCategoryName;
 		ExpenseCategoriesDto.Remarks = ExpenseCategoriesViewModel.Remarks;
 	}
-}
+
+	private async Task OnSaveClickAsync()
+	{
+		if (ExpenseCategoryId == 0)
+		{
+			await ExpenseCategoryApiService.CreateExpenseCategoryAsync(ExpenseCategoriesDto);
+		}
+		else
+		{
+			await ExpenseCategoryApiService.UpdateExpenseCategoryAsync(ExpenseCategoriesDto);
+		}
+
+		NavigationManager.NavigateTo("/app/expense-categories");
+	}
+}   
