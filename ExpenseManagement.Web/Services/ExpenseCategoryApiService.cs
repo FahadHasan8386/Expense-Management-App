@@ -22,9 +22,10 @@ namespace ExpenseManagement.Web.Services
         }
         public async Task<ExpenseCategoriesViewModel> GetExpenseCategoryByIdAsync(long expenseCategoryId)
         {
-            var response = await _httpClient.GetFromJsonAsync<ExpenseCategoriesViewModel>($"/ExpenseCategories/GetExpenseCategoriesById/{expenseCategoryId}");
+            var response = await _httpClient.GetFromJsonAsync<ExpenseCategoriesViewModel>($"ExpenseCategories/GetExpenseCategoriesById/{expenseCategoryId}");
             return response ?? new();
         }
+
 
         public async Task<ResponseModel> CreateExpenseCategoryAsync(ExpenseCategoriesDto expenseCategoriesDto)
         {

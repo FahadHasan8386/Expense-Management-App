@@ -41,8 +41,8 @@ namespace ExpenseManagement.Api.Controllers
         }
 
 
-        [HttpPut("UpdateExpenseCategories/{id}")]
-        public async Task<IActionResult> UpdateExpenseCategoriesAsync(long id ,[FromBody] ExpenseCategoriesDto categoryDto)
+        [HttpPut("UpdateExpenseCategories")]
+        public async Task<IActionResult> UpdateExpenseCategoriesAsync([FromBody] ExpenseCategoriesDto categoryDto)
         {
             if (categoryDto == null)
                 return BadRequest();
