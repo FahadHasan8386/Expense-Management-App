@@ -2,7 +2,7 @@
 using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Interfaces.IServices;
 using ExpenseManagement.Api.Models;
-using ExpenseManagement.Api.Models.Dtos;
+using ExpenseManagement.Shared.Models.DtoModels;
 using ExpenseManagement.Api.Models.Entities;
 using ExpenseManagement.Api.Repository;
 using ExpenseManagement.Shared.Models;

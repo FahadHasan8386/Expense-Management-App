@@ -1,8 +1,9 @@
 ﻿using System.Data;
 using Dapper;
 using ExpenseManagement.Api.Interfaces.IRepositories;
-using ExpenseManagement.Api.Models.Dtos;
+using ExpenseManagement.Shared.Models.DtoModels;
 using ExpenseManagement.Api.Models.Entities;
+using ExpenseManagement.Shared.Models.ViewModel;
 
 namespace ExpenseManagement.Api.Repository
 {

@@ -17,7 +17,7 @@ namespace ExpenseManagement.Web.Services
         public async Task<List<DepositViewModel>> GetDepositAsync()
         {
             var response = await _httpClient.GetFromJsonAsync<List<DepositViewModel>>("Deposits/GetAllDeposits");
-            return response ?? new();
+            return response ?? [];
         }
 
         public async Task<DepositViewModel> GetDepositByIdAsync(long depositId)
@@ -32,7 +32,7 @@ namespace ExpenseManagement.Web.Services
             return await response.Content.ReadFromJsonAsync<ResponseModel>() ?? new();
         }
 
-
+            
         public async Task<ResponseModel> UpdateDepositAsync(DepositDto depositDto)
         {
             var response = await _httpClient.PutAsJsonAsync("Deposits/UpdateDeposit", depositDto);

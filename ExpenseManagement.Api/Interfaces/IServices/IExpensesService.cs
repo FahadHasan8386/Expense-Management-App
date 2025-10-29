@@ -1,4 +1,4 @@
-﻿using ExpenseManagement.Api.Models.Dtos;
+﻿using ExpenseManagement.Shared.Models.DtoModels;
 using ExpenseManagement.Api.Models.Entities;
 using ExpenseManagement.Shared.Models;
 

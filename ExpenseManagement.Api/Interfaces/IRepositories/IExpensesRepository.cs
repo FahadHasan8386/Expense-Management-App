@@ -1,4 +1,4 @@
-﻿using ExpenseManagement.Api.Models.Dtos;
+﻿using ExpenseManagement.Shared.Models.DtoModels;
 using ExpenseManagement.Api.Models.Entities;
 
 namespace ExpenseManagement.Api.Interfaces.IRepositories

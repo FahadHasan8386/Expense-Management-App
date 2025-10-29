@@ -12,6 +12,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 // Register Api services
 builder.Services.AddScoped<DepositApiService>();
 builder.Services.AddScoped<ExpenseCategoryApiService>();
+builder.Services.AddScoped<ExpenseApiService>();
 
 
 await builder.Build().RunAsync();

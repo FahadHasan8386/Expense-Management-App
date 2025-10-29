@@ -1,5 +1,5 @@
 ﻿using ExpenseManagement.Api.Interfaces.IServices;
-using ExpenseManagement.Api.Models.Dtos;
+using ExpenseManagement.Shared.Models.DtoModels;
 using ExpenseManagement.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,24 +35,19 @@ namespace ExpenseManagement.Api.Controllers
         public async Task<IActionResult> AddExpensesAsync([FromBody] ExpensesDto expensesDto)
         {
             if (expensesDto == null)
-                return BadRequest("Expense data cannot be null.");
+                return BadRequest();
 
-            var result = await _expensesService.AddExpensesAsync(expensesDto);
-            return Ok(result);
+            return Ok(await _expensesService.AddExpensesAsync(expensesDto));
         }
 
         // Update expense
-        [HttpPut("UpdateExpenses/{id}")]
-        public async Task<IActionResult> UpdateExpensesAsync(long id, [FromBody] ExpensesDto expensesDto)
+        [HttpPut("UpdateExpenses")]
+        public async Task<IActionResult> UpdateExpensesAsync([FromBody] ExpensesDto expensesDto)
         {
             if (expensesDto == null)
-                return BadRequest("Expense data cannot be null.");
+                return BadRequest();
 
-          
-            expensesDto.ExpenseId = id;
-
-            var result = await _expensesService.UpdateExpensesAsync(expensesDto);
-            return Ok(result);
+            return Ok(await _expensesService.UpdateExpensesAsync(expensesDto));
         }
 
         // Delete expense

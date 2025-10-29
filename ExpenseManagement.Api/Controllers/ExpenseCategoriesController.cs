@@ -1,8 +1,8 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
 using ExpenseManagement.Api.Interfaces.IServices;
-using ExpenseManagement.Api.Models.Dtos;
 using ExpenseManagement.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using ExpenseManagement.Shared.Models.DtoModels;
 
 namespace ExpenseManagement.Api.Controllers
 {
