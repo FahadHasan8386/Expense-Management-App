@@ -8,47 +8,62 @@
 			<h4 class="mb-0">
 				<i class="bi bi-list-ul me-2"></i> Category list
 			</h4>
-			<button class="btn btn-light btn-sm" @onclick="OnClickCreateExpenseCategory">
+			<button class="btn btn-light btn-sm" @onclick="() => OnExpenseCategoryCreateUpdateClick(0)">
 				<i class="bi bi-plus-circle me-1"></i> Add Category
 			</button>
 		</div>
 
 		<div class="card-body">
 			<div class="table-responsive">
-				<table class="table table-hover align-middle">
-					<thead class="table-light">
-						<tr>
-							<th>#</th>
-							<th>Category Id</th>
-							<th>Expense Category Name </th>
-							<th>Remarks</th>
-							<th>Actions</th>
-						</tr>     
-					</thead>  
-					<tbody> 
-						@foreach (var item in ExpenseCategoriesViewModel)
-						{
+				@if(IsLoading)
+				{
+					<p style="text-align: center; padding: 8px 0;">Loading...</p>
+				}
+				else{
+					<table class="table table-hover align-middle">
+						<thead class="table-light">
 							<tr>
-								<td>@SL</td>
-								<td>@item.ExpenseCategoryId</td>
-								<td>@item.ExpenseCategoryName</td>
-								<td>@item.Remarks</td>
-								<td>
-									<button class="btn btn-sm btn-outline-info me-2" @onclick="() => OnClickViewExpenseCategory(item.ExpenseCategoryId)">
-										<i class="bi bi-eye"></i>
-									</button>
-									<button class="btn btn-sm btn-outline-primary me-2" @onclick="() => OnClickUpdateExpenseCategory(item.ExpenseCategoryId)">
-										<i class="bi bi-pencil"></i>
-									</button>
-									<button class="btn btn-sm btn-outline-danger" @onclick="() => OnClickDeleteExpenseCategory(item.ExpenseCategoryId)">
-										<i class="bi bi-trash"></i>
-									</button>
-								</td>
+								<th>#</th>
+								<th>Category Id</th>
+								<th>Expense Category Name </th>
+								<th>Remarks</th>
+								<th>Actions</th>
 							</tr>
-							SL++;
-						}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							@if (ExpenseCategoriesViewModel.Any())
+							{
+								@foreach (var item in ExpenseCategoriesViewModel)
+								{
+									<tr>
+										<td>@SL</td>
+										<td>@item.ExpenseCategoryId</td>
+										<td>@item.ExpenseCategoryName</td>
+										<td>@item.Remarks</td>
+										<td>
+											<button class="btn btn-sm btn-outline-info me-2" @onclick="() => OnExpenseCategoryViewClick(item.ExpenseCategoryId)">
+												<i class="bi bi-eye"></i>
+											</button>
+											<button class="btn btn-sm btn-outline-primary me-2" @onclick="() => OnExpenseCategoryCreateUpdateClick(item.ExpenseCategoryId)">
+												<i class="bi bi-pencil"></i>
+											</button>
+											<button class="btn btn-sm btn-outline-danger" @onclick="() => OnExpenseCategoryDeleteClick(item.ExpenseCategoryId)">
+												<i class="bi bi-trash"></i>
+											</button>
+										</td>
+									</tr>
+									SL++;
+								}
+							}
+							else
+							{
+								<tr>
+									<td colspan="6" style="text-align: center; padding: 8px 0; color: red;">No Record Found!</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				}
 			</div>
 		</div>
 	</div>
@@ -60,12 +75,14 @@
 	[Parameter]
 	public long ExpenseCategoryId { get; set; }
 	private long SL { get; set; } = 1;
-
+	private bool IsLoading {get; set;} = false;
 	private List<ExpenseCategoriesViewModel> ExpenseCategoriesViewModel { get; set; } = [];
 
 	protected async override Task OnInitializedAsync()
 	{
+		IsLoading = true;
 		await LoadExpenseCategoryAsync();
+		IsLoading = false;
 	}
 
 	private async Task LoadExpenseCategoryAsync()
@@ -73,27 +90,23 @@
 		ExpenseCategoriesViewModel = await ExpenseCategoryApiService.GetExpenseCategoriesAsync();
 	}
 
-	private void OnClickViewExpenseCategory(long depositId)
+
+	private void OnExpenseCategoryViewClick(long ExpenseCategoryId)
 	{
-		NavigationManager.NavigateTo($"/app/expenseCategoryView-form/{ExpenseCategoryId}");
+		NavigationManager.NavigateTo($"/app/expenseCategoryView/{ExpenseCategoryId}");
 	}
 
-	private void OnClickCreateExpenseCategory()
+	private void OnExpenseCategoryCreateUpdateClick(long ExpenseCategoryId)
 	{
-		NavigationManager.NavigateTo($"/app/expenseCategory-form/{0}");
-	}
-
-	private void OnClickUpdateExpenseCategory(long ExpenseCategoryId)
-	{
-		NavigationManager.NavigateTo($"/app/expenseCategory-form/{ExpenseCategoryId}");
+		NavigationManager.NavigateTo($"/app/expenseCategory/edit-form/{ExpenseCategoryId}");
 	}
 
 
-	private async Task OnClickDeleteExpenseCategory(long ExpenseCategoryId)
+	private async Task OnExpenseCategoryDeleteClick(long ExpenseCategoryId)
 	{
 		var response = await ExpenseCategoryApiService.DeleteExpenseCategoriesAsync(ExpenseCategoryId);
 
-		if (response.Code is 200)
+		if (response.Code == 200)
 		{
 			await LoadExpenseCategoryAsync();
 			Console.WriteLine(response.Message);

@@ -1,0 +1,78 @@
+﻿@page "/app/expenseCategoryView/{ExpenseCategoryId:long}"
+
+
+<PageTitle>Expense Category Details</PageTitle>
+
+<div class="container mt-4">
+	<div class="card shadow-lg border-0">
+		<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+			<h5 class="mb-0"><i class="bi bi-eye me-2"></i> Deposit Details</h5>
+			<a href="/app/expense-categories" class="btn btn-light btn-sm">
+				<i class="bi bi-arrow-left"></i> Back to List
+			</a>
+		</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-12">
+					<table class="table table-bordered table-striped">
+						<tbody>
+							<tr><th>Expense Category Id</th><td>@ExpenseCategoriesViewModel.ExpenseCategoryId</td></tr>
+
+							<tr><th>Expense Category Name</th><td>@ExpenseCategoriesViewModel.ExpenseCategoryName</td></tr>
+
+							<tr><th>Remarks</th><td>@ExpenseCategoriesViewModel.Remarks</td></tr>
+
+							<tr><th>Created By</th><td>@ExpenseCategoriesViewModel.CreatedBy</td></tr>
+
+							<tr><th>Created At</th><td>@ExpenseCategoriesViewModel.CreatedAt.ToString("dd MMM, yyyy hh:mm tt")</td></tr>
+
+							<tr><th>Modified By</th><td>@ExpenseCategoriesViewModel.ModifiedBy</td></tr>
+
+							<tr><th>Modified At</th><td>@(ExpenseCategoriesViewModel.ModifiedAt?.ToString("dd MMM, yyyy hh:mm tt") ?? "N/A")</td></tr>
+
+							<tr><th>Status</th><td>@ExpenseCategoriesViewModel.InActive </td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-12 text-end">
+					<button class="btn btn-outline-danger" style="padding: 10px 20px;" @onclick="() => OnExpenseCategoryDeleteClick(ExpenseCategoriesViewModel.ExpenseCategoryId)">Delete</button>
+					<button class="btn btn-outline-warning mx-2" style="padding: 10px 20px;" @onclick="() => OnExpenseCategoryStatusChangeClick(ExpenseCategoriesViewModel.ExpenseCategoryId)">Change Status</button>
+					<button class="btn btn-outline-info" style="padding: 10px 20px;" @onclick="() => OnExpenseCategoryUpdateClick(ExpenseCategoriesViewModel.ExpenseCategoryId)">Update</button>
+				</div>
+			</div>
+		</div>	
+	</div>
+</div>
+
+@code {
+	
+	[Parameter]
+	public long ExpenseCategoryId { get; set; }
+	private ExpenseCategoriesViewModel ExpenseCategoriesViewModel { get; set; } = new();
+
+	protected async override Task OnInitializedAsync()
+	{
+			ExpenseCategoriesViewModel = await ExpenseCategoryApiService.GetExpenseCategoryByIdAsync(ExpenseCategoryId);
+	}
+
+	private void OnExpenseCategoryUpdateClick(long ExpenseCategoryId)
+	{
+		NavigationManager.NavigateTo($"/app/expenseCategory/edit-form/{ExpenseCategoryId}");
+	}
+
+
+	private async Task OnExpenseCategoryStatusChangeClick(long ExpenseCategoryId)
+	{
+		await ExpenseCategoryApiService.DeleteExpenseCategoriesAsync(ExpenseCategoryId);
+		StateHasChanged();
+	}
+
+	private async Task OnExpenseCategoryDeleteClick(long ExpenseCategoryId)
+	{
+		var response = await ExpenseCategoryApiService.DeleteExpenseCategoriesAsync(ExpenseCategoryId);
+
+		if (response.Code == 200)
+			NavigationManager.NavigateTo($"/app/expense-categories");
+		
+	}
+}

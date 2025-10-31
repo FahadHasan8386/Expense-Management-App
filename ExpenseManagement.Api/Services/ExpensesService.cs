@@ -23,7 +23,7 @@ namespace ExpenseManagement.Api.Services
         }
 
         //GetBy ID
-        public async Task<List<Expenses>> ExpensesByIdAsync(long expenseId)
+        public async Task<Expenses?> ExpensesByIdAsync(long expenseId)
         {
             return await _expensesRepository.ExpensesByIdAsync(expenseId);
         }

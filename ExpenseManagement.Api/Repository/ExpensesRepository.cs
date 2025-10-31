@@ -1,8 +1,9 @@
 ﻿using System.Data;
+using System.Linq;
 using Dapper;
 using ExpenseManagement.Api.Interfaces.IRepositories;
-using ExpenseManagement.Shared.Models.DtoModels;
 using ExpenseManagement.Api.Models.Entities;
+using ExpenseManagement.Shared.Models.DtoModels;
 
 namespace ExpenseManagement.Api.Repository
 {
@@ -27,7 +28,7 @@ namespace ExpenseManagement.Api.Repository
         }
 
         // Get Expenses By Id
-        public async Task<List<Expenses>> ExpensesByIdAsync(long expenseId)
+        public async Task<Expenses?> ExpensesByIdAsync(long expenseId)
         {
             const string sql = @"SELECT * FROM Expenses WHERE ExpenseId = @ExpenseId";
 
@@ -38,7 +39,7 @@ namespace ExpenseManagement.Api.Repository
             var expenses = await _connection.QueryAsync<Expenses>(sql, new { ExpenseId = expenseId });
 
             _connection.Close();
-            return expenses.ToList();
+            return expenses.FirstOrDefault();
         }
 
 
