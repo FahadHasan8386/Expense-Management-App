@@ -29,7 +29,7 @@ namespace ExpenseManagement.Api.Repository
         }
 
         //Get By Id Expense Category
-        public async Task<List<ExpenseCategories>> GetExpenseCategoriesByIdAsync(long expenseCategoryId)
+        public async Task<ExpenseCategories?> GetExpenseCategoriesByIdAsync(long expenseCategoryId)
         {
             const string sql = @"SELECT * FROM ExpenseCategories WHERE ExpenseCategoryId = @ExpenseCategoryId";
 
@@ -39,7 +39,7 @@ namespace ExpenseManagement.Api.Repository
             var categories = await _connection.QueryAsync<ExpenseCategories>(sql, new { ExpenseCategoryId = expenseCategoryId });
 
             _connection.Close();
-            return categories.ToList();
+            return categories.FirstOrDefault();
         }
 
 

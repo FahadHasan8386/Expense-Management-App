@@ -25,7 +25,7 @@ namespace ExpenseManagement.Api.Services
         }
 
         // Get By Id  
-        public async Task<List<ExpenseCategories>> GetExpenseCategoriesByIdAsync(long expenseCategoryId)
+        public async Task<ExpenseCategories> GetExpenseCategoriesByIdAsync(long expenseCategoryId)
         {
             return await _expenseCategoriesRepository.GetExpenseCategoriesByIdAsync(expenseCategoryId);
         }

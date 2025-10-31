@@ -1,0 +1,76 @@
+﻿@page "/app/deposits/{DepositId:long}"
+
+<PageTitle>Deposit Details</PageTitle>
+
+<div class="container mt-4">
+	<div class="card shadow-lg border-0">
+		<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+			<h5 class="mb-0"><i class="bi bi-eye me-2"></i> Deposit Details</h5>
+			<a href="/app/deposits" class="btn btn-light btn-sm">
+				<i class="bi bi-arrow-left"></i> Back to List
+			</a>
+		</div>
+
+		<div class="card-body">
+			<div class="row">
+				<div class="col-12">
+					<table class="table table-bordered table-striped">
+						<tbody>
+							<tr><th>Deposit ID</th><td>@DepositViewModel.DepositId</td></tr>
+
+							<tr><th>Amount</th><td>@DepositViewModel.DepositAmount</td></tr>
+
+							<tr><th>Date</th><td>@DepositViewModel.DepositDate.ToString("dd MMMM, yyyy - dddd")</td></tr>
+
+							<tr><th>Remarks</th><td>@DepositViewModel.Remarks</td></tr>
+
+							<tr><th>Created By</th><td>@DepositViewModel.CreatedBy</td></tr>
+
+							<tr><th>Created At</th><td>@DepositViewModel.CreatedAt.ToString("dd MMMM, yyyy hh:mm tt")</td></tr>
+
+							<tr><th>Modified By</th><td>@(DepositViewModel.ModifiedBy ?? "N/A")</td></tr>
+
+							<tr><th>Modified At</th><td>@(DepositViewModel.ModifiedAt?.ToString("dd MMMM, yyyy hh:mm tt") ?? "N/A")</td></tr>
+
+							<tr><th>Status</th><td>@(DepositViewModel.InActive ? "Inactive" : "Active") </td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-12 text-end">
+					<button class="btn btn-outline-danger" style="padding: 10px 20px;" @onclick="() => OnDepositDeleteClickAsync(DepositViewModel.DepositId)">Delete</button>
+					<button class="btn btn-outline-warning mx-2" style="padding: 10px 20px;" @onclick="() =>  OnDepositStatusChangeClick(DepositViewModel.DepositId)">Change Status</button>
+					<button class="btn btn-outline-info" style="padding: 10px 20px;" @onclick="() =>  OnDepositUpdateClick(DepositViewModel.DepositId)">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public long DepositId { get; set; }
+
+	private DepositViewModel DepositViewModel { get; set; } = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		DepositViewModel = await DepositApiService.GetDepositByIdAsync(DepositId);
+	}
+
+	private void OnDepositUpdateClick(long depositId)
+	{
+		NavigationManager.NavigateTo($"/app/deposits/edit-form/{depositId}");
+	}
+
+	private async Task OnDepositStatusChangeClick(long depositId)
+	{
+		await DepositApiService.DeleteDepositsAsync(depositId);
+		StateHasChanged();
+	}
+
+	private async Task OnDepositDeleteClickAsync(long depositId)
+	{
+		var response = await DepositApiService.DeleteDepositsAsync(depositId);
+		if (response.Code == 200)
+			NavigationManager.NavigateTo($"/app/deposits");
+	}
+}
