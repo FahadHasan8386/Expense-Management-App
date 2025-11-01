@@ -1,4 +1,6 @@
 ﻿using ExpenseManagement.Api.Interfaces.IServices;
+using ExpenseManagement.Api.Services;
+using ExpenseManagement.Shared.Models;
 using ExpenseManagement.Shared.Models.DtoModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,7 +54,16 @@ namespace ExpenseManagement.Api.Controllers
             return Ok(await _DepositsService.UpdateDepositsAsync(DepositDto));
         }
 
+        [HttpPut("InActiveDeposit")]
+        public async Task<IActionResult> InActiveDepositAsync([FromBody] DepositDto DepositDto)
+        {
+            if (DepositDto.DepositId <= 0)
+                return BadRequest();
 
+            return Ok(await _DepositsService.DepositInActiveAsync(DepositDto));
+        }
+
+      
         [HttpDelete("DeleteDeposits/{DepositId}")]
         public async Task<IActionResult> DeleteDepositsAsync(long DepositId)
         {

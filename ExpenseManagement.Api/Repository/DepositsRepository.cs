@@ -3,6 +3,7 @@ using Dapper;
 using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Models.Entities;
 using ExpenseManagement.Shared.Models.DtoModels;
+using ExpenseManagement.Shared.Models.ViewModel;
 
 namespace ExpenseManagement.Api.Repository
 {
@@ -85,5 +86,21 @@ namespace ExpenseManagement.Api.Repository
 
             return result;
         }
+
+        public async Task<int> DepositInActiveAsync(DepositDto DepositDto)
+        {
+            var sql = @"UPDATE Deposits SET InActive = CASE 
+            WHEN InAction = 1 THEN 0
+             ELSE 1
+            END WHERE DepositId = @DepositId";
+
+            _connection.Open();
+            var result = await _connection.ExecuteAsync(sql, new { DepositDto });
+            _connection.Close();
+
+            return result;
+        }
+
+
     }
 }

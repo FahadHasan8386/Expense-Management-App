@@ -11,6 +11,7 @@ namespace ExpenseManagement.Api.Interfaces.IServices
         Task<ResponseModel> AddDepositsAsync(DepositDto depositDto);
         Task<ResponseModel> UpdateDepositsAsync(DepositDto DepositDto);
         Task<ResponseModel> DeleteDepositsAsync(long DepositId);
+        Task<ResponseModel> DepositInActiveAsync(DepositDto DepositDto);
 
     }
 }

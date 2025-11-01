@@ -196,5 +196,54 @@ namespace ExpenseManagement.Api.Services
                 };
             }
         }
+
+        public async Task<ResponseModel> DepositInActiveAsync(DepositDto DepositDto)
+        {
+            try
+            {
+                if (DepositDto.DepositId <= 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Invalid deposit ID."
+                    };
+                }
+
+                int result;
+
+                using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    result = await _depositsRepository.DepositInActiveAsync(DepositDto);
+                    transactionScope.Complete();
+                }
+
+                if (result > 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status200OK,
+                        Message = "Deposit status updated successfully (Active/Inactive)."
+                    };
+                }
+                else
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Message = "Deposit not found."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 500,
+                    Message = ex.Message
+                };
+            }
+        }
+
     }
 }
