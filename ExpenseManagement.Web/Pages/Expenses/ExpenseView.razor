@@ -1,0 +1,77 @@
+﻿@page "/app/expenses/{ExpenseId:long}"
+
+<div class="container mt-4">
+	<div class="card shadow-lg border-0">
+		<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+			<h5 class="mb-0"><i class="bi bi-eye me-2"></i> Expense Details</h5>
+			<a href="/app/deposits" class="btn btn-light btn-sm">
+				<i class="bi bi-arrow-left"></i> Back to List
+			</a>
+		</div>
+
+		<div class="card-body">
+			<div class="row">	
+				<div class="col-12">
+					<table class="table table-bordered table-striped">
+						<tbody>
+							<tr><th>Expense ID</th><td>@ExpensesViewModel.ExpenseId</td></tr>
+
+							<tr><th>Expense Category ID</th><td>@ExpensesViewModel.ExpenseCategoryId</td></tr>
+
+							<tr><th>Expense Amount</th><td>@ExpensesViewModel.ExpenseAmount</td></tr>
+
+							<tr><th>Date</th><td>@ExpensesViewModel.ExpenseDate.ToString("dd MMMM, yyyy - dddd")</td></tr>
+
+							<tr><th>Payment Method</th><td>@ExpensesViewModel.PaymentMethod</td></tr>
+
+							<tr><th>Remarks</th><td>@ExpensesViewModel.Remarks</td></tr>
+
+							<tr><th>Created By</th><td>@ExpensesViewModel.CreatedBy</td></tr>
+
+							<tr><th>Created At</th><td>@ExpensesViewModel.CreatedAt.ToString("dd MMMM, yyyy hh:mm tt")</td></tr>
+
+							<tr><th>Modified By</th><td>@(ExpensesViewModel.ModifiedBy ?? "N/A")</td></tr>
+
+							<tr><th>Modified At</th><td>@(ExpensesViewModel.ModifiedAt?.ToString("dd MMMM, yyyy hh:mm tt") ?? "N/A")</td></tr>
+
+							<tr><th>Status</th><td>@(ExpensesViewModel.InActive ? "Inactive" : "Active") </td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-12 text-end">
+					<button class="btn btn-outline-danger" style="padding: 10px 20px;" @onclick="() => OnExpenseDeleteClickAsync(ExpensesViewModel.ExpenseId)">Delete</button>
+					<button class="btn btn-outline-warning mx-2" style="padding: 10px 20px;" @onclick="() => OnExpenseStatusChangeClick(ExpensesViewModel.ExpenseId)">Change Status</button>
+					<button class="btn btn-outline-info" style="padding: 10px 20px;" @onclick="() => OnExpenseUpdateClick(ExpensesViewModel.ExpenseId)">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public long ExpenseId { get; set; }
+	private ExpensesViewModel ExpensesViewModel { get; set; } = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		ExpensesViewModel = await ExpenseApiService.GetExpenseByIdAsync(ExpenseId);
+	}
+
+	private void OnExpenseUpdateClick(long ExpenseId)
+	{
+		NavigationManager.NavigateTo($"/app/expenses/edit-form/{ExpenseId}");
+	}
+
+	private async Task OnExpenseStatusChangeClick(long ExpenseId)
+	{
+		await ExpenseApiService.DeleteExpensesAsync(ExpenseId);
+		StateHasChanged();
+	}
+
+	private async Task OnExpenseDeleteClickAsync(long ExpenseId)
+	{
+		var response = await ExpenseApiService.DeleteExpensesAsync(ExpenseId);
+		if (response.Code == 200)
+			NavigationManager.NavigateTo($"/app/expenses");
+	}
+}

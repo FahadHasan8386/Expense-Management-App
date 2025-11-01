@@ -8,18 +8,25 @@
 			<h4 class="mb-0">
 				<i class="bi bi-list-ul me-2"></i> Expense List
 			</h4>
-			<button class="btn btn-light btn-sm" @onclick="OnClickCreateExpenses">
+			<button class="btn btn-light btn-sm" @onclick="() => OnExpensesCreateUpdateClick(0)">
 				<i class="bi bi-plus-circle me-1"></i> Add Expenses
 			</button>
 		</div>
 
 		<div class="card-body">
 			<div class="table-responsive">
+				@if (IsLoading)
+				{
+					<p style="text-align: center; padding: 8px 0;">Loading...</p>
+				}   
+				else
+				{
 				<table class="table table-hover align-middle">
 					<thead class="table-light">
 						<tr>
 							<th>#</th>
 							<th>Expense ID</th>
+							<th>Expense Category Id</th>
 							<th>Expense Amount</th>
 							<th>Expense Date</th>
 							<th>Payment Method</th>
@@ -28,32 +35,43 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach (var item in ExpensesViewModel)
+					@if (ExpensesViewModel.Any()) 
+					{
+							@foreach (var item in ExpensesViewModel)
+							{
+								<tr>
+									<td>@SL</td>
+									<td>@item.ExpenseId</td>
+									<td>@item.ExpenseCategoryId</td>
+									<td>@item.ExpenseAmount</td>
+									<td>@item.ExpenseDate.ToString("dd MMM, yyyy")</td>
+									<td>@item.PaymentMethod</td>
+									<td>@item.Remarks</td>
+									<td>
+											<button class="btn btn-sm btn-outline-info me-2" @onclick="() => OnExpenseViewClick(item.ExpenseId)">
+											<i class="bi bi-eye"></i>
+										</button>
+											<button class="btn btn-sm btn-outline-primary me-2" @onclick="() => OnExpensesCreateUpdateClick(item.ExpenseId)">
+											<i class="bi bi-pencil"></i>
+										</button>
+											<button class="btn btn-sm btn-outline-danger" @onclick="() => OnExpenseDeleteClickAsync(item.ExpenseId)">
+											<i class="bi bi-trash"></i>
+										</button>
+									</td>
+								</tr>
+								SL++;
+							}
+					}
+					else
 						{
-							<tr>
-								<td>@SL</td>
-								<td>@item.ExpenseId</td>
-								<td>@item.ExpenseCategoryId</td>
-								<td>@item.ExpenseAmount</td>
-								<td>@item.ExpenseDate.ToString("dd MMM, yyyy")</td>
-								<td>@item.PaymentMethod</td>
-								<td>@item.Remarks</td>
-								<td>
-									<button class="btn btn-sm btn-outline-info me-2">
-										<i class="bi bi-eye"></i>
-									</button>
-									<button class="btn btn-sm btn-outline-primary me-2" >
-										<i class="bi bi-pencil"></i>
-									</button>
-									<button class="btn btn-sm btn-outline-danger" >
-										<i class="bi bi-trash"></i>
-									</button>
-								</td>
-							</tr>
-							SL++;
-						}
+						<tr>
+							<td colspan="6" style="text-align: center; padding: 8px 0; color: red;">No Record Found!</td>
+						</tr>
+						}					
 					</tbody>
 				</table>
+				
+				}
 			</div>
 		</div>
 	</div>
@@ -63,12 +81,14 @@
 	[Parameter]
 	public long ExpenseId { get; set; }
 	private long SL { get; set; } = 1;
-
+	private bool IsLoading { get; set; } = false;
 	private List<ExpensesViewModel> ExpensesViewModel { get; set; } = [];
 
 	protected override async Task OnInitializedAsync()
 	{
+		IsLoading = true;
 		await LoadExpensesAsync();
+		IsLoading = false;
 	}
 
 	private async Task LoadExpensesAsync()
@@ -76,10 +96,31 @@
 		ExpensesViewModel = await ExpenseApiService.GetExpensesAsync();
 	}
 
-	private void OnClickCreateExpenses()
+	private void OnExpenseViewClick(long expenseId)
 	{
-		NavigationManager.NavigateTo($"app/expenses-form/{0}");
+		NavigationManager.NavigateTo($"/app/expenses/{expenseId}");
+	}
+
+
+	private void OnExpensesCreateUpdateClick(long expenseId)
+	{
+		NavigationManager.NavigateTo($"/app/expenses/edit-form/{expenseId}");
 	}
 	
+	private async Task OnExpenseDeleteClickAsync(long expenseId)
+	{
+		var response = await ExpenseApiService.DeleteExpensesAsync(expenseId);
+
+		if (response.Code == 200)
+		{
+			await LoadExpensesAsync();
+			Console.WriteLine(response.Message);
+		}
+		else
+		{
+			Console.WriteLine(response.Message);
+		}
+		StateHasChanged();
+	}
 }
 

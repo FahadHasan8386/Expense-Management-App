@@ -34,9 +34,16 @@ namespace ExpenseManagement.Web.Services
 
         public async Task<ResponseModel> UpdateExpenseAsync(ExpensesDto expensesDto)
         {
-            var response = await _httpClient.PostAsJsonAsync("Expenses/UpdateExpenses", expensesDto);
+            var response = await _httpClient.PutAsJsonAsync("Expenses/UpdateExpenses", expensesDto);
             return await response.Content.ReadFromJsonAsync<ResponseModel>() ?? new();
         }
+
+        public async Task<ResponseModel> DeleteExpensesAsync(long ExpenseId)
+        {
+            var response = await _httpClient.DeleteFromJsonAsync<ResponseModel>($"Expenses/DeleteExpenses/{ExpenseId}");
+            return response ?? new();
+        }
+
     }
 }
     
