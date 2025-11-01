@@ -32,12 +32,19 @@ namespace ExpenseManagement.Web.Services
             return await response.Content.ReadFromJsonAsync<ResponseModel>() ?? new();
         }
 
-            
+
         public async Task<ResponseModel> UpdateDepositAsync(DepositDto depositDto)
         {
             var response = await _httpClient.PutAsJsonAsync("Deposits/UpdateDeposit", depositDto);
             return await response.Content.ReadFromJsonAsync<ResponseModel>() ?? new();
         }
+
+         public async Task<ResponseModel> UpdateDepositStatusAsync(DepositDto depositDto)
+        {
+            var response = await _httpClient.PatchAsJsonAsync("Deposits/UpdateDepositStatus", depositDto);
+            return await response.Content.ReadFromJsonAsync<ResponseModel>() ?? new();
+        }
+
 
         public async Task<ResponseModel> DeleteDepositsAsync(long depositId)
         {

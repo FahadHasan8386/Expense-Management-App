@@ -54,16 +54,15 @@ namespace ExpenseManagement.Api.Controllers
             return Ok(await _DepositsService.UpdateDepositsAsync(DepositDto));
         }
 
-        [HttpPut("InActiveDeposit")]
-        public async Task<IActionResult> InActiveDepositAsync([FromBody] DepositDto DepositDto)
+        [HttpPatch("UpdateDepositStatus")]
+        public async Task<IActionResult> UpdateDepositStatusAsync([FromBody] DepositDto DepositDto)
         {
             if (DepositDto.DepositId <= 0)
                 return BadRequest();
 
-            return Ok(await _DepositsService.DepositInActiveAsync(DepositDto));
+            return Ok(await _DepositsService.DepositInActiveAsync(DepositDto.DepositId, DepositDto.CreatedBy));
         }
 
-      
         [HttpDelete("DeleteDeposits/{DepositId}")]
         public async Task<IActionResult> DeleteDepositsAsync(long DepositId)
         {

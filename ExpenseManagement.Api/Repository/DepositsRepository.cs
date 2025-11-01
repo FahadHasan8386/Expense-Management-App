@@ -28,7 +28,7 @@ namespace ExpenseManagement.Api.Repository
 
         public async Task<Deposits?> GetDepositsByIdAsync(long depositId)
         {
-            const string sql = @"SELECT TOP 1 * FROM Deposits WHERE DepositId = @DepositId";
+            const string sql = @"SELECT TOP(1) * FROM Deposits WHERE DepositId = @DepositId";
             _connection.Open();
             var deposits = await _connection.QueryAsync<Deposits>(sql, new { @DepositId = depositId });
             _connection.Close();
@@ -76,31 +76,34 @@ namespace ExpenseManagement.Api.Repository
         }
 
 
-        public async Task<int> DeleteDepositsAsync(long DepositId)
+        public async Task<int> DeleteDepositsAsync(long depositId)
         {
             var sql = @"DELETE FROM Deposits WHERE DepositId = @DepositId";
-
             _connection.Open();
-            var result = await _connection.ExecuteAsync(sql, new { DepositId });
+            var result = await _connection.ExecuteAsync(sql, new {
+                @DepositId = depositId
+            });
             _connection.Close();
-
             return result;
         }
 
-        public async Task<int> DepositInActiveAsync(DepositDto DepositDto)
+        public async Task<int> UpateDepositStatusAsync(long depositId, bool status, string changedBy)
         {
-            var sql = @"UPDATE Deposits SET InActive = CASE 
-            WHEN InAction = 1 THEN 0
-             ELSE 1
-            END WHERE DepositId = @DepositId";
-
+            var sql = @"UPDATE Deposits
+                        SET InActive = @Status,
+                             ModifiedBy = @ModifiedBy,
+                            ModifiedAt = GETDATE()
+                        WHERE DepositId = @DepositId";
             _connection.Open();
-            var result = await _connection.ExecuteAsync(sql, new { DepositDto });
+            var result = await _connection.ExecuteAsync(sql, new
+            {
+                @DepositId = depositId,
+                @Status = status,
+                @ModifiedBy = changedBy
+            });
             _connection.Close();
-
             return result;
         }
-
 
     }
 }

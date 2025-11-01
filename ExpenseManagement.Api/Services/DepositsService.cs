@@ -197,11 +197,11 @@ namespace ExpenseManagement.Api.Services
             }
         }
 
-        public async Task<ResponseModel> DepositInActiveAsync(DepositDto DepositDto)
+        public async Task<ResponseModel> DepositInActiveAsync(long depositId, string changedBy)
         {
             try
             {
-                if (DepositDto.DepositId <= 0)
+                if (depositId <= 0)
                 {
                     return new ResponseModel
                     {
@@ -210,11 +210,21 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
+                var deposit = await _depositsRepository.GetDepositsByIdAsync(depositId);
+                if (deposit is null)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "No record found."
+                    };
+                }
+
                 int result;
 
                 using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    result = await _depositsRepository.DepositInActiveAsync(DepositDto);
+                    result = await _depositsRepository.UpateDepositStatusAsync(depositId, !deposit.InActive, changedBy);
                     transactionScope.Complete();
                 }
 
@@ -223,7 +233,7 @@ namespace ExpenseManagement.Api.Services
                     return new ResponseModel
                     {
                         Code = StatusCodes.Status200OK,
-                        Message = "Deposit status updated successfully (Active/Inactive)."
+                        Message = "Deposit status updated successfully."
                     };
                 }
                 else

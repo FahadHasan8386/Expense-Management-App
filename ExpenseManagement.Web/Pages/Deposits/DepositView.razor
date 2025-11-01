@@ -63,8 +63,17 @@
 
 	private async Task OnDepositStatusChangeClick(long depositId)
 	{
-		await DepositApiService.DeleteDepositsAsync(depositId);
-		StateHasChanged();
+		DepositDto depositDto = new DepositDto
+		{
+			DepositId = DepositViewModel.DepositId,
+			DepositDate = DepositViewModel.DepositDate,
+			DepositAmount = DepositViewModel.DepositAmount,
+			Remarks = DepositViewModel.Remarks
+		};
+		var response = await DepositApiService.UpdateDepositStatusAsync(depositDto);
+		if (response.Code == 200)
+			NavigationManager.NavigateTo($"/app/deposits");
+
 	}
 
 	private async Task OnDepositDeleteClickAsync(long depositId)
