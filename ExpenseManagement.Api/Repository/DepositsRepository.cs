@@ -13,7 +13,7 @@ namespace ExpenseManagement.Api.Repository
 
         public DepositsRepository(IDbConnection connection)
         {
-            _connection = connection;
+            _connection = connection; 
         }
 
 
@@ -75,19 +75,7 @@ namespace ExpenseManagement.Api.Repository
             return result;
         }
 
-
-        public async Task<int> DeleteDepositsAsync(long depositId)
-        {
-            var sql = @"DELETE FROM Deposits WHERE DepositId = @DepositId";
-            _connection.Open();
-            var result = await _connection.ExecuteAsync(sql, new {
-                @DepositId = depositId
-            });
-            _connection.Close();
-            return result;
-        }
-
-        public async Task<int> UpateDepositStatusAsync(long depositId, bool status, string changedBy)
+        public async Task<int> UpdateDepositStatusAsync(long depositId, bool status, string changedBy)
         {
             var sql = @"UPDATE Deposits
                         SET InActive = @Status,
@@ -104,6 +92,19 @@ namespace ExpenseManagement.Api.Repository
             _connection.Close();
             return result;
         }
+        
+        public async Task<int> DeleteDepositsAsync(long depositId)
+        {
+            var sql = @"DELETE FROM Deposits WHERE DepositId = @DepositId";
+            _connection.Open();
+            var result = await _connection.ExecuteAsync(sql, new {
+                @DepositId = depositId
+            });
+            _connection.Close();
+            return result;
+        }
+
+        
 
     }
 }

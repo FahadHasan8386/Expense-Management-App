@@ -22,7 +22,7 @@
 				else{
 					<table class="table table-hover align-middle">
 						<thead class="table-light">
-							<tr>
+							<tr>   
 								<th>#</th>
 								<th>Category Id</th>
 								<th>Expense Category Name </th>
@@ -36,10 +36,10 @@
 								@foreach (var item in ExpenseCategoriesViewModel)
 								{
 									<tr>
-										<td>@SL</td>
-										<td>@item.ExpenseCategoryId</td>
-										<td>@item.ExpenseCategoryName</td>
-										<td>@item.Remarks</td>
+										<td style="@(item.InActive ? "color: red" : "color: #000000")">@SL</td>
+										<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseCategoryId</td>
+										<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseCategoryName</td>
+										<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.Remarks</td>
 										<td>
 											<button class="btn btn-sm btn-outline-info me-2" @onclick="() => OnExpenseCategoryViewClick(item.ExpenseCategoryId)">
 												<i class="bi bi-eye"></i>

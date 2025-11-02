@@ -50,6 +50,15 @@ namespace ExpenseManagement.Api.Controllers
             return Ok(await _ExpenseCategoriesService.UpdateExpenseCategoriesAsync(categoryDto));
         }
 
+        [HttpPatch("UpdateExpenseCategoryStatus")]
+        public async Task<IActionResult> UpdateExpenseCategoryStatusAsync([FromBody] ExpenseCategoriesDto categoryDto)
+        {
+            if (categoryDto.ExpenseCategoryId <= 0)
+                return BadRequest();
+
+            return Ok(await _ExpenseCategoriesService.ExpenseCategoryInActiveAsync(categoryDto.ExpenseCategoryId, categoryDto.CreatedBy));
+        }
+
 
         [HttpDelete("DeleteExpenseCategories/{expenseCategoryId}")]
         public async Task<IActionResult> DeleteExpenseCategoriesAsync(long expenseCategoryId)

@@ -25,12 +25,12 @@
 							<tr><th>Created By</th><td>@ExpenseCategoriesViewModel.CreatedBy</td></tr>
 
 							<tr><th>Created At</th><td>@ExpenseCategoriesViewModel.CreatedAt.ToString("dd MMM, yyyy hh:mm tt")</td></tr>
-
+							  
 							<tr><th>Modified By</th><td>@ExpenseCategoriesViewModel.ModifiedBy</td></tr>
 
 							<tr><th>Modified At</th><td>@(ExpenseCategoriesViewModel.ModifiedAt?.ToString("dd MMM, yyyy hh:mm tt") ?? "N/A")</td></tr>
 
-							<tr><th>Status</th><td>@ExpenseCategoriesViewModel.InActive </td></tr>
+							<tr><th>Status</th><td>@(ExpenseCategoriesViewModel.InActive ? "Inactive" : "Active")</td></tr>
 						</tbody>
 					</table>
 				</div>
@@ -60,11 +60,18 @@
 		NavigationManager.NavigateTo($"/app/expenseCategory/edit-form/{ExpenseCategoryId}");
 	}
 
-
 	private async Task OnExpenseCategoryStatusChangeClick(long ExpenseCategoryId)
 	{
-		await ExpenseCategoryApiService.DeleteExpenseCategoriesAsync(ExpenseCategoryId);
-		StateHasChanged();
+		ExpenseCategoriesDto expenseCategoriesDto = new ExpenseCategoriesDto
+		{
+			ExpenseCategoryId = ExpenseCategoriesViewModel.ExpenseCategoryId,
+			ExpenseCategoryName = ExpenseCategoriesViewModel.ExpenseCategoryName,
+			Remarks = ExpenseCategoriesViewModel.Remarks
+		};
+		var response = await ExpenseCategoryApiService.UpdateExpenseCategoryStatusAsync(expenseCategoriesDto);
+		if (response.Code == 200)
+			NavigationManager.NavigateTo($"/app/expense-categories");
+
 	}
 
 	private async Task OnExpenseCategoryDeleteClick(long ExpenseCategoryId)

@@ -155,6 +155,65 @@ namespace ExpenseManagement.Api.Services
             }
         }
 
+        //Update
+        public async Task<ResponseModel> ExpenseCategoryInActiveAsync(long expenseCategoryId, string changedBy)
+        {
+            try
+            {
+                if (expenseCategoryId <= 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Invalid deposit ID."
+                    };
+                }
+
+                var Category = await _expenseCategoriesRepository.GetExpenseCategoriesByIdAsync(expenseCategoryId);
+                if (Category is null)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "No record found."
+                    };
+                }
+
+                int result;
+
+                using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    result = await _expenseCategoriesRepository.UpdateExpenseCategoryStatusAsync(expenseCategoryId, !Category.InActive, changedBy);
+                    transactionScope.Complete();
+                }
+
+                if (result > 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status200OK,
+                        Message = "Expense Category status updated successfully."
+                    };
+                }
+                else
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status404NotFound,
+                        Message = "Expense Category not found."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 500,
+                    Message = ex.Message
+                };
+            }
+        }
+
         // Delete
         public async Task<ResponseModel> DeleteExpenseCategoriesAsync(long expenseCategoryId)
         {

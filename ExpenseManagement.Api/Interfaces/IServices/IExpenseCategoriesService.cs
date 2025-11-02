@@ -11,6 +11,7 @@ namespace ExpenseManagement.Api.Interfaces.IServices
         Task<ExpenseCategories?> GetExpenseCategoriesByIdAsync(long expenseCategoryId);
         Task<ResponseModel> AddExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto);
         Task<ResponseModel> UpdateExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto);
+        Task<ResponseModel> ExpenseCategoryInActiveAsync(long expenseCategoryId, string changedBy);
         Task<ResponseModel> DeleteExpenseCategoriesAsync(long expenseCategoryId);
     }
 }

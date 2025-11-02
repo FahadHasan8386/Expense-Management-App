@@ -16,7 +16,7 @@ namespace ExpenseManagement.Api.Repository
             _connection = connection;
         }
 
-        //GET
+        //GET  
         public async Task<List<ExpenseCategories>> AllExpenseCategoriesAsync()  
         {
             const string sql = @"SELECT * FROM ExpenseCategories";
@@ -84,6 +84,25 @@ namespace ExpenseManagement.Api.Repository
             _connection.Close();
 
             return result; 
+        }
+
+        //Update
+        public async Task<int> UpdateExpenseCategoryStatusAsync(long expenseCategoryId, bool status, string changedBy)
+        {
+            var sql = @"UPDATE ExpenseCategories
+                        SET InActive = @Status,
+                             ModifiedBy = @ModifiedBy,
+                            ModifiedAt = GETDATE()
+                        WHERE ExpenseCategoryId = @ExpenseCategoryId";
+            _connection.Open();
+            var result = await _connection.ExecuteAsync(sql, new
+            {
+                @ExpenseCategoryId = expenseCategoryId,
+                @Status = status,
+                @ModifiedBy = changedBy
+            });
+            _connection.Close();
+            return result;
         }
 
         //DELETE

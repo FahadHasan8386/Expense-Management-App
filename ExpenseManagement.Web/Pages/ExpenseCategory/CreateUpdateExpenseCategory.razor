@@ -42,7 +42,7 @@
 					<InputTextArea @bind-Value="ExpenseCategoriesDto.Remarks" class="form-control" rows="3" placeholder="Write remarks..." />
 				</div>
 
-				<div class="col-md-12 text-end">
+				<div class="col-md-12 text-end mt-4 mb-3">
 					<button class="@(ExpenseCategoryId > 0 ? "btn btn-warning" : "btn btn-success")" style="padding: 10px 20px;" @onclick="OnSubmitClickAsync">
 						@((ExpenseCategoryId == 0) ? "Save" : "Update")
 					</button>
