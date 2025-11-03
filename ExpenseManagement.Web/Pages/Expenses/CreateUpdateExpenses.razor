@@ -23,7 +23,7 @@
 		  
 		<div class="card-body">
 				<div class="row mb-3">
-					@if (ExpenseId > 0)
+					@if (ExpenseId > 0) 
 					{
 						<div class="col-md-4">
 							<label class="form-label fw-semibold">Expense ID</label>
@@ -54,8 +54,16 @@
 
 					<div class="col-md-12">
 						<label class="form-label fw-semibold">Payment Method</label>
-						<InputTextArea @bind-Value="ExpensesDto.PaymentMethod" class="form-control" rows="3" placeholder="Write remarks..." />
+						<InputSelect @bind-Value="ExpensesDto.PaymentMethod" class="form-control">
+							<option value="">-- Select Payment Method --</option>
+							<option value="Cash">Cash</option>
+							<option value="Card">Card</option>
+							<option value="Bkash">Bkash</option>
+							<option value="Nagad">Nagad</option>
+							<option value="Bank Transfer">Bank Transfer</option>
+						</InputSelect>
 					</div>
+
 
 					<div class="col-md-12">
 						<label class="form-label fw-semibold">Remarks</label>
@@ -63,7 +71,7 @@
 					</div>
 
 					<div class="col-md-12 text-end">
-						<button class="@(ExpenseId > 0 ? "btn btn-warning" : "btn btn-success")" style="padding: 10px 20px;" @onclick="OnSubmitClickAsync">
+					<button class="@(ExpenseId > 0 ? "btn btn-warning" : "btn btn-success")" style="padding: 10px 20px;" @onclick="OnFormSubmitClickAsync">
 							@((ExpenseId == 0) ? "Save" : "Update")
 						</button>
 					</div>
@@ -95,7 +103,7 @@
 		ExpensesDto.Remarks = ExpensesViewModel.Remarks;
 	}
 
-	private async Task OnSubmitClickAsync()
+	private async Task OnFormSubmitClickAsync()
 	{
 		if (ExpenseId == 0)
 		{
@@ -106,7 +114,7 @@
 			await ExpenseApiService.UpdateExpenseAsync(ExpensesDto);
 		}
 
-		NavigationManager.NavigateTo("/app/expenses");
+		//NavigationManager.NavigateTo("/app/expenses");
 	}
 
 }
