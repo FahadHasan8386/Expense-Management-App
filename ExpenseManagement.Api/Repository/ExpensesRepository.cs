@@ -14,7 +14,7 @@ namespace ExpenseManagement.Api.Repository
         public ExpensesRepository(IDbConnection connection)
         {
             _connection = connection;
-        }
+        } 
 
         // Get all Expenses
         public async Task<List<Expenses>> AllExpensesAsync()

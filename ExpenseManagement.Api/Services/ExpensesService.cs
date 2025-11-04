@@ -14,7 +14,7 @@ namespace ExpenseManagement.Api.Services
         public ExpensesService(IExpensesRepository expensesRepository)
         {
             _expensesRepository = expensesRepository;
-        }
+        } 
 
         // All
         public async Task<List<Expenses>> AllExpensesAsync()
@@ -43,7 +43,7 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
-                if (expensesDto.ExpenseDate == default)
+                if (expensesDto.ExpenseDate is null)
                 {
                     return new ResponseModel
                     {

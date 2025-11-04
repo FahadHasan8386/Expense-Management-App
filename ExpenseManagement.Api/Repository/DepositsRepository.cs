@@ -16,7 +16,7 @@ namespace ExpenseManagement.Api.Repository
             _connection = connection; 
         }
 
-
+         
         public async Task<List<Deposits>> GetAllDepositsAsync()
         {
             var sql = @"SELECT * FROM Deposits";

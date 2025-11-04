@@ -14,8 +14,8 @@ namespace ExpenseManagement.Shared.Models.DtoModels
         [Range(1, Double.MaxValue, ErrorMessage = "Expense amount id must be grater than 0 .")]
         public decimal ExpenseAmount { get; set; }
 
-        [Required(ErrorMessage = "ExpenseDate is Required")]
-        public DateTime ExpenseDate { get; set; }
+        [Required]
+        public DateTime? ExpenseDate { get; set; }
 
         [Required(ErrorMessage = "Payment Method is Required")]
         public string PaymentMethod { get; set; } = string.Empty;
