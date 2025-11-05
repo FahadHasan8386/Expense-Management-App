@@ -10,6 +10,7 @@ namespace ExpenseManagement.Api.Interfaces.IServices
         Task<Expenses?> ExpensesByIdAsync(long expenseId);
         Task<ResponseModel> AddExpensesAsync(ExpensesDto expensesDto);
         Task<ResponseModel> UpdateExpensesAsync(ExpensesDto expensesDto);
+        Task<ResponseModel> ExpenseInActiveAsync(long expenseId, string changeBy);
         Task<ResponseModel> DeleteExpensesAsync(long expenseId);
     }
 }

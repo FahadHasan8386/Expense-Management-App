@@ -14,7 +14,7 @@ namespace ExpenseManagement.Api.Services
         public DepositsService(IDepositsRepository depositsRepository)
         {
             _depositsRepository = depositsRepository; 
-        }
+        }  
 
         // GET
         public async Task<List<Deposits>> GetAllDepositsAsync()
@@ -88,11 +88,11 @@ namespace ExpenseManagement.Api.Services
 
 
         //Put
-        public async Task<ResponseModel> UpdateDepositsAsync(DepositDto DepositDto)
+        public async Task<ResponseModel> UpdateDepositsAsync(DepositDto depositDto)
         {
             try
             {
-                if (DepositDto.DepositId <= 0)
+                if (depositDto.DepositId <= 0)
                 {
                     return new ResponseModel
                     {
@@ -102,7 +102,7 @@ namespace ExpenseManagement.Api.Services
                 }
 
 
-                if (DepositDto.DepositAmount <= 0)
+                if (depositDto.DepositAmount <= 0)
                 {
                     return new ResponseModel
                     {
@@ -115,7 +115,7 @@ namespace ExpenseManagement.Api.Services
 
                 using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    result = await _depositsRepository.UpdateDepositsAsync(DepositDto);
+                    result = await _depositsRepository.UpdateDepositsAsync(depositDto);
                     transactionScope.Complete();
                 }
 

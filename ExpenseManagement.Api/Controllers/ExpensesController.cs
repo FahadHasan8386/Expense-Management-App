@@ -49,6 +49,15 @@ namespace ExpenseManagement.Api.Controllers
 
             return Ok(await _expensesService.UpdateExpensesAsync(expensesDto));
         }
+        //Patch
+        [HttpPatch("UpdateExpenseStatus")]
+        public async Task<IActionResult> UpdateExpenseStatusAsync([FromBody] ExpensesDto expensesDto)
+        {
+            if (expensesDto.ExpenseId <= 0)
+                return BadRequest();
+
+            return Ok(await _expensesService.ExpenseInActiveAsync(expensesDto.ExpenseId, expensesDto.CreatedBy));
+        }
 
         // Delete expense
         [HttpDelete("DeleteExpenses/{expenseId}")]

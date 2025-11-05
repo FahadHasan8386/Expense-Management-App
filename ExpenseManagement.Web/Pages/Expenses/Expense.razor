@@ -16,7 +16,7 @@
 		<div class="card-body">
 			<div class="table-responsive">
 				@if (IsLoading)
-				{
+				{   
 					<p style="text-align: center; padding: 8px 0;">Loading...</p>
 				}   
 				else
@@ -40,13 +40,13 @@
 							@foreach (var item in ExpensesViewModel)
 							{
 								<tr>
-									<td>@SL</td>
-									<td>@item.ExpenseId</td>
-									<td>@item.ExpenseCategoryId</td>
-									<td>@item.ExpenseAmount</td>
-									<td>@item.ExpenseDate.ToString("dd MMM, yyyy")</td>
-									<td>@item.PaymentMethod</td>
-									<td>@item.Remarks</td>
+									<td style="@(item.InActive ? "color: red" : "color: #000000")">@SL</td>
+									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseId</td>
+									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseCategoryId</td>
+									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseAmount</td>
+									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseDate.ToString("dd MMM, yyyy")</td>
+									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.PaymentMethod</td>
+									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.Remarks</td>
 									<td>
 											<button class="btn btn-sm btn-outline-info me-2" @onclick="() => OnExpenseViewClick(item.ExpenseId)">
 											<i class="bi bi-eye"></i>
@@ -69,6 +69,16 @@
 						</tr>
 						}					
 					</tbody>
+					@if (ExpensesViewModel.Any())
+						{
+							<tfoot>
+								<tr>
+									<th colspan="5" class="text-center">Total Amount:</th>
+									<th class="text-center">@(TotalAmount)</th>
+									<th></th>
+								</tr>
+							</tfoot>
+						}
 				</table>
 				
 				}
@@ -82,6 +92,7 @@
 	public long ExpenseId { get; set; }
 	private long SL { get; set; } = 1;
 	private bool IsLoading { get; set; } = false;
+	private decimal TotalAmount { get; set; } = 0;
 	private List<ExpensesViewModel> ExpensesViewModel { get; set; } = [];
 
 	protected override async Task OnInitializedAsync()
@@ -94,6 +105,7 @@
 	private async Task LoadExpensesAsync()
 	{
 		ExpensesViewModel = await ExpenseApiService.GetExpensesAsync();
+		TotalAmount = ExpensesViewModel.Where(x => !x.InActive).Sum(s => s.ExpenseAmount);
 	}
 
 	private void OnExpenseViewClick(long expenseId)

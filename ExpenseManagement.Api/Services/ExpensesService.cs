@@ -15,7 +15,7 @@ namespace ExpenseManagement.Api.Services
         {
             _expensesRepository = expensesRepository;
         } 
-
+          
         // All
         public async Task<List<Expenses>> AllExpensesAsync()
         {
@@ -178,6 +178,66 @@ namespace ExpenseManagement.Api.Services
                 };
             }
         }
+
+
+        public async Task<ResponseModel> ExpenseInActiveAsync(long expenseId,string changeBy)
+        {
+            try
+            {
+                if (expenseId <= 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = 400,
+                        Message = "Invalid Expense Id."
+                    };
+                }
+                var expense = await _expensesRepository.ExpensesByIdAsync(expenseId);
+
+                if (expense is null)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "No Record Found."
+                    };
+                }
+
+                int result;
+                using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    result = await _expensesRepository.UpdateExpenseStatusAsync(expenseId ,!expense.InActive , changeBy);
+                    transactionScope.Complete();
+                }
+
+                if (result > 0)
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status200OK,
+                        Message = "Expense Status updated successfully."
+                    };
+                }
+                else
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Expense Not Found."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Code = 500,
+                    Message = ex.Message
+                };
+            }
+        }
+
+
 
         // Delete
         public async Task<ResponseModel> DeleteExpensesAsync(long expenseId)

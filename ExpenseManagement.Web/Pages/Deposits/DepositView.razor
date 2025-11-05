@@ -18,10 +18,10 @@
 						<tbody>
 							<tr><th>Deposit ID</th><td>@DepositViewModel.DepositId</td></tr>
 							   
-							<tr><th>Amount</th><td>@DepositViewModel.DepositAmount</td></tr>
+							<tr><th>Amount</th><td>@DepositViewModel.DepositAmount</td></tr>  
 							   
 							<tr><th>Date</th><td>@DepositViewModel.DepositDate.ToString("dd MMMM, yyyy - dddd")</td></tr>
-
+							   
 							<tr><th>Remarks</th><td>@DepositViewModel.Remarks</td></tr>
 
 							<tr><th>Created By</th><td>@DepositViewModel.CreatedBy</td></tr>
@@ -47,8 +47,8 @@
 </div>
 
 @code {
-	[Parameter] public long DepositId { get; set; }
-
+	[Parameter] 
+	public long DepositId { get; set; }
 	private DepositViewModel DepositViewModel { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()

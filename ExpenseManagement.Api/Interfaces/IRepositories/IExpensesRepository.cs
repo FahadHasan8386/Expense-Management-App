@@ -9,6 +9,8 @@ namespace ExpenseManagement.Api.Interfaces.IRepositories
         Task<Expenses?> ExpensesByIdAsync(long expenseId);
         Task<long> AddExpensesAsync(ExpensesDto expensesDto);
         Task<int> UpdateExpensesAsync(ExpensesDto expensesDto);
+        Task<int> UpdateExpenseStatusAsync(long expenseId, bool status, string changeBy);
         Task<int> DeleteExpensesAsync(long expenseId);
+        
     }
 }

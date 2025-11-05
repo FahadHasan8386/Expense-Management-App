@@ -20,7 +20,7 @@ namespace ExpenseManagement.Api.Controllers
         }
 
 
-        [HttpGet("GetAllDeposits")]
+        [HttpGet("GetAllDeposits")] 
         public async Task<IActionResult> GetAllDepositsAsync()
         {
             return Ok(await _DepositsService.GetAllDepositsAsync());
@@ -55,12 +55,12 @@ namespace ExpenseManagement.Api.Controllers
         }
 
         [HttpPatch("UpdateDepositStatus")]
-        public async Task<IActionResult> UpdateDepositStatusAsync([FromBody] DepositDto DepositDto)
+        public async Task<IActionResult> UpdateDepositStatusAsync([FromBody] DepositDto depositDto)
         {
-            if (DepositDto.DepositId <= 0)
+            if (depositDto.DepositId <= 0)
                 return BadRequest();
 
-            return Ok(await _DepositsService.DepositInActiveAsync(DepositDto.DepositId, DepositDto.CreatedBy));
+            return Ok(await _DepositsService.DepositInActiveAsync(depositDto.DepositId, depositDto.CreatedBy));
         }
 
         [HttpDelete("DeleteDeposits/{DepositId}")]
