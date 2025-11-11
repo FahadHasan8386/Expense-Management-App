@@ -1,4 +1,5 @@
-﻿using ExpenseManagement.Shared.Models;
+﻿using ExpenseManagement.Shared.Enums;
+using ExpenseManagement.Shared.Models;
 
 namespace ExpenseManagement.Api.Models.Entities
 {
@@ -8,7 +9,7 @@ namespace ExpenseManagement.Api.Models.Entities
         public long ExpenseCategoryId { get; set; }
         public decimal ExpenseAmount { get; set; }
         public DateTime ExpenseDate { get; set; }
-        public string PaymentMethod { get; set; } = string.Empty;
+        public EnumPaymentType PaymentMethod { get; set; }
         public string? Remarks { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ExpenseManagement.Shared.Enums;
 using ExpenseManagement.Shared.Models;
 
 namespace ExpenseManagement.Shared.Models.DtoModels
@@ -18,7 +19,7 @@ namespace ExpenseManagement.Shared.Models.DtoModels
         public DateTime? ExpenseDate { get; set; }
 
         [Required(ErrorMessage = "Payment Method is Required")]
-        public string PaymentMethod { get; set; } = string.Empty;
+        public EnumPaymentType PaymentMethod { get; set; } = EnumPaymentType.NONE;
         public string? Remarks { get; set; }
     }
 }

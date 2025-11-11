@@ -4,6 +4,7 @@ using ExpenseManagement.Api.Interfaces.IServices;
 using ExpenseManagement.Shared.Models.DtoModels;
 using ExpenseManagement.Api.Models.Entities;
 using ExpenseManagement.Shared.Models;
+using ExpenseManagement.Shared.Enums;
 
 namespace ExpenseManagement.Api.Services
 {
@@ -52,7 +53,7 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
-                if (string.IsNullOrWhiteSpace(expensesDto.PaymentMethod))
+                if (EnumPaymentType.NONE.ToString().Equals(expensesDto.PaymentMethod.ToString()))
                 {
                     return new ResponseModel
                     {
@@ -136,7 +137,7 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
-                if (string.IsNullOrWhiteSpace(expensesDto.PaymentMethod))
+                if (EnumPaymentType.NONE.ToString().Equals(expensesDto.PaymentMethod.ToString()))
                 {
                     return new ResponseModel
                     {

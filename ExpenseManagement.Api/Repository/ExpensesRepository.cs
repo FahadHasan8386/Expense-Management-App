@@ -57,7 +57,7 @@ namespace ExpenseManagement.Api.Repository
                 @ExpenseCategoryId = expensesDto.ExpenseCategoryId,
                 @ExpenseAmount = expensesDto.ExpenseAmount,
                 @ExpenseDate = expensesDto.ExpenseDate,
-                @PaymentMethod = expensesDto.PaymentMethod,
+                @PaymentMethod = expensesDto.PaymentMethod.ToString(),
                 @Remarks = expensesDto.Remarks,
                 @CreatedBy = expensesDto.CreatedBy
             });
@@ -85,7 +85,7 @@ namespace ExpenseManagement.Api.Repository
                 @ExpenseCategoryId = expensesDto.ExpenseCategoryId,
                 @ExpenseAmount = expensesDto.ExpenseAmount,
                 @ExpenseDate = expensesDto.ExpenseDate,
-                @PaymentMethod = expensesDto.PaymentMethod,
+                @PaymentMethod = expensesDto.PaymentMethod.ToString(),
                 @Remarks = expensesDto.Remarks,
                 @ModifiedBy = expensesDto.ModifiedBy,
                 @ExpenseId = expensesDto.ExpenseId

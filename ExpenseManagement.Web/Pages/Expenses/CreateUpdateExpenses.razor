@@ -1,6 +1,5 @@
 ﻿@page "/app/expenses/edit-form/{ExpenseId:long}"
 
-
 <PageTitle>Create Expense</PageTitle>
 
 <div class="container mt-4">
@@ -34,10 +33,10 @@
 					<div class="col-md-4" style="margin-right: 20px;">
 						<label class="form-label fw-semibold">Expense Category</label>
 						<InputSelect @bind-Value="ExpensesDto.ExpenseCategoryId" class="form-control">
-							<option value="">-- Select Category Id --</option>
+							<option selected>===Select Category===</option>
 							@foreach (var category in ExpenseCategoriesViewModel.Where(c => !c.InActive))
 							{
-							<option value="@category.ExpenseCategoryId">@category.ExpenseCategoryId</option>
+								<option value="@category.ExpenseCategoryId">@category.ExpenseCategoryName</option>
 							}
 						</InputSelect>
 					</div>
@@ -45,12 +44,10 @@
 					<div class="col-md-4" style="margin-right: 20px;">
 						<label class="form-label fw-semibold">Payment Method</label>
 						<InputSelect @bind-Value="ExpensesDto.PaymentMethod" class="form-control">
-							<option value="">-- Select Payment Method --</option>
-							<option value="Cash">Cash</option>
-							<option value="Card">Card</option>
-							<option value="Bkash">Bkash</option>
-							<option value="Nagad">Nagad</option>
-							<option value="Bank Transfer">Bank Transfer</option>
+							@foreach (var paymentType in Enum.GetValues<EnumPaymentType>())
+							{
+							<option value="@paymentType.ToString()">@paymentType.GetDisplayName()</option>
+							}
 						</InputSelect>
 					</div>
 
