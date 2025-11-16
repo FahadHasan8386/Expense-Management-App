@@ -22,19 +22,19 @@
     <div class="col-md-3">
         <div class="card shadow-sm border-0 text-center p-3">
             <h6 class="text-muted">Total Expenses</h6>
-            <h3 class="text-danger fw-bold">$1,250</h3>
+            <h3 class="text-danger fw-bold">@(TotalAmount)</h3>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card shadow-sm border-0 text-center p-3">
             <h6 class="text-muted">Total Deposits</h6>
-            <h3 class="text-success fw-bold">$2,500</h3>
+            <h3 class="text-success fw-bold">@(TotalAmountDeposit)</h3>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card shadow-sm border-0 text-center p-3">
             <h6 class="text-muted">Current Balance</h6>
-            <h3 class="text-primary fw-bold">$1,250</h3>
+            <h3 class="text-primary fw-bold">@(CurrentBalance)</h3>
         </div>
     </div>
   
@@ -57,11 +57,18 @@
 
 
 @code{
-	[Parameter]
+
+    [Parameter]
     public long ExpenseId { get; set; }
     private bool IsLoading { get; set; } = false;
+
+    private decimal TotalAmount { get; set; } = 0;
+    private decimal TotalAmountDeposit { get; set; } = 0;
+    private decimal CurrentBalance { get; set; } = 0;
+
     private List<ExpensesViewModel> ExpensesViewModel { get; set; } = [];
-    
+    private List<DepositViewModel> DepositViewModels { get; set; } = [];
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,6 +80,17 @@
     private async Task LoadExpensesAsync()
     {
         ExpensesViewModel = await ExpenseApiService.GetExpensesAsync();
+        TotalAmount = ExpensesViewModel
+            .Where(x => !x.InActive)
+            .Sum(s => s.ExpenseAmount);
+
+        DepositViewModels = await DepositApiService.GetDepositAsync();
+        TotalAmountDeposit = DepositViewModels
+            .Where(x => !x.InActive)
+            .Sum(s => s.DepositAmount);
+
+
+        CurrentBalance = TotalAmountDeposit - TotalAmount;
     }
 
     private void OnExpensesCreateUpdateClick(long expenseId)
