@@ -40,23 +40,46 @@
   
 </div>
 
-<div class="row g-4 mb-4">
-    <div class="col-md-6">
-        <div class="card shadow-sm border-0 p-3">
-            <h6 class="fw-bold mb-3">Expense by Category</h6>
-            <canvas id="expensePieChart"></canvas>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card shadow-sm border-0 p-3">
-            <h6 class="fw-bold mb-3">Monthly Summary</h6>
-            <canvas id="monthlyBarChart"></canvas>
-        </div>
-    </div>
-</div>
+<h4 class="mt-4 mb-2">Recent Expenses</h4>
+
+<table class="table table-bordered table-striped">
+    <thead class="bg-primary text-white">
+        <tr>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th class="text-end">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ExpensesViewModel != null && ExpensesViewModel.Any())
+        {
+            @foreach (var item in ExpensesViewModel
+                    .Where(x => !x.InActive)                 
+                    .OrderByDescending(x => x.ExpenseDate))  
+            {
+                <tr>
+                    <td>@item.ExpenseDate.ToString("dd MMMM, yyyy - dddd")</td>
+                    <td>--</td>
+                    <td>@item.Remarks</td>
+                    <td class="text-end">@item.ExpenseAmount</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center text-muted">No expenses found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p>Total Categories: @ExpenseCategoriesViewModel.Count()</p>
 
 
 @code{
+
+
 
     [Parameter]
     public long ExpenseId { get; set; }
@@ -66,9 +89,9 @@
     private decimal TotalAmountDeposit { get; set; } = 0;
     private decimal CurrentBalance { get; set; } = 0;
 
-    private List<ExpensesViewModel> ExpensesViewModel { get; set; } = [];
     private List<DepositViewModel> DepositViewModels { get; set; } = [];
-
+    private List<ExpenseCategoriesViewModel> ExpenseCategoriesViewModel { get; set; } = [];
+    private List<ExpensesViewModel> ExpensesViewModel { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,7 +102,12 @@
 
     private async Task LoadExpensesAsync()
     {
+        ExpenseCategoriesViewModel = await ExpenseCategoryApiService.GetExpenseCategoriesAsync();
         ExpensesViewModel = await ExpenseApiService.GetExpensesAsync();
+
+       
+       
+
         TotalAmount = ExpensesViewModel
             .Where(x => !x.InActive)
             .Sum(s => s.ExpenseAmount);
@@ -89,9 +117,9 @@
             .Where(x => !x.InActive)
             .Sum(s => s.DepositAmount);
 
-
         CurrentBalance = TotalAmountDeposit - TotalAmount;
     }
+
 
     private void OnExpensesCreateUpdateClick(long expenseId)
     {
