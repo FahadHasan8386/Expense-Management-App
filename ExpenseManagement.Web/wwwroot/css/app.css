@@ -129,4 +129,16 @@ code {
     }
 
 
- 
+.hero-button-gap{
+    align-content: center;
+    align-items: center;
+    text-align: end;
+}
+
+.hero-button-gap > button {
+    margin-right: 10px !important;
+}
+
+.hero-button-gap > button:last-child {
+    margin-right: 0 !important;
+}

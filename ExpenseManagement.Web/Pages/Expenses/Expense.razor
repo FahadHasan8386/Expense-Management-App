@@ -26,7 +26,7 @@
 						<tr>
 							<th>#</th>
 							<th>Expense ID</th>
-							<th>Expense Category Id</th>
+							<th>Expense Category Name</th>
 							<th>Remarks</th>
 							<th>Expense Date</th>
 							<th>Payment Method</th>
@@ -42,7 +42,7 @@
 								<tr>
 									<td style="@(item.InActive ? "color: red" : "color: #000000")">@SL</td>
 									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseId</td>
-									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseCategoryId</td>
+									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseCategories.ExpenseCategoryName</td>
 									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.Remarks</td>									
 									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseDate.ToString("dd MMM, yyyy")</td>
 									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.PaymentMethod</td>

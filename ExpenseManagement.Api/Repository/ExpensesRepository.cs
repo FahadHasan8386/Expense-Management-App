@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Linq;
 using Dapper;
 using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Models.Entities;
@@ -14,14 +13,34 @@ namespace ExpenseManagement.Api.Repository
         public ExpensesRepository(IDbConnection connection)
         {
             _connection = connection;
-        } 
+        }
 
         // Get all   
         public async Task<List<Expenses>> AllExpensesAsync()
         {
-            const string sql = @"SELECT * FROM Expenses";
+            const string sql = @"SELECT
+	                                e.ExpenseId,
+	                                e.ExpenseAmount,
+	                                e.ExpenseDate,
+	                                e.PaymentMethod,
+	                                e.Remarks,
+	                                e.CreatedBy,
+	                                e.CreatedAt,
+	                                e.ModifiedBy,
+	                                e.ModifiedAt,
+	                                e.ExpenseCategoryId,
+	                                ec.ExpenseCategoryName
+                                FROM Expenses AS e
+                                INNER JOIN ExpenseCategories AS ec
+	                                on e.ExpenseCategoryId = ec.ExpenseCategoryId";
             _connection.Open();
-            var expenses = await _connection.QueryAsync<Expenses>(sql);
+            var expenses = await _connection.QueryAsync(sql,
+                map: (Expenses e, ExpenseCategories ec) =>
+                {
+                    e.ExpenseCategories = ec;
+                    return e;
+                },
+                splitOn: "ExpenseCategoryId");
             _connection.Close();
 
             return expenses.ToList();
@@ -96,7 +115,7 @@ namespace ExpenseManagement.Api.Repository
         }
 
         //Update Status Change
-        public async Task<int> UpdateExpenseStatusAsync(long expenseId, bool status ,string changeBy)
+        public async Task<int> UpdateExpenseStatusAsync(long expenseId, bool status, string changeBy)
         {
             var sql = @"UPDATE Expenses
                         SET InActive = @Status,

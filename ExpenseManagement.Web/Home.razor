@@ -2,87 +2,92 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class="container mt-4">
-	<div class="d-flex justify-content-between align-items-center mb-4">
-		<div>
-			<h1 class="fw-bold">Expense Dashboard</h1>
-			<p class="text-muted">Overview of your financial activities</p>
-		</div>
-		<div>
-			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#invoiceModal">
-				<i class="bi bi-wallet2"></i> Invoice
-			</button>
-			<button class="btn btn-primary me-2" @onclick="() => OnExpensesCreateUpdateClick(0)">
-				<i class="bi bi-plus-circle"></i> Add Expense
-			</button>
-			<button class="btn btn-success" @onclick="() => OnDepositCreateUpdateClick(0)">
-				<i class="bi bi-wallet2"></i> Add Deposit
-			</button>
+<div class="row">
+	<div class="col-12">
+		<div class="row">
+			<div class="col-12 col-md-6">
+				<h1 class="fw-bold">Expense Management System</h1>
+				<p class="text-muted">A true tracking of daily financial activities</p>
+			</div>
+			<div class="col-12 col-md-6">
+				<div class="hero-button-gap">
+					<button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#invoiceModal">
+						<i class="bi bi-search"></i> Open Seach
+					</button>
+					<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#depositModal">
+						<i class="bi bi-arrow-up-square"></i> Deposit
+					</button>
+					<button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#expenseModal">
+						<i class="bi bi-arrow-down-square"></i> Expense
+					</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 
-<div class="row g-4 mb-4">
-	<div class="col-md-3">
+<div class="row my-5">
+	<div class="col-12 col-md-4">
 		<div class="card shadow-sm border-0 text-center p-3">
-			<h6 class="text-muted">Total Expenses</h6>
-			<h3 class="text-danger fw-bold">@(TotalAmount)</h3>
+			<h6 class="text-muted">Deposit</h6>
+			<h3 class="text-info fw-bold">@(TotalAmount)</h3>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-12 col-md-4">
 		<div class="card shadow-sm border-0 text-center p-3">
-			<h6 class="text-muted">Total Deposits</h6>
-			<h3 class="text-success fw-bold">@(TotalAmountDeposit)</h3>
+			<h6 class="text-muted">Expense</h6>
+			<h3 class="text-warning fw-bold">@(TotalAmountDeposit)</h3>
 		</div>
 	</div>
-	<div class="col-md-3">
+	<div class="col-12 col-md-4">
 		<div class="card shadow-sm border-0 text-center p-3">
-			<h6 class="text-muted">Current Balance</h6>
-			<h3 class="text-primary fw-bold">@(CurrentBalance)</h3>
+			<h6 class="text-muted">Balance</h6>
+			<h3 class="text-success fw-bold">@(CurrentBalance)</h3>
 		</div>
 	</div>
-
 </div>
 
-<h4 class="mt-4 mb-2">Recent Expenses</h4>
+<div class="row">
+	<div class="col-12 col-md-12">
+		<div class="my-2 text-center">
+			<h4>Expenses at a glance</h4>
+			<p class="text-muted">Last ten activities</p>
+		</div>
 
-<table class="table table-bordered table-striped">
-	<thead class="bg-primary text-white">
-		<tr>
-			<th>Date</th>
-			<th>Category</th>
-			<th>Description</th>
-			<th class="text-end">Amount</th>
-		</tr>
-	</thead>
-	<tbody>
-		@if (ExpensesViewModel != null && ExpensesViewModel.Any())
-		{
-			@foreach (var item in ExpensesViewModel
-					.Where(x => !x.InActive)
-					.OrderByDescending(x => x.ExpenseDate))
-			{
+		<table class="table table-bordered table-striped">
+			<thead class="bg-primary text-white">
 				<tr>
-					<td>@item.ExpenseDate.ToString("dd MMMM, yyyy - dddd")</td>
-					<td>--</td>
-					<td>@item.Remarks</td>
-					<td class="text-end">@item.ExpenseAmount</td>
+					<th>#</th>
+					<th>Date</th>
+					<th>Category</th>
+					<th>Remarks</th>
+					<th>Payment</th>
+					<th class="text-end">Amount</th>
 				</tr>
-			}
-		}
-		else
-		{
-			<tr>
-				<td colspan="4" class="text-center text-muted">No expenses found.</td>
-			</tr>
-		}
-	</tbody>
-</table>
-<p>Total Categories: @ExpenseCategoriesViewModel.Count()</p>
+			</thead>
+			<tbody>
+				<tr>
+					<td>1</td>
+					<td>Date</td>
+					<td>Category</td>
+					<td>Remarks</td>
+					<td>BKASH</td>
+					<td class="text-end">111.000</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="5" class="text-end">Total</td>
+					<td class="text-end">111.000</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
 
 <!-- Invoice Modal -->
 <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="invoiceModalLabel">Search Invoice</h1>
@@ -97,6 +102,43 @@
 		</div>
 	</div>
 </div>
+
+<!-- Deposit Modal -->
+<div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="depositModalLabel">New Deposit</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				...
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Expense Modal -->
+<div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="expenseModalLabel">New Expense</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				...
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 
 @code {
