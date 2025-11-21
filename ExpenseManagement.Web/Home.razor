@@ -3,136 +3,157 @@
 <PageTitle>Home</PageTitle>
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="fw-bold">Expense Dashboard</h1>
-            <p class="text-muted">Overview of your financial activities</p>
-        </div>
-        <div>
-            <button class="btn btn-success" @onclick="() => OnInvoiceClick()">
-                <i class="bi bi-wallet2"></i> Invoice</button>
-            <button class="btn btn-primary me-2" @onclick="() => OnExpensesCreateUpdateClick(0)">
-                <i class="bi bi-plus-circle"></i> Add Expense</button>
-            <button class="btn btn-success" @onclick="() => OnDepositCreateUpdateClick(0)">
-                <i class="bi bi-wallet2"></i> Add Deposit</button>
-        </div>
-    </div>
- </div>
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<div>
+			<h1 class="fw-bold">Expense Dashboard</h1>
+			<p class="text-muted">Overview of your financial activities</p>
+		</div>
+		<div>
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#invoiceModal">
+				<i class="bi bi-wallet2"></i> Invoice
+			</button>
+			<button class="btn btn-primary me-2" @onclick="() => OnExpensesCreateUpdateClick(0)">
+				<i class="bi bi-plus-circle"></i> Add Expense
+			</button>
+			<button class="btn btn-success" @onclick="() => OnDepositCreateUpdateClick(0)">
+				<i class="bi bi-wallet2"></i> Add Deposit
+			</button>
+		</div>
+	</div>
+</div>
 
 <div class="row g-4 mb-4">
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 text-center p-3">
-            <h6 class="text-muted">Total Expenses</h6>
-            <h3 class="text-danger fw-bold">@(TotalAmount)</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 text-center p-3">
-            <h6 class="text-muted">Total Deposits</h6>
-            <h3 class="text-success fw-bold">@(TotalAmountDeposit)</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 text-center p-3">
-            <h6 class="text-muted">Current Balance</h6>
-            <h3 class="text-primary fw-bold">@(CurrentBalance)</h3>
-        </div>
-    </div>
-  
+	<div class="col-md-3">
+		<div class="card shadow-sm border-0 text-center p-3">
+			<h6 class="text-muted">Total Expenses</h6>
+			<h3 class="text-danger fw-bold">@(TotalAmount)</h3>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card shadow-sm border-0 text-center p-3">
+			<h6 class="text-muted">Total Deposits</h6>
+			<h3 class="text-success fw-bold">@(TotalAmountDeposit)</h3>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card shadow-sm border-0 text-center p-3">
+			<h6 class="text-muted">Current Balance</h6>
+			<h3 class="text-primary fw-bold">@(CurrentBalance)</h3>
+		</div>
+	</div>
+
 </div>
 
 <h4 class="mt-4 mb-2">Recent Expenses</h4>
 
 <table class="table table-bordered table-striped">
-    <thead class="bg-primary text-white">
-        <tr>
-            <th>Date</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th class="text-end">Amount</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (ExpensesViewModel != null && ExpensesViewModel.Any())
-        {
-            @foreach (var item in ExpensesViewModel
-                    .Where(x => !x.InActive)                 
-                    .OrderByDescending(x => x.ExpenseDate))  
-            {
-                <tr>
-                    <td>@item.ExpenseDate.ToString("dd MMMM, yyyy - dddd")</td>
-                    <td>--</td>
-                    <td>@item.Remarks</td>
-                    <td class="text-end">@item.ExpenseAmount</td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="4" class="text-center text-muted">No expenses found.</td>
-            </tr>
-        }
-    </tbody>
+	<thead class="bg-primary text-white">
+		<tr>
+			<th>Date</th>
+			<th>Category</th>
+			<th>Description</th>
+			<th class="text-end">Amount</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (ExpensesViewModel != null && ExpensesViewModel.Any())
+		{
+			@foreach (var item in ExpensesViewModel
+					.Where(x => !x.InActive)
+					.OrderByDescending(x => x.ExpenseDate))
+			{
+				<tr>
+					<td>@item.ExpenseDate.ToString("dd MMMM, yyyy - dddd")</td>
+					<td>--</td>
+					<td>@item.Remarks</td>
+					<td class="text-end">@item.ExpenseAmount</td>
+				</tr>
+			}
+		}
+		else
+		{
+			<tr>
+				<td colspan="4" class="text-center text-muted">No expenses found.</td>
+			</tr>
+		}
+	</tbody>
 </table>
 <p>Total Categories: @ExpenseCategoriesViewModel.Count()</p>
 
+<!-- Invoice Modal -->
+<div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="invoiceModalLabel">Search Invoice</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				...
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary">Search</button>
+			</div>
+		</div>
+	</div>
+</div>
 
-@code{
 
-    [Parameter]
-    public long ExpenseId { get; set; }
-    private bool IsLoading { get; set; } = false;
+@code {
 
-    private decimal TotalAmount { get; set; } = 0;
-    private decimal TotalAmountDeposit { get; set; } = 0;
-    private decimal CurrentBalance { get; set; } = 0;
+	[Parameter]
+	public long ExpenseId { get; set; }
+	private bool IsLoading { get; set; } = false;
 
-    private List<DepositViewModel> DepositViewModels { get; set; } = [];
-    private List<ExpenseCategoriesViewModel> ExpenseCategoriesViewModel { get; set; } = [];
-    private List<ExpensesViewModel> ExpensesViewModel { get; set; } = [];
+	private decimal TotalAmount { get; set; } = 0;
+	private decimal TotalAmountDeposit { get; set; } = 0;
+	private decimal CurrentBalance { get; set; } = 0;
 
-    protected override async Task OnInitializedAsync()
-    {
-        IsLoading = true;
-        await LoadExpensesAsync();
-        IsLoading = false;
-    }
+	private List<DepositViewModel> DepositViewModels { get; set; } = [];
+	private List<ExpenseCategoriesViewModel> ExpenseCategoriesViewModel { get; set; } = [];
+	private List<ExpensesViewModel> ExpensesViewModel { get; set; } = [];
 
-    private async Task LoadExpensesAsync()
-    {
-        ExpenseCategoriesViewModel = await ExpenseCategoryApiService.GetExpenseCategoriesAsync();
-        ExpensesViewModel = await ExpenseApiService.GetExpensesAsync();
+	protected override async Task OnInitializedAsync()
+	{
+		IsLoading = true;
+		await LoadExpensesAsync();
+		IsLoading = false;
+	}
 
-       
-       
+	private async Task LoadExpensesAsync()
+	{
+		ExpenseCategoriesViewModel = await ExpenseCategoryApiService.GetExpenseCategoriesAsync();
+		ExpensesViewModel = await ExpenseApiService.GetExpensesAsync();
 
-        TotalAmount = ExpensesViewModel
-            .Where(x => !x.InActive)
-            .Sum(s => s.ExpenseAmount);
 
-        DepositViewModels = await DepositApiService.GetDepositAsync();
-        TotalAmountDeposit = DepositViewModels
-            .Where(x => !x.InActive)
-            .Sum(s => s.DepositAmount);
 
-        CurrentBalance = TotalAmountDeposit - TotalAmount;
-    }
 
-    private void OnInvoiceClick()
-    {
-        NavigationManager.NavigateTo($"/app/invoice");
-    }
+		TotalAmount = ExpensesViewModel
+			.Where(x => !x.InActive)
+			.Sum(s => s.ExpenseAmount);
 
-    private void OnExpensesCreateUpdateClick(long expenseId)
-    {
-        NavigationManager.NavigateTo($"/app/expenses/edit-form/{expenseId}");
-    }
+		DepositViewModels = await DepositApiService.GetDepositAsync();
+		TotalAmountDeposit = DepositViewModels
+			.Where(x => !x.InActive)
+			.Sum(s => s.DepositAmount);
 
-    private void OnDepositCreateUpdateClick(long depositId)
-    {
-        NavigationManager.NavigateTo($"/app/deposits/edit-form/{depositId}");
-    }
+		CurrentBalance = TotalAmountDeposit - TotalAmount;
+	}
 
-    
+	private void OnInvoiceClick()
+	{
+		NavigationManager.NavigateTo($"/app/invoice");
+	}
+
+	private void OnExpensesCreateUpdateClick(long expenseId)
+	{
+		NavigationManager.NavigateTo($"/app/expenses/edit-form/{expenseId}");
+	}
+
+	private void OnDepositCreateUpdateClick(long depositId)
+	{
+		NavigationManager.NavigateTo($"/app/deposits/edit-form/{depositId}");
+	}
+
+
 }
