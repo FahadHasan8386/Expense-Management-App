@@ -57,33 +57,48 @@
 		<table class="table table-bordered table-striped">
 			<thead class="bg-primary text-white">
 				<tr>
-					<th>#</th>
-					<th>Date</th>
-					<th>Category</th>
-					<th>Remarks</th>
-					<th>Payment</th>
-					<th class="text-end">Amount</th>
+					<th class="text-left">#</th>
+					<th class="text-center">Date</th>
+					<th class="text-center">Category</th>
+					<th class ="text-center">Remarks</th>
+					<th class="text-center">Payment</th>
+					<th class="text-center">Amount</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>1</td>
-					<td>Date</td>
-					<td>Category</td>
-					<td>Remarks</td>
-					<td>BKASH</td>
-					<td class="text-end">111.000</td>
-				</tr>
+				@if (ExpensesViewModel.Any())
+				{
+					@foreach (var item in ExpensesViewModel)
+					{
+						<tr>
+							<td>@SL</td>
+							<td class="text-center">@item.ExpenseDate.ToString("dd MMM, yyyy")</td>
+							<td class="text-center">@item.ExpenseCategories.ExpenseCategoryName</td>
+							<td class="text-center">@item.Remarks</td>
+							<td class="text-center">@item.PaymentMethod</td>
+							<td class="text-center">@item.ExpenseAmount</td>
+							
+						</tr>
+						SL++;
+					}
+				}
+				else
+				{
+					<tr>
+						<td colspan="6" style="text-align: center; padding: 8px 0; color: red;">No Record Found!</td>
+					</tr>
+				}
 			</tbody>
 			<tfoot>
 				<tr>
 					<td colspan="5" class="text-end">Total</td>
-					<td class="text-end">111.000</td>
+					<td class="text-center">@ExpenseTotalAmount</td>
 				</tr>
 			</tfoot>
 		</table>
 	</div>
 </div>
+
 
 <!-- Invoice Modal -->
 <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
@@ -113,30 +128,12 @@
 			</div>
 			<div class="modal-body row">
 
-				<div class="col-md-4 mb-3">
-					<label class="form-label fw-semibold">Deposit Date</label>
-					<InputDate @bind-Value="DepositDto.DepositDate" class="form-control" />
-				</div>
-
-				<div class="col-md-4 mb-3">
-					<label class="form-label fw-semibold">Deposit Amount</label>
-					<InputNumber @bind-Value="DepositDto.DepositAmount"
-								 class="form-control"
-								 placeholder="Enter deposit amount" />
-				</div>
-
-				<div class="col-md-12 mb-3">
-					<label class="form-label fw-semibold">Remarks</label>
-					<InputTextArea @bind-Value="DepositDto.Remarks"
-								   class="form-control"
-								   rows="3"
-								   placeholder="Write remarks..." />
-				</div>
+			....
 
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" @onclick="OnFomSubmitClickAsync">Save</button>
+				<button type="button" class="btn btn-primary">Save</button>
 			</div>
 
 
@@ -169,13 +166,13 @@
 	[Parameter]
 	public long ExpenseId { get; set; }
 	private bool IsLoading { get; set; } = false;
+	private long SL { get; set; } = 1;
 
 	private decimal TotalAmount { get; set; } = 0;
 	private decimal TotalAmountDeposit { get; set; } = 0;
 	private decimal CurrentBalance { get; set; } = 0;
+	private decimal ExpenseTotalAmount { get; set; } = 0;
 
-	private DepositDto DepositDto { get; set; } = new();
-	//private DepositViewModel DepositViewModel { get; set; } = new();
 	private List<DepositViewModel> DepositViewModel { get; set; } = [];
 	private List<ExpenseCategoriesViewModel> ExpenseCategoriesViewModel { get; set; } = [];
 	private List<ExpensesViewModel> ExpensesViewModel { get; set; } = [];
@@ -184,32 +181,17 @@
 	{
 		IsLoading = true;
 		
-		await LoadSingleDepositAsync();
 		await LoadExpensesAsync();
 
 		IsLoading = false;
 	}
-
-	private async Task LoadSingleDepositAsync()
-	{
-		DepositViewModel = await DepositApiService.AddDepositAsync(DepositDto);
-
-		DepositDto = new DepositDto
-		{
-			DepositDate = DepositViewModel.DepositDate,
-			DepositAmount = DepositViewModel.DepositAmount,
-			Remarks = DepositViewModel.Remarks
-		};
-	}
-
 
 	private async Task LoadExpensesAsync()
 	{
 		ExpenseCategoriesViewModel = await ExpenseCategoryApiService.GetExpenseCategoriesAsync();
 		ExpensesViewModel = await ExpenseApiService.GetExpensesAsync();
 
-
-
+		ExpenseTotalAmount = ExpensesViewModel.Where(x => !x.InActive).Sum(s => s.ExpenseAmount);
 
 		TotalAmount = ExpensesViewModel
 			.Where(x => !x.InActive)
@@ -227,8 +209,5 @@
 	{
 		NavigationManager.NavigateTo($"/app/invoice");
 	}
-
-	
-
 
 }
