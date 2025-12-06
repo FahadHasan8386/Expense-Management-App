@@ -142,3 +142,10 @@ code {
 .hero-button-gap > button:last-child {
     margin-right: 0 !important;
 }
+
+.ex-cz-modal{
+    background-color: transparent !important;
+    padding: 0px !important;
+    box-sizing: border-box !important;
+    border: none !important;
+}

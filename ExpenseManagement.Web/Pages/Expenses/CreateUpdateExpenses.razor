@@ -2,87 +2,7 @@
 
 <PageTitle>Create Expense</PageTitle>
 
-<div class="container mt-4">
-	<div class="card shadow-lg border-0">
-		<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-			<h4 class="mb-0">
-				@if (ExpenseId == 0)
-				{
-					<span><i class="bi bi-plus-circle"></i> Create Expense</span>
-				}
-				else  
-				{
-					<span><i class="bi bi-pencil-square"></i> Edit Expense</span>
-				}
-			</h4>
-			<a href="/app/expenses" class="btn btn-light btn-sm">
-				<i class="bi bi-arrow-left"></i> Back to List
-			</a>
-		</div>
-		  
-		<div class="card-body">
-				<div class="row mb-3">  
-					@if (ExpenseId > 0) 
-					{
-						<div class="col-md-4" style="margin-right: 20px;">
-							<label class="form-label fw-semibold">Expense ID</label>
-							<InputNumber @bind-Value="ExpensesDto.ExpenseId" class="form-control" readonly />
-						</div>
-					}
-
-					<div class="col-md-4" style="margin-right: 20px;">
-						<label class="form-label fw-semibold">Expense Category</label>
-						<InputSelect @bind-Value="ExpensesDto.ExpenseCategoryId" class="form-control">
-							<option selected>===Select Category===</option>
-							@foreach (var category in ExpenseCategoriesViewModel.Where(c => !c.InActive))
-							{
-								<option value="@category.ExpenseCategoryId">@category.ExpenseCategoryName</option>
-							}
-						</InputSelect>
-					</div>
-
-					<div class="col-md-4" style="margin-right: 20px;">
-						<label class="form-label fw-semibold">Payment Method</label>
-						<InputSelect @bind-Value="ExpensesDto.PaymentMethod" class="form-control">
-							@foreach (var paymentType in Enum.GetValues<EnumPaymentType>())
-							{
-							<option value="@paymentType.ToString()">@paymentType.GetDisplayName()</option>
-							}
-						</InputSelect>
-					</div>
-
-					<div class="col-md-4" style="margin-right: 20px;">
-
-						<label class="form-label fw-semibold">Expense Amount</label>
-						<InputNumber @bind-Value="ExpensesDto.ExpenseAmount" class="form-control" placeholder="Enter expense amount" />
-					</div>
-
-					<div class="col-md-4">
-						<label class="form-label fw-semibold">Expense Date</label>
-						@if (ExpenseId > 0)
-						{
-							<InputDate @bind-Value="ExpensesDto.ExpenseDate" class="form-control disabled" readonly />
-						}
-						else
-						{
-							<InputDate @bind-Value="ExpensesDto.ExpenseDate" class="form-control" />
-						}
-					</div>
-
-					<div class="col-md-12">
-						<label class="form-label fw-semibold">Remarks</label>
-						<InputTextArea @bind-Value="ExpensesDto.Remarks" class="form-control" rows="3" placeholder="Write remarks..." />
-					</div>
-
-				<div class="col-md-12 text-end" style="margin-top: 20px;">
-					<button class="@(ExpenseId > 0 ? "btn btn-warning" : "btn btn-success")" style="padding: 10px 20px;" @onclick="OnFormSubmitClickAsync">
-							@((ExpenseId == 0) ? "Save" : "Update")
-						</button>
-					</div>
-				</div>
-		</div>
-	</div>
-</div>
+<ExpenseComponente IsModal="false" ExpenseId="ExpenseId" ExpensesDto="ExpensesDto" ></ExpenseComponente>
 
 @code {
 	[Parameter]
@@ -90,11 +10,8 @@
 	private ExpensesDto ExpensesDto { get; set; } = new();
 	private ExpensesViewModel ExpensesViewModel { get; set; } = new();
 
-	private List<ExpenseCategoriesViewModel> ExpenseCategoriesViewModel { get; set; } = [];
-
 	protected override async Task OnInitializedAsync()
 	{
-		ExpenseCategoriesViewModel = await ExpenseCategoryApiService.GetExpenseCategoriesAsync();
 		if (ExpenseId > 0)
 			await LoadExpenseAsync();
 	}
@@ -108,20 +25,6 @@
 		ExpensesDto.ExpenseDate = ExpensesViewModel.ExpenseDate;
 		ExpensesDto.PaymentMethod = ExpensesViewModel.PaymentMethod;
 		ExpensesDto.Remarks = ExpensesViewModel.Remarks;
-	}
-
-	private async Task OnFormSubmitClickAsync()
-	{
-		if (ExpenseId == 0)
-		{
-			await ExpenseApiService.CreateExpenseAsync(ExpensesDto);
-		}
-		else
-		{
-			await ExpenseApiService.UpdateExpenseAsync(ExpensesDto);
-		}
-
-		NavigationManager.NavigateTo("/app/expenses");
 	}
 
 }

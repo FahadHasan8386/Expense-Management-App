@@ -37,7 +37,7 @@
 					<tbody>
 					@if (ExpensesViewModel.Any()) 
 					{
-							@foreach (var item in ExpensesViewModel)
+							@foreach (var item in ExpensesViewModel.OrderByDescending(o => o.ExpenseId))
 							{
 								<tr>
 									<td style="@(item.InActive ? "color: red" : "color: #000000")">@SL</td>
@@ -48,13 +48,13 @@
 									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.PaymentMethod</td>
 									<td style="@(item.InActive ? "color: red" : "color: #000000")">@item.ExpenseAmount</td>
 									<td>
-											<button class="btn btn-sm btn-outline-info me-2" @onclick="() => OnExpenseViewClick(item.ExpenseId)">
+											<button class="btn btn-sm btn-outline-info me-1 mb-1" @onclick="() => OnExpenseViewClick(item.ExpenseId)">
 											<i class="bi bi-eye"></i>
 										</button>
-											<button class="btn btn-sm btn-outline-primary me-2" @onclick="() => OnExpensesCreateUpdateClick(item.ExpenseId)">
+											<button class="btn btn-sm btn-outline-primary me-1 mb-1" @onclick="() => OnExpensesCreateUpdateClick(item.ExpenseId)">
 											<i class="bi bi-pencil"></i>
 										</button>
-											<button class="btn btn-sm btn-outline-danger" @onclick="() => OnExpenseDeleteClickAsync(item.ExpenseId)">
+											<button class="btn btn-sm btn-outline-danger me-1 mb-1" @onclick="() => OnExpenseDeleteClickAsync(item.ExpenseId)">
 											<i class="bi bi-trash"></i>
 										</button>
 									</td>
