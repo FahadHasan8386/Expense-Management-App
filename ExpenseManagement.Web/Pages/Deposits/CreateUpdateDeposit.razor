@@ -2,61 +2,7 @@
 
 <PageTitle>Deposit Create</PageTitle>
 
-<div class="container mt-4">
-	<div class="card shadow-lg border-0">
-		<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-			<h4 class="mb-0">
-				@if (DepositId == 0)
-				{
-					<span><i class="bi bi-plus-circle"></i> Create Deposit</span>
-				}
-				else
-				{
-					<span><i class="bi bi-pencil-square"></i> Edit Deposit</span>
-				}
-			</h4>
-			<a href="/app/deposits" class="btn btn-light btn-sm">
-				<i class="bi bi-arrow-left"></i> Back to List   
-			</a>    
-		</div>
-  
-		<div class="card-body">
-			<div class="row">
-				@if (DepositId > 0)
-				{
-					<div class="col-md-4 mb-3">
-						<label class="form-label fw-semibold">Deposit ID</label>
-						<InputNumber @bind-Value="DepositDto.DepositId" class="form-control disabled" readonly />
-					</div>
-				}
-				<div class="@(DepositId > 0 ? "col-md-4 mb-3" : "col-md-6 mb-3")">
-					<label class="form-label fw-semibold">Deposit Date</label>
-					@if (DepositId > 0)
-					{
-						<InputDate @bind-Value="DepositDto.DepositDate" class="form-control disabled" readonly />
-					}
-					else
-					{
-						<InputDate @bind-Value="DepositDto.DepositDate" class="form-control" />
-					}
-				</div>
-				<div class="@(DepositId > 0 ? "col-md-4 mb-3" : "col-md-6 mb-3")">
-					<label class="form-label fw-semibold">Deposit Amount</label>
-					<InputNumber @bind-Value="DepositDto.DepositAmount" class="form-control" placeholder="Enter deposit amount" />
-				</div>
-				<div class="col-md-12 mb-3">
-					<label class="form-label fw-semibold">Remarks</label>
-					<InputTextArea @bind-Value="DepositDto.Remarks" class="form-control" rows="3" placeholder="Write remarks..." />
-				</div>
-				<div class="col-md-12 text-end">
-					<button class="@(DepositId > 0 ? "btn btn-warning" : "btn btn-success")" style="padding: 10px 20px;" @onclick="OnFomSubmitClickAsync">
-						@((DepositId == 0) ? "Save" : "Update")
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+<DepositsComponente IsModal="false" DepositId="DepositId" DepositDto="new()"></DepositsComponente>
 
 @code {
 	[Parameter]

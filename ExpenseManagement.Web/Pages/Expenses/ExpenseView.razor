@@ -16,13 +16,13 @@
 						<tbody>
 							<tr><th>Expense ID</th><td>@ExpensesViewModel.ExpenseId</td></tr>
 
-							<tr><th>Expense Category ID</th><td>@ExpensesViewModel.ExpenseCategoryId</td></tr>
+							<tr><th>Expense Category Name</th><td>@ExpensesViewModel.ExpenseCategories.ExpenseCategoryName</td></tr>
 
 							<tr><th>Expense Amount</th><td>@ExpensesViewModel.ExpenseAmount</td></tr>
 
 							<tr><th>Date</th><td>@ExpensesViewModel.ExpenseDate.ToString("dd MMMM, yyyy - dddd")</td></tr>
 
-							<tr><th>Payment Method</th><td>@ExpensesViewModel.PaymentMethod</td></tr>
+							<tr><th>Payment Method</th><td>@ExpensesViewModel.PaymentMethod</td></tr> 
 
 							<tr><th>Remarks</th><td>@ExpensesViewModel.Remarks</td></tr>
 
@@ -68,7 +68,7 @@
 		ExpensesDto expensesDto = new ExpensesDto
 		{
 			ExpenseId = ExpensesViewModel.ExpenseId,
-			ExpenseCategoryId = ExpensesViewModel.ExpenseCategoryId,		
+			ExpenseCategoryId = ExpensesViewModel.ExpenseCategoryId,
 			ExpenseAmount = ExpensesViewModel.ExpenseAmount,
 			ExpenseDate = ExpensesViewModel.ExpenseDate,
 			PaymentMethod = ExpensesViewModel.PaymentMethod,

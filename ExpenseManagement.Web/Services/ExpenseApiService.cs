@@ -29,7 +29,6 @@ namespace ExpenseManagement.Web.Services
         public async Task<ResponseModel> CreateExpenseAsync(ExpensesDto expensesDto)
         {
             var response = await _httpClient.PostAsJsonAsync("Expenses/AddExpenses", expensesDto);
-            Console.WriteLine($"Raw Response: {response}");
             return await response.Content.ReadFromJsonAsync<ResponseModel>() ?? new();
         }
 
