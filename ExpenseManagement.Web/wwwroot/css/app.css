@@ -149,3 +149,8 @@ code {
     box-sizing: border-box !important;
     border: none !important;
 }
+
+.rm-btn-focus:focus{
+    outline: none !important;
+    box-shadow: none !important;
+}

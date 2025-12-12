@@ -1,0 +1,45 @@
+﻿<div class="container mt-4">
+	<div class="card shadow-lg border-0">
+		<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+			<h4 class="mb-0">
+				<span><i class="bi bi-pencil-square"></i> Query</span>
+			</h4>
+			<button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close" style="color: #fff !important">X</button>
+		</div>
+
+		<div class="card-body">
+			<div class="row mb-3">
+				
+
+				<div class="col-12  col-md-12 text-end">
+					<button class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" style="padding: 10px 20px;" @onclick="OnFormSubmitClickAsync">
+						Search
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+
+	private QueryDto QueryDto { get; set; } = new();
+
+
+	private List<DepositViewModel> DepositViewModels { get; set; } = [];
+	private List<ExpenseCategoriesViewModel> ExpenseCategoriesViewModel { get; set; } = [];
+	private List<ExpensesViewModel> ExpensesViewModels { get; set; } = [];
+
+	protected override async Task OnInitializedAsync()
+	{
+		DepositViewModels = await DepositApiService.GetDepositAsync();
+		ExpenseCategoriesViewModel = await ExpenseCategoryApiService.GetExpenseCategoriesAsync();
+		ExpensesViewModels = await ExpenseApiService.GetExpensesAsync();
+	}
+
+	private async Task OnFormSubmitClickAsync()
+	{
+		
+	}
+
+}

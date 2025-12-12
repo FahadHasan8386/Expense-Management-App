@@ -11,9 +11,16 @@
 					<span><i class="bi bi-pencil-square"></i> Edit Deposit</span>
 				}
 			</h4>
-			<a href="/app/deposits" class="btn btn-light btn-sm">
-				<i class="bi bi-arrow-left"></i> Back to List
-			</a>
+			@if (IsModal)
+			{
+				<button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close" style="color: #fff !important">X</button>
+			}
+			else
+			{
+				<a href="/app/expenses" class="btn btn-light btn-sm">
+					<i class="bi bi-arrow-left"></i> Back to List
+				</a>
+			}
 		</div>
 
 		<div class="card-body">
