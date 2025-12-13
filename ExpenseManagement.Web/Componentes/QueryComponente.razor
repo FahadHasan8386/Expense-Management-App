@@ -10,9 +10,87 @@
 		<div class="card-body">
 			<div class="row mb-3">
 				
+				<div class="row g-3">
+
+                <!-- Query Type -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Query Type</label>
+                    <select class="form-select" @bind="QueryDto.QueryTypes">
+                       @foreach (EnumQueryTypes item in Enum.GetValues(typeof(EnumQueryTypes)))
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Payment Type -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Payment Type</label>
+                    <select class="form-select" @bind="QueryDto.PaymentType">
+                    
+                        @foreach (EnumPaymentType item in Enum.GetValues(typeof(EnumPaymentType)))
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </div>
+
+                <!--Expense Name-->
+                <div class="col-md-6">
+                <label class="form-label fw-semibold">Expense Category</label>
+                <select class="form-select" @bind="QueryDto.ExpenseCategoryId">
+                    <option value="0">All Categories</option>
+
+                    @foreach (var item in ExpenseCategoriesViewModel
+                              .GroupBy(x => x.ExpenseCategoryId)
+                              .Select(g => g.First()))
+                     {
+                        <option value="@item.ExpenseCategoryId">
+                            @item.ExpenseCategoryName
+                        </option>
+                     }
+                </select>
+                </div>
+
+
+                 <!-- Empty Space (Align) -->
+                <div class="col-md-6"></div>
+
+                <!-- From Amount -->
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Min Amount</label>
+                    <input type="number" class="form-control"
+                           placeholder="Min"
+                           @bind="QueryDto.FromAmount" />
+                </div>
+
+                <!-- To Amount -->
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Max Amount</label>
+                    <input type="number" class="form-control"
+                           placeholder="Max"
+                           @bind="QueryDto.ToAmount" />
+                </div>
+
+                <div class="col-md-6"></div>
+                <!-- From Date -->
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">From Date</label>
+                    <input type="date" class="form-control"
+                           @bind="QueryDto.FromDate" />
+                </div>
+
+                <!-- To Date -->
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">To Date</label>
+                    <input type="date" class="form-control"
+                           @bind="QueryDto.ToDate" />
+                </div>
+
+            </div>
 
 				<div class="col-12  col-md-12 text-end">
-					<button class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" style="padding: 10px 20px;" @onclick="OnFormSubmitClickAsync">
+					<button class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" style="padding: 10px 20px;" @onclick="OnFormSearchClickAsync">
 						Search
 					</button>
 				</div>
@@ -37,7 +115,7 @@
 		ExpensesViewModels = await ExpenseApiService.GetExpensesAsync();
 	}
 
-	private async Task OnFormSubmitClickAsync()
+	private async Task OnFormSearchClickAsync()
 	{
 		
 	}
