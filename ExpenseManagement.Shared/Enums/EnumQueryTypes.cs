@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ExpenseManagement.Shared.Enums
 {
     public enum EnumQueryTypes
     {
-        [Display(Name = "===Select Query Types===")]
+        [Display(Name = "===Select Query ===")]
         NONE = 0,
         [Display(Name = "Deposit")]
         DepositReport = 1,
