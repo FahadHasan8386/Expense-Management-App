@@ -1,6 +1,184 @@
 ﻿@page "/app/invoice"
-<h3>Invoice</h3>
+
+<style>
+    @@media print {
+        .no-print {
+            display: none !important;
+        }
+
+        .invoice-card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+    }
+
+    .invoice-header {
+        border-bottom: 2px solid #0d6efd;
+    }
+
+    .table-custom th {
+        background-color: #f8f9fa;
+        color: #444;
+    }
+
+    .total-box {
+        background: #f1f5f9;
+        padding: 15px 25px;
+        border-radius: 10px;
+        border-left: 5px solid #0d6efd;
+        display: inline-block;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <button class="btn btn-sm btn-outline-secondary" @onclick="GoBack">
+            <i class="bi bi-arrow-left"></i> Back to Search
+        </button>
+        <button class="btn btn-primary shadow-sm" onclick="window.print()">
+            <i class="bi bi-printer"></i> Print Report
+        </button>
+    </div>
+
+    <div class="card shadow-sm invoice-card">
+        <div class="card-body p-4 p-md-5">
+
+            <div class="row invoice-header pb-3 mb-4">
+                <div class="col-6">
+                    <h2 class="text-primary fw-bold mb-0">EXPENSE SYSTEM</h2>
+                    <small class="text-muted">Financial Activities Report</small>
+                </div>
+                <div class="col-6 text-end">
+                    <h4 class="fw-bold text-uppercase">@(ReportType == EnumQueryTypes.ExpenseReport ? "Expense" : "Deposit") Report</h4>
+                    <p class="mb-0 text-muted">Date: @DateTime.Now.ToString("dd MMM, yyyy")</p>
+                </div>
+            </div>
+
+            <div class="row mb-4 text-secondary small">
+                <div class="col-12">
+                    <span class="badge bg-light text-dark border p-2">
+                        <i class="bi bi-calendar-range"></i> Range: @FromDate.ToString("dd/MM/yyyy") - @ToDate.ToString("dd/MM/yyyy")
+                    </span>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Date</th>
+                            @if (ReportType == EnumQueryTypes.ExpenseReport)
+                            {
+                                <th>Expense Category</th>
+                            }
+                            <th>Description / Note</th>
+                            <th>Payment Method</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (DisplayData != null && DisplayData.Any())
+                        {
+                            int serial = 1;
+                            foreach (var item in DisplayData)
+                            {
+                                <tr>
+                                    <td>@(serial++)</td>
+                                    <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                    @if (ReportType == EnumQueryTypes.ExpenseReport)
+                                    {
+                                        <td>@item.CategoryName</td>
+                                    }
+                                    <td>@item.Description</td>
+                                    <td><span class="text-uppercase small fw-bold">@item.PaymentMethod</span></td>
+                                    <td class="text-end fw-bold">@item.Amount.ToString("N2")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="@(ReportType == EnumQueryTypes.ExpenseReport ? 6 : 5)" class="text-center py-5 text-muted">
+                                    <i class="bi bi-exclamation-circle d-block mb-2" style="font-size: 2rem;"></i>
+                                    No records found for the selected criteria.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-7">
+                    <p class="small text-muted"><em>* This report is generated based on your search filters.</em></p>
+                </div>
+                <div class="col-md-5 text-end">
+                    <div class="total-box">
+                        <span class="text-muted small text-uppercase d-block">Net Total Amount</span>
+                        <h3 class="text-primary fw-bold mb-0">@TotalAmount.ToString("N2") BDT</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
+    [Parameter] public EnumQueryTypes ReportType { get; set; } = EnumQueryTypes.ExpenseReport;
+    [Parameter] public DateTime FromDate { get; set; } = DateTime.Now.Date;
+    [Parameter] public DateTime ToDate { get; set; } = DateTime.Now.Date;
 
+    private List<ReportViewModel> DisplayData = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadReportData();
+    }
+
+    private async Task LoadReportData()
+    {
+        if (ReportType == EnumQueryTypes.ExpenseReport)
+        {
+            var expenses = await ExpenseApiService.GetExpensesAsync();
+            DisplayData = expenses
+                .Where(x => x.ExpenseDate.Date >= FromDate.Date && x.ExpenseDate.Date <= ToDate.Date)
+                .Select(x => new ReportViewModel
+                {
+                    Date = x.ExpenseDate,
+                    //CategoryName = x.ExpenseCategoryName,
+                    Description = x.Remarks,
+                    PaymentMethod = x.PaymentMethod.ToString(),
+                    Amount = x.ExpenseAmount
+                }).ToList();
+        }
+        else
+        {
+            var deposits = await DepositApiService.GetDepositAsync();
+            DisplayData = deposits
+                .Where(x => x.DepositDate.Date >= FromDate.Date && x.DepositDate.Date <= ToDate.Date)
+                .Select(x => new ReportViewModel
+                {
+                    Date = x.DepositDate,
+                    Description = x.Remarks,
+                    //PaymentMethod = x.PaymentMethod?.ToString() ?? "N/A", // Deposit এ PaymentMethod থাকলে আসবে
+                    Amount = x.DepositAmount,
+                    CategoryName = ""
+                }).ToList();
+        }
+    }
+
+    private decimal TotalAmount => DisplayData.Sum(x => x.Amount);
+    private void GoBack() => NavigationManager.NavigateTo("/");
+
+    public class ReportViewModel
+    {
+        public DateTime Date { get; set; }
+        public string? CategoryName { get; set; }
+        public string Description { get; set; } = "";
+        public string PaymentMethod { get; set; } = "";
+        public decimal Amount { get; set; }
+    }
+
+    public enum EnumQueryTypes { ExpenseReport, DepositReport }
 }
