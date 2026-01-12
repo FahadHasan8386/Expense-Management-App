@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace ExpenseManagement.Shared.Models.DtoModels
 {
     public sealed class QueryDto
     {
+        [Required]
         public EnumQueryTypes QueryTypes { get; set; }
         public EnumPaymentType PaymentType { get; set; }
         public long ExpenseCategoryId { get; set; }

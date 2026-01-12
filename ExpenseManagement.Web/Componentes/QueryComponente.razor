@@ -11,7 +11,7 @@
 			<div class="row mb-3">
 				<div class="col-12 col-md-4 mb-3">
 					<label class="form-label fw-semibold">Search For</label>
-					<InputSelect @bind-Value="QueryDto.QueryTypes" @bind-Value:after="OnQueryForChange" class="form-control" >
+					<InputSelect @bind-Value="QueryDto.QueryTypes" @bind-Value:after="OnQueryForChange" class="form-control" required >
 						@foreach (var queryType in Enum.GetValues<EnumQueryTypes>())
 						{
 							<option value="@queryType">@queryType.GetDisplayName()</option>
@@ -94,7 +94,8 @@
 
 	private async Task OnFormSearchClickAsync()
 	{
-		  NavigationManager.NavigateTo($"/app/invoice");
+		  if(!QueryDto.QueryTypes.Equals(EnumQueryTypes.NONE))
+			NavigationManager.NavigateTo($"/app/report/{(int)QueryDto.QueryTypes}");
 	}
 
 }
