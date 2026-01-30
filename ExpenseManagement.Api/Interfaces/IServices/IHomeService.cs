@@ -1,11 +1,10 @@
-﻿using ExpenseManagement.Api.Models.Entities;
-using ExpenseManagement.Shared.Models;
-using ExpenseManagement.Shared.Models.DtoModels;
+﻿using ExpenseManagement.Shared.Models.DtoModels;
+using ExpenseManagement.Shared.Models.ViewModel;
 
 namespace ExpenseManagement.Api.Interfaces.IServices
 {
     public interface IHomeService
     {
-        Task<List<Deposits>> GetResultSerachByUserAsync(QueryDto queryDto);
+        Task<HomeViewModel> GetResultSerachByUserAsync(QueryDto queryDto);
     }
 }

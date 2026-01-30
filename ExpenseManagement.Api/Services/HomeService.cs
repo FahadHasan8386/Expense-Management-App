@@ -1,7 +1,7 @@
 ﻿using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Api.Interfaces.IServices;
-using ExpenseManagement.Api.Models.Entities;
 using ExpenseManagement.Shared.Models.DtoModels;
+using ExpenseManagement.Shared.Models.ViewModel;
 
 namespace ExpenseManagement.Api.Services
 {
@@ -15,7 +15,7 @@ namespace ExpenseManagement.Api.Services
         }
 
         // GET
-        public async Task<List<Deposits>> GetResultSerachByUserAsync(QueryDto queryDto)
+        public async Task<HomeViewModel> GetResultSerachByUserAsync(QueryDto queryDto)
         {
             return await _HomeRepository.ExecuteResultSerachByUserAsync(queryDto);
         }

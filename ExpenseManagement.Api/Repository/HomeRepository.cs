@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using ExpenseManagement.Api.Interfaces.IRepositories;
-using ExpenseManagement.Api.Models.Entities;
+using ExpenseManagement.Shared.Enums;
 using ExpenseManagement.Shared.Models.DtoModels;
 using ExpenseManagement.Shared.Models.ViewModel;
 using System.Data;
@@ -17,22 +17,48 @@ namespace ExpenseManagement.Api.Repository
         }
 
 
-        public async Task<QueryResultViewModel> ExecuteResultSerachByUserAsync(QueryDto queryDto)
+        public async Task<HomeViewModel> ExecuteResultSerachByUserAsync(QueryDto queryDto)
         {
-            var sql = @"SELECT * FROM Deposits";
+            var viewModel = new HomeViewModel();
+
+            if (queryDto.QueryTypes.Equals(EnumQueryTypes.DepositReport))
+                viewModel.DepositViewModels = await ExecuteDeposistSearch(queryDto.FromAmount, queryDto.ToAmount, queryDto.FromDate, queryDto.ToDate);
+
+            if (queryDto.QueryTypes.Equals(EnumQueryTypes.ExpenseReport))
+                viewModel.ExpensesViewModels = await ExecuteExpenseSearch(queryDto.FromAmount, queryDto.ToAmount, queryDto.FromDate, queryDto.ToDate, queryDto.PaymentType);
+
+            return viewModel;
+        }
+
+        private async Task<List<DepositViewModel>> ExecuteDeposistSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate)
+        {
+            const string sql = @"SELECT DepositAmount, DepositDate, Remarks, CreatedBy, ModifiedBy, CreatedAt, ModifiedAt FROM Deposits
+                                WHERE CAST(DepositDate AS DATE) >=  CAST(@FromDate AS DATE) and CAST(DepositDate AS DATE) <= CAST(@ToDate AS DATE)";
             _connection.Open();
-            var deposits = await _connection.QueryAsync<Deposits>(sql);
+            var deposits = await _connection.QueryAsync<DepositViewModel>(sql, new
+            {
+                @FromAmount = fromAmount,
+                @ToAmount = toAmount,
+                @FromDate = fromDate,
+                @ToDate = toDate
+            });
             _connection.Close();
             return deposits.ToList();
         }
 
-        public async Task<Deposits?> ExecuteDeposistSearch(long FromAmount, long ToAmount, DateTime FromDate, DateTime ToDate)
+        private async Task<List<ExpensesViewModel>> ExecuteExpenseSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate, EnumPaymentType paymentType)
         {
-            const string sql = @"SELECT TOP(1) * FROM Deposits WHERE DepositId = @DepositId";
+            const string sql = @"SELECT * FROM Expenses WHERE ExpenseId = @FromAmount ";
             _connection.Open();
-            var deposits = await _connection.QueryAsync<Deposits>(sql, new { @DepositId = depositId });
+            var expenses = await _connection.QueryAsync<ExpensesViewModel>(sql, new
+            {
+                @FromAmount = fromAmount,
+                @ToAmount = toAmount,
+                @FromDate = fromDate,
+                @ToDate = toDate
+            });
             _connection.Close();
-            return deposits.FirstOrDefault();
+            return expenses.ToList();
         }
 
     }
