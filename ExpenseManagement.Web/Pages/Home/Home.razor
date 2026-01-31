@@ -170,7 +170,7 @@
 			.Where(x => !x.InActive)
 			.Sum(s => s.DepositAmount);
 
-		CurrentBalance = TotalAmountDeposit - TotalAmount;
+		CurrentBalance = TotalAmount - TotalAmountDeposit ;
 	}
 
 	private void OnInvoiceClick()
