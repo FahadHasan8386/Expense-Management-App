@@ -24,16 +24,19 @@ namespace ExpenseManagement.Api.Repository
             if (queryDto.QueryTypes.Equals(EnumQueryTypes.DepositReport))
                 viewModel.DepositViewModels = await ExecuteDeposistSearch(queryDto.FromAmount, queryDto.ToAmount, queryDto.FromDate, queryDto.ToDate);
 
-            if (queryDto.QueryTypes.Equals(EnumQueryTypes.ExpenseReport))
-                viewModel.ExpensesViewModels = await ExecuteExpenseSearch(queryDto.FromAmount, queryDto.ToAmount, queryDto.FromDate, queryDto.ToDate, queryDto.PaymentType);
+            else if (queryDto.QueryTypes.Equals(EnumQueryTypes.ExpenseReport))
+                viewModel.ExpensesViewModels = await ExecuteExpenseSearch(queryDto.FromAmount, queryDto.ToAmount, queryDto.FromDate, queryDto.ToDate, queryDto.PaymentType ,queryDto.ExpenseCategoryId);
 
             return viewModel;
         }
 
         private async Task<List<DepositViewModel>> ExecuteDeposistSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate)
         {
-            const string sql = @"SELECT DepositAmount, DepositDate, Remarks, CreatedBy, ModifiedBy, CreatedAt, ModifiedAt FROM Deposits
-                                WHERE CAST(DepositDate AS DATE) >=  CAST(@FromDate AS DATE) and CAST(DepositDate AS DATE) <= CAST(@ToDate AS DATE)";
+            const string sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt FROM Deposits
+                                 WHERE DepositAmount >= @FromAmount
+                                 AND DepositAmount <= @ToAmount
+                                 AND DepositDate >= @FromDate
+                                 AND DepositDate < DATEADD(DAY, 1, @ToDate)";
             _connection.Open();
             var deposits = await _connection.QueryAsync<DepositViewModel>(sql, new
             {
@@ -46,17 +49,31 @@ namespace ExpenseManagement.Api.Repository
             return deposits.ToList();
         }
 
-        private async Task<List<ExpensesViewModel>> ExecuteExpenseSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate, EnumPaymentType paymentType)
+        private async Task<List<ExpensesViewModel>> ExecuteExpenseSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate, EnumPaymentType paymentType, long expenseCategoryId)
         {
-            const string sql = @"SELECT * FROM Expenses WHERE ExpenseId = @FromAmount ";
+
+            const string sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
+                            e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
+                     FROM Expenses e
+                     INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
+                     WHERE e.ExpenseDate >= @FromDate
+                       AND e.ExpenseDate < DATEADD(DAY, 1, @ToDate)
+                       AND e.ExpenseAmount >= @FromAmount
+                       AND e.ExpenseAmount <= @ToAmount
+                       AND e.ExpenseCategoryId = @CategoryId
+                       AND e.PaymentMethod = @PaymentMethod";
+
             _connection.Open();
-            var expenses = await _connection.QueryAsync<ExpensesViewModel>(sql, new
+            var parameters = new
             {
-                @FromAmount = fromAmount,
-                @ToAmount = toAmount,
-                @FromDate = fromDate,
-                @ToDate = toDate
-            });
+                FromAmount = fromAmount,
+                ToAmount = toAmount,
+                FromDate = fromDate,
+                ToDate = toDate,
+                CategoryId = expenseCategoryId, 
+                PaymentMethod = (int)paymentType
+            };
+            var expenses = await _connection.QueryAsync<ExpensesViewModel>(sql, parameters);
             _connection.Close();
             return expenses.ToList();
         }

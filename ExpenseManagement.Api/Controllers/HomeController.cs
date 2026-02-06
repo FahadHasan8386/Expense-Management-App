@@ -20,10 +20,22 @@ namespace ExpenseManagement.Api.Controllers
         }
 
 
-        [HttpPost("SerachByUser")] 
+        [HttpPost("SerachByUser")]
         public async Task<IActionResult> SerachByUserAsync([FromBody] QueryDto queryDto)
         {
             return Ok(await _HomeService.GetResultSerachByUserAsync(queryDto));
         }
+
+
+        [HttpPost("Search")]
+        public async Task<IActionResult> SearchDepositAsync([FromBody] QueryDto queryDto)
+        {
+            {
+                return Ok(await _HomeService.GetDepositResultSerachByUserAsync(queryDto));
+            }
+        }
     }
 }
+    
+    
+

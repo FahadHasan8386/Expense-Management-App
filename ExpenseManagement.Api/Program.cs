@@ -29,11 +29,13 @@ builder.Services.AddScoped<System.Data.IDbConnection>(sp =>
 builder.Services.AddScoped<IDepositsService, DepositsService>();
 builder.Services.AddScoped<IExpenseCategoriesService, ExpenseCategoriesService>();
 builder.Services.AddScoped<IExpensesService, ExpensesService>();
+builder.Services.AddScoped<IHomeService ,HomeService > ();
 
 // Register Repositories
 builder.Services.AddScoped<IDepositsRepository, DepositsRepository>();
 builder.Services.AddScoped<IExpenseCategoriesRepository, ExpenseCategoriesRepository>();
 builder.Services.AddScoped<IExpensesRepository, ExpensesRepository>();
+builder.Services.AddScoped<IHomeRepository, HomeRepository>();
 
 var app = builder.Build();
 
