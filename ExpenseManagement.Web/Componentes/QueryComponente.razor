@@ -12,7 +12,7 @@
 			<div class="row mb-3">
 				<div class="col-12 col-md-4 mb-3">
 					<label class="form-label fw-semibold">Search For</label>
-					<InputSelect @bind-Value="QueryDto.QueryTypes" @bind-Value:after="OnQueryForChange" class="form-control" required >
+					<InputSelect @bind-Value="QueryDto.QueryTypes" @bind-Value:after="OnQueryForChange" class="form-control" required>
 						@foreach (var queryType in Enum.GetValues<EnumQueryTypes>())
 						{
 							<option value="@queryType">@queryType.GetDisplayName()</option>
@@ -33,25 +33,25 @@
 				@if (IsExpenseSearch)
 				{
 					<div class="col-12 col-md-6 mb-3">
-					<label class="form-label fw-semibold">Expense Category</label>
-					<InputSelect @bind-Value="QueryDto.ExpenseCategoryId" class="form-control">
-						<option selected value="0">===Select Category===</option>
-						@foreach (var category in ExpenseCategoriesViewModel.Where(c => !c.InActive))
-						{
-							<option value="@category.ExpenseCategoryId">@category.ExpenseCategoryName</option>
-						}
-					</InputSelect>
-				</div>
+						<label class="form-label fw-semibold">Expense Category</label>
+						<InputSelect @bind-Value="QueryDto.ExpenseCategoryId" class="form-control">
+							<option selected value="0">===Select Category===</option>
+							@foreach (var category in ExpenseCategoriesViewModel.Where(c => !c.InActive))
+							{
+								<option value="@category.ExpenseCategoryId">@category.ExpenseCategoryName</option>
+							}
+						</InputSelect>
+					</div>
 
-				<div class="col-12 col-md-6 mb-3">
-					<label class="form-label fw-semibold">Payment Method</label>
-					<InputSelect @bind-Value="QueryDto.PaymentType" class="form-control">
-						@foreach (var paymentType in Enum.GetValues<EnumPaymentType>())
-						{
-							<option value="@paymentType.ToString()">@paymentType.GetDisplayName()</option>
-						}
-					</InputSelect>
-				</div>
+					<div class="col-12 col-md-6 mb-3">
+						<label class="form-label fw-semibold">Payment Method</label>
+						<InputSelect @bind-Value="QueryDto.PaymentType" class="form-control">
+							@foreach (var paymentType in Enum.GetValues<EnumPaymentType>())
+							{
+								<option value="@paymentType.ToString()">@paymentType.GetDisplayName()</option>
+							}
+						</InputSelect>
+					</div>
 				}
 
 				<div class="col-12 col-md-6 mb-3">
@@ -75,7 +75,7 @@
 </div>
 
 @code {
-	private bool IsExpenseSearch {get; set;} = false;
+	private bool IsExpenseSearch { get; set; } = false;
 	private QueryDto QueryDto { get; set; } = new();
 	private List<DepositViewModel> DepositViewModels { get; set; } = [];
 	private List<ExpenseCategoriesViewModel> ExpenseCategoriesViewModel { get; set; } = [];
@@ -95,8 +95,10 @@
 
 	private async Task OnFormSearchClickAsync()
 	{
-		  if(!QueryDto.QueryTypes.Equals(EnumQueryTypes.NONE))
-			NavigationManager.NavigateTo($"/app/report/{(int)QueryDto.QueryTypes}");
+		if (!QueryDto.QueryTypes.Equals(EnumQueryTypes.NONE))
+			NavigationManager.NavigateTo(
+				$"/app/report/{(int)QueryDto.QueryTypes}/{(int)QueryDto.PaymentType}/{QueryDto.ExpenseCategoryId}/{QueryDto.FromAmount}/{QueryDto.ToAmount}/{QueryDto.FromDate.ToString("dd-mm-yyyy")}/{QueryDto.ToDate.ToString("dd-mm-yyyy")}"
+			);
 	}
 
 }

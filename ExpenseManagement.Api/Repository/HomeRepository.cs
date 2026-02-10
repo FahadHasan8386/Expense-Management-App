@@ -3,7 +3,6 @@ using ExpenseManagement.Api.Interfaces.IRepositories;
 using ExpenseManagement.Shared.Enums;
 using ExpenseManagement.Shared.Models.DtoModels;
 using ExpenseManagement.Shared.Models.ViewModel;
-using Microsoft.IdentityModel.Tokens;
 using System.Data;
 
 namespace ExpenseManagement.Api.Repository
@@ -26,7 +25,7 @@ namespace ExpenseManagement.Api.Repository
                 viewModel.DepositViewModels = await ExecuteDeposistSearch(queryDto.FromAmount, queryDto.ToAmount, queryDto.FromDate, queryDto.ToDate);
 
             else if (queryDto.QueryTypes.Equals(EnumQueryTypes.ExpenseReport))
-                viewModel.ExpensesViewModels = await ExecuteExpenseSearch(queryDto.FromAmount, queryDto.ToAmount, queryDto.FromDate, queryDto.ToDate, queryDto.PaymentType ,queryDto.ExpenseCategoryId);
+                viewModel.ExpensesViewModels = await ExecuteExpenseSearch(queryDto.FromAmount, queryDto.ToAmount, queryDto.FromDate, queryDto.ToDate, queryDto.PaymentType, queryDto.ExpenseCategoryId);
 
             return viewModel;
         }
@@ -34,6 +33,11 @@ namespace ExpenseManagement.Api.Repository
         private async Task<List<DepositViewModel>> ExecuteDeposistSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate)
         {
             string sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt FROM Deposits";
+            object sqlParam = new
+            {
+                @FromDate = fromDate,
+                @ToDate = toDate
+            }; ;
 
             if (!fromAmount.Equals(0) && toAmount.Equals(0))
             {
@@ -42,32 +46,49 @@ namespace ExpenseManagement.Api.Repository
                         WHERE DepositAmount >= @FromAmount
                         AND CAST(DepositDate AS DATE) >= CAST(@FromDate AS DATE)
                         AND CAST(DepositDate AS DATE) <= CAST(@ToDate AS DATE)";
+
+                sqlParam = new
+                {
+                    @FromAmount = fromAmount,
+                    @FromDate = fromDate,
+                    @ToDate = toDate
+                };
             }
 
-            else if (!fromAmount.Equals(0) && !toAmount.Equals(0))
+            if (!toAmount.Equals(0))
             {
-                sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt FROM Deposits
-                                 WHERE DepositAmount >= @FromAmount
-                                 AND DepositAmount <= @ToAmount
-                                 AND CAST(DepositDate AS DATE) >= CAST(@FromDate AS DATE)
-                                 AND CAST(DepositDate AS DATE) <= CAST(@ToDate AS DATE)";
+                sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt
+                        FROM Deposits
+                        WHERE DepositAmount >= @FromAmount
+                        AND DepositAmount <= @ToAmount
+                        AND CAST(DepositDate AS DATE) >= CAST(@FromDate AS DATE)
+                        AND CAST(DepositDate AS DATE) <= CAST(@ToDate AS DATE)";
+
+                sqlParam = new
+                {
+                    @FromAmount = fromAmount,
+                    @ToAmount = toAmount,
+                    @FromDate = fromDate,
+                    @ToDate = toDate
+                };
             }
 
-            else if (fromAmount.Equals(0) && toAmount.Equals(0))
+            if (fromAmount.Equals(0) && toAmount.Equals(0))
             {
-                sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt FROM Deposits
-                                 WHERE  CAST(DepositDate AS DATE) >= CAST(@FromDate AS DATE)
-                                 AND CAST(DepositDate AS DATE) <= CAST(@ToDate AS DATE)";
+                sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt
+                        FROM Deposits
+                        WHERE CAST(DepositDate AS DATE) >= CAST(@FromDate AS DATE)
+                        AND CAST(DepositDate AS DATE) <= CAST(@ToDate AS DATE)";
+
+                sqlParam = new
+                {
+                    @FromDate = fromDate,
+                    @ToDate = toDate
+                };
             }
 
             _connection.Open();
-            var deposits = await _connection.QueryAsync<DepositViewModel>(sql, new
-            {
-                @FromAmount = fromAmount,
-                @ToAmount = toAmount,
-                @FromDate = fromDate,
-                @ToDate = toDate
-            });
+            var deposits = await _connection.QueryAsync<DepositViewModel>(sql: sql, param: sqlParam);
             _connection.Close();
             return deposits.ToList();
         }
@@ -90,7 +111,8 @@ namespace ExpenseManagement.Api.Repository
                           AND e.PaymentMethod = @PaymentMethod";
 
             }
-            else if (!fromAmount.Equals(0) && !toAmount.Equals(0))
+
+            if (!toAmount.Equals(0))
             {
                 sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
                          e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
@@ -103,7 +125,8 @@ namespace ExpenseManagement.Api.Repository
                            AND e.ExpenseCategoryId = @CategoryId
                            AND e.PaymentMethod = @PaymentMethod";
             }
-            else if (fromAmount.Equals(0) && toAmount.Equals(0))
+
+            if (fromAmount.Equals(0) && toAmount.Equals(0))
             {
                 sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
                          e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
@@ -115,16 +138,22 @@ namespace ExpenseManagement.Api.Repository
                            AND e.PaymentMethod = @PaymentMethod";
             }
             _connection.Open();
-            var parameters = new
-            {
-                @FromAmount = fromAmount,
-                @ToAmount = toAmount,
-                @FromDate = fromDate,
-                @ToDate = toDate,
-                @CategoryId = expenseCategoryId,
-                @PaymentMethod = (int)paymentype
-            };
-            var expenses = await _connection.QueryAsync<ExpensesViewModel>(sql, parameters);
+            var expenses = await _connection.QueryAsync(sql,
+                map: (ExpensesViewModel e, ExpenseCategoriesViewModel ec) =>
+                {
+                    e.ExpenseCategories = ec;
+                    return e;
+                },
+                splitOn: "ExpenseCategoryId",
+                param: new
+                {
+                    @FromAmount = fromAmount,
+                    @ToAmount = toAmount,
+                    @FromDate = fromDate,
+                    @ToDate = toDate,
+                    @CategoryId = expenseCategoryId,
+                    @PaymentMethod = paymentype.ToString()
+                });
             _connection.Close();
             return expenses.ToList();
         }
