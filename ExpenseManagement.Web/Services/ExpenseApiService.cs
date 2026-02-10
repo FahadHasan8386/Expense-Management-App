@@ -12,7 +12,7 @@ namespace ExpenseManagement.Web.Services
         public ExpenseApiService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-        }
+        } 
 
         public async Task<List<ExpensesViewModel>> GetExpensesAsync()
         {

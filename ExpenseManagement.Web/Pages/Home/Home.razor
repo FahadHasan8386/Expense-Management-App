@@ -30,13 +30,13 @@
 	<div class="col-12 col-md-4">
 		<div class="card shadow-sm border-0 text-center p-3">
 			<h6 class="text-muted">Deposit</h6>
-			<h3 class="text-info fw-bold">@(TotalAmount)</h3>
+			<h3 class="text-info fw-bold">@(TotalAmountDeposit)</h3>
 		</div>
 	</div>
 	<div class="col-12 col-md-4">
 		<div class="card shadow-sm border-0 text-center p-3">
 			<h6 class="text-muted">Expense</h6>
-			<h3 class="text-warning fw-bold">@(TotalAmountDeposit)</h3>
+			<h3 class="text-warning fw-bold">@(TotalAmountExpense)</h3>
 		</div>
 	</div>
 	<div class="col-12 col-md-4">
@@ -136,7 +136,7 @@
 	private bool IsLoading { get; set; } = false;
 	private long SL { get; set; } = 1;
 
-	private decimal TotalAmount { get; set; } = 0;
+	private decimal TotalAmountExpense { get; set; } = 0;
 	private decimal TotalAmountDeposit { get; set; } = 0;
 	private decimal CurrentBalance { get; set; } = 0;
 	private decimal ExpenseTotalAmount { get; set; } = 0;
@@ -161,7 +161,7 @@
 
 		ExpenseTotalAmount = ExpensesViewModel.Where(x => !x.InActive).Sum(s => s.ExpenseAmount);
 
-		TotalAmount = ExpensesViewModel
+		TotalAmountExpense = ExpensesViewModel
 			.Where(x => !x.InActive)
 			.Sum(s => s.ExpenseAmount);
 
@@ -170,7 +170,7 @@
 			.Where(x => !x.InActive)
 			.Sum(s => s.DepositAmount);
 
-		CurrentBalance = TotalAmount - TotalAmountDeposit ;
+		CurrentBalance = TotalAmountDeposit - TotalAmountExpense;
 	}
 
 	private void OnInvoiceClick()

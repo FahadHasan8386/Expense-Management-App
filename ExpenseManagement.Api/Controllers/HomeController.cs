@@ -12,28 +12,20 @@ namespace ExpenseManagement.Api.Controllers
 
     public class HomeController : ControllerBase
     {
-        public readonly IHomeService _HomeService;
+        public readonly IHomeService _homeService;
 
         public HomeController(IHomeService homeService)
         {
-            _HomeService = homeService;
+            _homeService = homeService;
         }
 
 
         [HttpPost("SerachByUser")]
         public async Task<IActionResult> SerachByUserAsync([FromBody] QueryDto queryDto)
         {
-            return Ok(await _HomeService.GetResultSerachByUserAsync(queryDto));
+            return Ok(await _homeService.GetResultSerachByUserAsync(queryDto));
         }
 
-
-        [HttpPost("Search")]
-        public async Task<IActionResult> SearchDepositAsync([FromBody] QueryDto queryDto)
-        {
-            {
-                return Ok(await _HomeService.GetDepositResultSerachByUserAsync(queryDto));
-            }
-        }
     }
 }
     

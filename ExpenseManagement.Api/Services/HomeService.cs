@@ -20,9 +20,6 @@ namespace ExpenseManagement.Api.Services
             return await _HomeRepository.ExecuteResultSerachByUserAsync(queryDto);
         }
 
-        public async Task<HomeViewModel> GetDepositResultSerachByUserAsync(QueryDto queryDto)
-        {
-            return await _HomeRepository.ExecuteResultSerachByUserAsync(queryDto);
-        }
+       
     }
 }

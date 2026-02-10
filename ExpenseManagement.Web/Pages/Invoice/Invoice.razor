@@ -104,12 +104,24 @@
 
 	private string ReportName { get; set; } = string.Empty;
 
+	private List<HomeViewModel> HomeViewModels { get; set; }
+
+
 	protected EnumQueryTypes QueryTypes { get; private set; }
 
 	protected override async Task OnInitializedAsync()
 	{
+
 		QueryTypes = (EnumQueryTypes)QueryTypeId;
 		if (QueryTypeId > 0)
 			ReportName = QueryTypes.GetDisplayName();
+
+		await LoadReportData();
 	}
+
+	private async Task LoadReportData()
+	{
+		
+	}
+
 }
