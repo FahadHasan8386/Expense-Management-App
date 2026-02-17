@@ -15,7 +15,7 @@ namespace ExpenseManagement.Api.Services
         }
 
         // GET
-        public async Task<HomeViewModel> GetResultSerachByUserAsync(QueryDto queryDto)
+        public async Task<ReportViewModel> GetResultSerachByUserAsync(QueryDto queryDto)
         {
             return await _HomeRepository.ExecuteResultSerachByUserAsync(queryDto);
         }

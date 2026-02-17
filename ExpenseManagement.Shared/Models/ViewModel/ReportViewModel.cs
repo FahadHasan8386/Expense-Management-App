@@ -1,6 +1,6 @@
 ﻿namespace ExpenseManagement.Shared.Models.ViewModel
 {
-    public sealed class HomeViewModel
+    public sealed class ReportViewModel
     {
         public DepositViewModel DepositViewModel { get; set; } = new();
         public ExpensesViewModel ExpensesViewModel { get; set; } = new();

@@ -154,3 +154,24 @@ code {
     outline: none !important;
     box-shadow: none !important;
 }
+
+/* Sidebar container */
+/*.nav-scrollable {
+    background: #484A49;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.em-icons {
+    font-size: 18px;
+}*/
+
+/*Page Layout*/
+/*.page {
+    display: flex;
+    background: #CDD1CF;
+    color: #F5F5F7;
+    font-family: 'Segoe UI', sans-serif;
+}*/

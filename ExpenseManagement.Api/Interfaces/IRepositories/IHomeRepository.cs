@@ -5,6 +5,6 @@ namespace ExpenseManagement.Api.Interfaces.IRepositories
 {
     public interface IHomeRepository
     {
-        Task<HomeViewModel> ExecuteResultSerachByUserAsync(QueryDto queryDto);
+        Task<ReportViewModel> ExecuteResultSerachByUserAsync(QueryDto queryDto);
     }
 }

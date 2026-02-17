@@ -96,9 +96,20 @@
 	private async Task OnFormSearchClickAsync()
 	{
 		if (!QueryDto.QueryTypes.Equals(EnumQueryTypes.NONE))
+		{
 			NavigationManager.NavigateTo(
-				$"/app/report/{(int)QueryDto.QueryTypes}/{(int)QueryDto.PaymentType}/{QueryDto.ExpenseCategoryId}/{QueryDto.FromAmount}/{QueryDto.ToAmount}/{QueryDto.FromDate.ToString("dd-mm-yyyy")}/{QueryDto.ToDate.ToString("dd-mm-yyyy")}"
+				$"/app/report?" +
+				$"QueryTypes={(int)QueryDto.QueryTypes}" +
+				$"&PaymentType={(int)QueryDto.PaymentType}" +
+				$"&ExpenseCategoryId={QueryDto.ExpenseCategoryId}" +
+				$"&FromAmount={QueryDto.FromAmount}" +
+				$"&ToAmount={QueryDto.ToAmount}" +
+				$"&FromDate={QueryDto.FromDate:yyyy-MM-dd}" +
+				$"&ToDate={QueryDto.ToDate:yyyy-MM-dd}"
 			);
+		}
+
+
 	}
 
 }

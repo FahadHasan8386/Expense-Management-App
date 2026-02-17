@@ -1,4 +1,4 @@
-﻿@page "/app/report/{QueryTypes:int}/{PaymentType:int}/{ExpenseCategoryId:long}/{FromAmount:decimal}/{ToAmount:decimal}/{FromDate:DateTime}/{ToDate:DateTime}"
+﻿@page "/app/report"
 
 <div class="container mt-4 mb-5">
 
@@ -98,19 +98,17 @@
 </div>
 
 @code {
-	[Parameter] public int QueryTypes { get; set; }
-	[Parameter] public int PaymentType { get; set; }
-	[Parameter] public long ExpenseCategoryId { get; set; }
-	[Parameter] public decimal FromAmount { get; set; }
-	[Parameter] public decimal ToAmount { get; set; }
-	[Parameter] public DateTime FromDate { get; set; }
-	[Parameter] public DateTime ToDate { get; set; }
-
+	[SupplyParameterFromQuery] public int QueryTypes { get; set; }
+	[SupplyParameterFromQuery] public int PaymentType { get; set; }
+	[SupplyParameterFromQuery] public long ExpenseCategoryId { get; set; }
+	[SupplyParameterFromQuery] public decimal FromAmount { get; set; }
+	[SupplyParameterFromQuery] public decimal ToAmount { get; set; }
+	[SupplyParameterFromQuery] public DateTime FromDate { get; set; }
+	[SupplyParameterFromQuery] public DateTime ToDate { get; set; } 
 	private string ReportName { get; set; } = string.Empty;
-
-	private List<HomeViewModel>? HomeViewModels { get; set; }
-
 	protected EnumQueryTypes EnumQueryTypes { get; private set; }
+	private QueryDto QueryDto { get; set; } = new();
+	private ReportViewModel? ReportViewModels { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -118,12 +116,21 @@
 		if (QueryTypes > 0)
 			ReportName = EnumQueryTypes.GetDisplayName();
 
+		QueryDto.QueryTypes = (EnumQueryTypes)QueryTypes;
+		QueryDto.PaymentType = (EnumPaymentType)PaymentType;
+		QueryDto.ExpenseCategoryId = ExpenseCategoryId;
+		QueryDto.FromAmount = FromAmount;
+		QueryDto.ToAmount = ToAmount;
+		QueryDto.FromDate = FromDate;
+		QueryDto.ToDate = ToDate;
+
 		await LoadReportData();
 	}
 
 	private async Task LoadReportData()
 	{
-		
+		ReportViewModels = await ReportApiService.SearchUserAsync(QueryDto);
+		bool bb = true;
 	}
 
 }

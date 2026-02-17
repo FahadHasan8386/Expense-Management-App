@@ -5,7 +5,7 @@ namespace ExpenseManagement.Api.Interfaces.IServices
 {
     public interface IHomeService
     {
-        Task<HomeViewModel> GetResultSerachByUserAsync(QueryDto queryDto);
+        Task<ReportViewModel> GetResultSerachByUserAsync(QueryDto queryDto);
         
     }
 }

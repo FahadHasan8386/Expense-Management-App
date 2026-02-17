@@ -17,9 +17,9 @@ namespace ExpenseManagement.Api.Repository
         }
 
 
-        public async Task<HomeViewModel> ExecuteResultSerachByUserAsync(QueryDto queryDto)
+        public async Task<ReportViewModel> ExecuteResultSerachByUserAsync(QueryDto queryDto)
         {
-            var viewModel = new HomeViewModel();
+            var viewModel = new ReportViewModel();
 
             if (queryDto.QueryTypes.Equals(EnumQueryTypes.DepositReport))
                 viewModel.DepositViewModels = await ExecuteDeposistSearch(queryDto.FromAmount, queryDto.ToAmount, queryDto.FromDate, queryDto.ToDate);
