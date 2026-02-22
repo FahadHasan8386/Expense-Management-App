@@ -60,6 +60,19 @@ namespace ExpenseManagement.Api.Repository
             _connection.Close();
             return expenses.FirstOrDefault();
         }
+        ///.....
+        public async Task<Expenses?> ExpenseByCategoryIdAsync(long expenseCategoryId)
+        {
+            const string sql = @"SELECT * FROM Expenses WHERE ExpenseCategoryId = @ExpenseCategoryId";
+
+            if (_connection.State == ConnectionState.Closed)
+                _connection.Open();
+
+            var expenses = await _connection.QueryAsync<Expenses>(sql, new { ExpenseCategoryId = expenseCategoryId });
+
+            _connection.Close();
+            return expenses.FirstOrDefault();
+        }
 
 
         //Add

@@ -25,7 +25,7 @@
 				</div>
 				<div class="col-6 text-end">
 					<h4 class="fw-bold text-uppercase">@(ReportName)</h4>
-					<p class="mb-0 text-muted">Date: 01 Jan, 2026</p>
+					<p class="mb-0 text-muted">Search Date: @DateTime.Now.ToString("dd MMM, yyyy")</p>
 				</div>
 			</div>
 
@@ -34,7 +34,7 @@
 				<div class="col-12">
 					<span class="badge bg-light text-dark border p-2">
 						<i class="bi bi-calendar-range"></i>
-						Range: 01/01/2026 - 31/01/2026
+						Range: @QueryDto.FromDate.ToString("dd MMM, yyyy") - @QueryDto.ToDate.ToString("dd MMM, yyyy")
 					</span>
 				</div>
 			</div>
@@ -53,23 +53,34 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>05/01/2026</td>
-							<td>Food</td>
-							<td>Lunch Expense</td>
-							<td>CASH</td>
-							<td class="text-end fw-bold">990.00</td>
-						</tr>
-
-						<tr>
-							<td>2</td>
-							<td>07/01/2026</td>
-							<td>Transport</td>
-							<td>Bus Fare</td>
-							<td>BANK</td>
-							<td class="text-end fw-bold">9000.00</td>
-						</tr>
+						@if (ReportViewModels?.DepositViewModels != null
+							&& ReportViewModels.DepositViewModels.Any())
+						{
+							int index = 1;
+							@foreach (var item in ReportViewModels.DepositViewModels)
+							{
+								<tr>
+									<td>@index</td>
+									<td>@item.DepositDate.ToString("dd/MM/yyyy")</td>
+									<td>@item.</td>
+									<td>Lunch Expense</td>
+									<td>CASH</td>
+									<td class="text-end fw-bold">990.00</td>
+								</tr>
+								index++;
+							}
+						}
+						else
+						{
+							<tr>
+								<td colspan="6" class="text-center text-muted">
+									No data found
+								</td>
+							</tr>
+						}
+						
+							
+							
 					</tbody>
 				</table>
 			</div>

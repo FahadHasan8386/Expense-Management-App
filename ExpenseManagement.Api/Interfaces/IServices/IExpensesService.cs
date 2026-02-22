@@ -1,6 +1,6 @@
-﻿using ExpenseManagement.Shared.Models.DtoModels;
-using ExpenseManagement.Api.Models.Entities;
+﻿using ExpenseManagement.Api.Models.Entities;
 using ExpenseManagement.Shared.Models;
+using ExpenseManagement.Shared.Models.DtoModels;
 
 namespace ExpenseManagement.Api.Interfaces.IServices
 {
@@ -8,6 +8,7 @@ namespace ExpenseManagement.Api.Interfaces.IServices
     {
         Task<List<Expenses>> AllExpensesAsync();
         Task<Expenses?> ExpensesByIdAsync(long expenseId);
+        Task<Expenses?> ExpenseCategoryByIdAsync(long expenseCategoryId);
         Task<ResponseModel> AddExpensesAsync(ExpensesDto expensesDto);
         Task<ResponseModel> UpdateExpensesAsync(ExpensesDto expensesDto);
         Task<ResponseModel> ExpenseInActiveAsync(long expenseId, string changeBy);

@@ -12,10 +12,12 @@ namespace ExpenseManagement.Api.Services
     public class ExpenseCategoriesService : IExpenseCategoriesService
     {
         private readonly IExpenseCategoriesRepository _expenseCategoriesRepository;
+        private readonly IExpensesService _expensesService;
 
-        public ExpenseCategoriesService(IExpenseCategoriesRepository expenseCategoriesRepository)
+        public ExpenseCategoriesService(IExpenseCategoriesRepository expenseCategoriesRepository, IExpensesService expensesService)
         {
             _expenseCategoriesRepository = expenseCategoriesRepository;
+            _expensesService = expensesService;
         }
 
         // Get all  
@@ -30,7 +32,7 @@ namespace ExpenseManagement.Api.Services
             return await _expenseCategoriesRepository.GetExpenseCategoriesByIdAsync(expenseCategoryId);
         }
 
-        // Add new
+        // Add new 
         public async Task<ResponseModel> AddExpenseCategoriesAsync(ExpenseCategoriesDto categoryDto)
         {
             try
@@ -227,6 +229,10 @@ namespace ExpenseManagement.Api.Services
                         Message = "Invaild Id."
                     };
                 }
+
+                
+
+
                 int result;
 
                 using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
