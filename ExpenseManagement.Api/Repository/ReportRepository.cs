@@ -7,11 +7,11 @@ using System.Data;
 
 namespace ExpenseManagement.Api.Repository
 {
-    public class HomeRepository : IHomeRepository
+    public class ReportRepository : IReportRepository
     {
         private readonly IDbConnection _connection;
 
-        public HomeRepository(IDbConnection connection)
+        public ReportRepository(IDbConnection connection)
         {
             _connection = connection;
         }

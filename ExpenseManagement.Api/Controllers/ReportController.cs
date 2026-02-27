@@ -12,9 +12,9 @@ namespace ExpenseManagement.Api.Controllers
 
     public class ReportController : ControllerBase
     {
-        public readonly IHomeService _homeService;
+        public readonly IReportService _homeService;
 
-        public ReportController(IHomeService homeService)
+        public ReportController(IReportService homeService)
         {
             _homeService = homeService;
         }

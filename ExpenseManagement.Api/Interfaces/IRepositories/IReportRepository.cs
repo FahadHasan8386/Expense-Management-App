@@ -3,7 +3,7 @@ using ExpenseManagement.Shared.Models.ViewModel;
 
 namespace ExpenseManagement.Api.Interfaces.IRepositories
 {
-    public interface IHomeRepository
+    public interface IReportRepository
     {
         Task<ReportViewModel> ExecuteResultSerachByUserAsync(QueryDto queryDto);
     }

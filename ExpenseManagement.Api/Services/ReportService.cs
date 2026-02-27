@@ -5,19 +5,19 @@ using ExpenseManagement.Shared.Models.ViewModel;
 
 namespace ExpenseManagement.Api.Services
 {
-    public class HomeService : IHomeService
+    public class ReportService : IReportService
     {
-        private readonly IHomeRepository _HomeRepository;
+        private readonly IReportRepository _ReportRepository;
 
-        public HomeService(IHomeRepository depositsRepository)
+        public ReportService(IReportRepository depositsRepository)
         {
-            _HomeRepository = depositsRepository;
+            _ReportRepository = depositsRepository;
         }
 
         // GET
         public async Task<ReportViewModel> GetResultSerachByUserAsync(QueryDto queryDto)
         {
-            return await _HomeRepository.ExecuteResultSerachByUserAsync(queryDto);
+            return await _ReportRepository.ExecuteResultSerachByUserAsync(queryDto);
         }
 
        
