@@ -59,7 +59,7 @@
 								<tbody>
 								@{
 									int sl = 1;
-									decimal rowTotal = 0;
+									decimal depositTotal = 0;
 									foreach (var item in ReportViewModels.DepositViewModels)
 									{
 											<tr>
@@ -70,11 +70,11 @@
 												<td class="text-end fw-bold">@item.DepositAmount</td>
 											</tr>
 											sl++;
-											rowTotal += item.DepositAmount;
+										depositTotal += item.DepositAmount;
 									}
 									<tr>
-										<td colspan="4" class="text-end">Total:</td>
-										<td class="text-end fw-bold">@rowTotal</td>
+										<td colspan="4" class="text-end">Total :</td>
+										<td class="text-end fw-bold">@depositTotal</td>
 									</tr>
 									}
 								</tbody>
@@ -83,30 +83,37 @@
 						{
 							<thead>
 								<tr>
-									<th style="width:50px;">#</th>
-									<th>Date</th>
-									<th>Category</th>
-									<th>Description</th>
-									<th>Payment</th>
+									<th style="width:30px;" class="text-center">#</th>
+									<th class="text-center">Expense Id</th>
+									<th class="text-center">Category Name</th>
+									<th class="text-center">Description</th>
+									<th class="text-center">Date</th>
+									<th class="text-center">Payment</th>
 									<th class="text-end">Amount</th>
 								</tr>
 							</thead>
 							<tbody>
 								@{
 									int sl = 1;
+									decimal expenseTotal = 0;
 									foreach (var item in ReportViewModels.ExpensesViewModels)
 									{
 										<tr>
-											<td>@sl</td>
-											<td>@item.ExpenseId</td>
-											<td>@item.ExpenseCategories.ExpenseCategoryName</td>
-											<td>@item.ExpenseDate.ToString("dd MMM, yyyy")</td>
-											<td>>@item.PaymentMethod.GetDisplayName()</td>
-											<td>>@item.Remarks</td>
+											<td class="text-center">@sl</td>
+											<td class="text-center">@item.ExpenseId</td>
+											<td class="text-center">@item.ExpenseCategories.ExpenseCategoryName</td>
+											<td class="text-center">@item.Remarks</td>
+											<td class="text-center">@item.ExpenseDate.ToString("dd MMM, yyyy")</td>
+											<td class="text-center">@item.PaymentMethod.GetDisplayName()</td>
 											<td class="text-end fw-bold">@item.ExpenseAmount</td>
 										</tr>
 										sl++;
+										expenseTotal += item.ExpenseAmount;
 									}
+									<tr>
+										<td colspan="6" class="text-end">Total :</td>
+										<td class="text-end fw-bold">@expenseTotal</td>
+									</tr>
 								}
 							</tbody>
 						}

@@ -95,8 +95,11 @@ namespace ExpenseManagement.Api.Repository
 
         private async Task<List<ExpensesViewModel>> ExecuteExpenseSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate, EnumPaymentType paymentype, long expenseCategoryId)
         {
-            string sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
-                            e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt ";
+            string sql = @"SELECT e.ExpenseId, e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
+                            e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt FROM Expenses e
+                            INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
+                            WHERE CAST(e.ExpenseDate AS DATE) >= CAST(@FromDate AS DATE)
+                              AND CAST(ExpenseDate AS DATE) <= CAST(@ToDate AS DATE)" ;
             object sqlParam = new
             {
                 @FromDate = fromDate,
@@ -106,7 +109,7 @@ namespace ExpenseManagement.Api.Repository
             };
             if (!fromAmount.Equals(0) && toAmount.Equals(0))
             {
-                sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
+                sql = @"SELECT e.ExpenseId, e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
                         e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
                         FROM Expenses e
                         INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
@@ -127,7 +130,7 @@ namespace ExpenseManagement.Api.Repository
 
             if (!toAmount.Equals(0))
             {
-                sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
+                sql = @"SELECT e.ExpenseId, e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
                          e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
                          FROM Expenses e
                          INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
@@ -150,7 +153,7 @@ namespace ExpenseManagement.Api.Repository
 
             if (fromAmount.Equals(0) && toAmount.Equals(0))
             {
-                sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
+                sql = @"SELECT e.ExpenseId, e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
                          e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
                          FROM Expenses e
                          INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
