@@ -181,6 +181,16 @@ namespace ExpenseManagement.Api.Services
                     };
                 }
 
+                var expenses = await _expensesService.ExpensesByCategoryIdAync(expenseCategoryId);
+                if (expenses.Any())
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Cannot be inactive this category."
+                    };
+                }
+
                 int result;
 
                 using (TransactionScope transactionScope = new(TransactionScopeAsyncFlowOption.Enabled))
@@ -226,12 +236,19 @@ namespace ExpenseManagement.Api.Services
                     return new ResponseModel
                     {
                         Code = 400,
-                        Message = "Invaild Id."
+                        Message = "Invaild catgory Id."
                     };
                 }
 
-                
-
+                var expenses = await _expensesService.ExpensesByCategoryIdAync(expenseCategoryId);
+                if (expenses.Any())
+                {
+                    return new ResponseModel
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Message = "Cannot be delete this category."
+                    };
+                }
 
                 int result;
 

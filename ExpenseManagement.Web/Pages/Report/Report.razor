@@ -41,48 +41,85 @@
 
 			<!-- Table -->
 			<div class="table-responsive">
-				<table class="table table-bordered table-custom">
-					<thead>
-						<tr>
-							<th style="width:50px;">#</th>
-							<th>Date</th>
-							<th>Category</th>
-							<th>Description</th>
-							<th>Payment</th>
-							<th class="text-end">Amount</th>
-						</tr>
-					</thead>
-					<tbody>
-						@if (ReportViewModels?.DepositViewModels != null
-							&& ReportViewModels.DepositViewModels.Any())
-						{
-							int index = 1;
-							@foreach (var item in ReportViewModels.DepositViewModels)
+				@if(ReportViewModels is not null)
+				{
+					<table class="table table-bordered table-custom">
+						
+							@if (ReportViewModels.DepositViewModels.Any())
 							{
-								<tr>
-									<td>@index</td>
-									<td>@item.DepositDate.ToString("dd/MM/yyyy")</td>
-									<td>@item.</td>
-									<td>Lunch Expense</td>
-									<td>CASH</td>
-									<td class="text-end fw-bold">990.00</td>
-								</tr>
-								index++;
+								<thead>
+									<tr>
+										<th style="width:30px;" class="text-center">#</th>
+										<th class="text-center">Deposit ID</th>
+										<th class="text-center">Date</th>
+										<th class="text-center">Remarks</th>
+										<th class="text-center">Amount</th>
+									</tr>
+								</thead>
+								<tbody>
+								@{
+									int sl = 1;
+									decimal rowTotal = 0;
+									foreach (var item in ReportViewModels.DepositViewModels)
+									{
+											<tr>
+												<td class="text-center">@sl</td>
+												<td class="text-start">@item.DepositId</td>
+												<td class="text-start">@item.DepositDate.ToString("dd MMM, yyyy")</td>
+												<td class="text-start">@item.Remarks</td>
+												<td class="text-end fw-bold">@item.DepositAmount</td>
+											</tr>
+											sl++;
+											rowTotal += item.DepositAmount;
+									}
+									<tr>
+										<td colspan="4" class="text-end">Total:</td>
+										<td class="text-end fw-bold">@rowTotal</td>
+									</tr>
+									}
+								</tbody>
 							}
+						else if (ReportViewModels.ExpensesViewModels.Any())
+						{
+							<thead>
+								<tr>
+									<th style="width:50px;">#</th>
+									<th>Date</th>
+									<th>Category</th>
+									<th>Description</th>
+									<th>Payment</th>
+									<th class="text-end">Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								@{
+									int sl = 1;
+									foreach (var item in ReportViewModels.ExpensesViewModels)
+									{
+										<tr>
+											<td>@sl</td>
+											<td>@item.ExpenseId</td>
+											<td>@item.ExpenseCategories.ExpenseCategoryName</td>
+											<td>@item.ExpenseDate.ToString("dd MMM, yyyy")</td>
+											<td>>@item.PaymentMethod.GetDisplayName()</td>
+											<td>>@item.Remarks</td>
+											<td class="text-end fw-bold">@item.ExpenseAmount</td>
+										</tr>
+										sl++;
+									}
+								}
+							</tbody>
 						}
 						else
-						{
-							<tr>
-								<td colspan="6" class="text-center text-muted">
-									No data found
-								</td>
-							</tr>
-						}
-						
-							
-							
-					</tbody>
-				</table>
+							{
+								<tr>
+									<td colspan="6" class="text-center text-muted">
+										No data found
+									</td>
+								</tr>
+							}
+					</table>
+				}
 			</div>
 
 			<!-- Footer -->
@@ -91,16 +128,6 @@
 					<p class="small text-muted">
 						<em>* This is a system generated report.</em>
 					</p>
-				</div>
-				<div class="col-md-5 text-end">
-					<div class="total-box">
-						<span class="text-muted small text-uppercase d-block">
-							Net Total Amount
-						</span>
-						<h3 class="text-primary fw-bold mb-0">
-							330.00 BDT
-						</h3>
-					</div>
 				</div>
 			</div>
 
@@ -141,7 +168,5 @@
 	private async Task LoadReportData()
 	{
 		ReportViewModels = await ReportApiService.SearchUserAsync(QueryDto);
-		bool bb = true;
 	}
-
 }

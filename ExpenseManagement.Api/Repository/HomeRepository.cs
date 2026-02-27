@@ -32,7 +32,7 @@ namespace ExpenseManagement.Api.Repository
 
         private async Task<List<DepositViewModel>> ExecuteDeposistSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate)
         {
-            string sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt FROM Deposits";
+            string sql = @"SELECT DepositId, DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt FROM Deposits";
             object sqlParam = new
             {
                 @FromDate = fromDate,
@@ -41,7 +41,7 @@ namespace ExpenseManagement.Api.Repository
 
             if (!fromAmount.Equals(0) && toAmount.Equals(0))
             {
-                sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt 
+                sql = @"SELECT DepositId, DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt 
                         FROM Deposits
                         WHERE DepositAmount >= @FromAmount
                         AND CAST(DepositDate AS DATE) >= CAST(@FromDate AS DATE)
@@ -57,7 +57,7 @@ namespace ExpenseManagement.Api.Repository
 
             if (!toAmount.Equals(0))
             {
-                sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt
+                sql = @"SELECT DepositId, DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt
                         FROM Deposits
                         WHERE DepositAmount >= @FromAmount
                         AND DepositAmount <= @ToAmount
@@ -75,7 +75,7 @@ namespace ExpenseManagement.Api.Repository
 
             if (fromAmount.Equals(0) && toAmount.Equals(0))
             {
-                sql = @"SELECT DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt
+                sql = @"SELECT DepositId, DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt
                         FROM Deposits
                         WHERE CAST(DepositDate AS DATE) >= CAST(@FromDate AS DATE)
                         AND CAST(DepositDate AS DATE) <= CAST(@ToDate AS DATE)";

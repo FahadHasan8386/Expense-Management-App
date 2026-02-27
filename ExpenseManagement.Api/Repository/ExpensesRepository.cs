@@ -49,29 +49,73 @@ namespace ExpenseManagement.Api.Repository
         // Get Expenses By Id
         public async Task<Expenses?> ExpensesByIdAsync(long expenseId)
         {
-            const string sql = @"SELECT * FROM Expenses WHERE ExpenseId = @ExpenseId";
-
-            if (_connection.State == ConnectionState.Closed)
-                _connection.Open();
-
-            // Pass the expenseId parameter to Dapper
-            var expenses = await _connection.QueryAsync<Expenses>(sql, new { ExpenseId = expenseId });
-
+            const string sql = @"SELECT
+	                                e.ExpenseId,
+	                                e.ExpenseAmount,
+	                                e.ExpenseDate,
+	                                e.PaymentMethod,
+	                                e.Remarks,
+	                                e.CreatedBy,
+	                                e.CreatedAt,
+	                                e.ModifiedBy,
+	                                e.ModifiedAt,
+	                                e.ExpenseCategoryId,
+	                                ec.ExpenseCategoryName
+                                FROM Expenses AS e
+                                INNER JOIN ExpenseCategories AS ec
+	                                on e.ExpenseCategoryId = ec.ExpenseCategoryId
+								WHERE e.ExpenseId = @ExpenseId";
+            _connection.Open();
+            var expenses = await _connection.QueryAsync(sql,
+                map: (Expenses e, ExpenseCategories ec) =>
+                {
+                    e.ExpenseCategories = ec;
+                    return e;
+                },
+                param: new
+                {
+                    @ExpenseId = expenseId
+                },
+                splitOn: "ExpenseCategoryId");
             _connection.Close();
+
             return expenses.FirstOrDefault();
         }
-        ///.....
-        public async Task<Expenses?> ExpenseByCategoryIdAsync(long expenseCategoryId)
+        
+
+        public async Task<List<Expenses>> ExpenseByCategoryIdAsync(long expenseCategoryId)
         {
-            const string sql = @"SELECT * FROM Expenses WHERE ExpenseCategoryId = @ExpenseCategoryId";
-
-            if (_connection.State == ConnectionState.Closed)
-                _connection.Open();
-
-            var expenses = await _connection.QueryAsync<Expenses>(sql, new { ExpenseCategoryId = expenseCategoryId });
-
+            const string sql = @"SELECT
+	                                e.ExpenseId,
+	                                e.ExpenseAmount,
+	                                e.ExpenseDate,
+	                                e.PaymentMethod,
+	                                e.Remarks,
+	                                e.CreatedBy,
+	                                e.CreatedAt,
+	                                e.ModifiedBy,
+	                                e.ModifiedAt,
+	                                e.ExpenseCategoryId,
+	                                ec.ExpenseCategoryName
+                                FROM Expenses AS e
+                                INNER JOIN ExpenseCategories AS ec
+	                                on e.ExpenseCategoryId = ec.ExpenseCategoryId
+								WHERE e.ExpenseCategoryId = @ExpenseCategoryId";
+            _connection.Open();
+            var expenses = await _connection.QueryAsync(sql,
+                map: (Expenses e, ExpenseCategories ec) =>
+                {
+                    e.ExpenseCategories = ec;
+                    return e;
+                },
+                param: new
+                {
+                    @ExpenseCategoryId = expenseCategoryId
+                },
+                splitOn: "ExpenseCategoryId");
             _connection.Close();
-            return expenses.FirstOrDefault();
+
+            return expenses.ToList();
         }
 
 

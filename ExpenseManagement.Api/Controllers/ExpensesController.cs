@@ -33,7 +33,7 @@ namespace ExpenseManagement.Api.Controllers
         [HttpGet("ExpenseCategoryById/{expenseCategoryId}")]
         public async Task<IActionResult> ExpenseCategoryByIdAsync(long expenseCategoryId)
         {
-            return Ok(await _expensesService.ExpenseCategoryByIdAsync(expenseCategoryId));
+            return Ok(await _expensesService.ExpensesByCategoryIdAync(expenseCategoryId));
         }
 
         // Add new expense

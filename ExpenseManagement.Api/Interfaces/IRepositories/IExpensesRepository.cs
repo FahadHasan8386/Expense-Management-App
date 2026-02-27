@@ -7,7 +7,7 @@ namespace ExpenseManagement.Api.Interfaces.IRepositories
     {
         Task<List<Expenses>> AllExpensesAsync();
         Task<Expenses?> ExpensesByIdAsync(long expenseId);
-        Task<Expenses?> ExpenseByCategoryIdAsync(long expenseCategoryId);
+        Task<List<Expenses>> ExpenseByCategoryIdAsync(long expenseCategoryId);
         Task<long> AddExpensesAsync(ExpensesDto expensesDto);
         Task<int> UpdateExpensesAsync(ExpensesDto expensesDto);
         Task<int> UpdateExpenseStatusAsync(long expenseId, bool status, string changeBy);

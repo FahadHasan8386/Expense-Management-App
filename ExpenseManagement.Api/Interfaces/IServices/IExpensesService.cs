@@ -8,7 +8,7 @@ namespace ExpenseManagement.Api.Interfaces.IServices
     {
         Task<List<Expenses>> AllExpensesAsync();
         Task<Expenses?> ExpensesByIdAsync(long expenseId);
-        Task<Expenses?> ExpenseCategoryByIdAsync(long expenseCategoryId);
+        Task<List<Expenses>> ExpensesByCategoryIdAync(long expenseCategoryId);
         Task<ResponseModel> AddExpensesAsync(ExpensesDto expensesDto);
         Task<ResponseModel> UpdateExpensesAsync(ExpensesDto expensesDto);
         Task<ResponseModel> ExpenseInActiveAsync(long expenseId, string changeBy);
