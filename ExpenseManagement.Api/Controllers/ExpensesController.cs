@@ -30,8 +30,9 @@ namespace ExpenseManagement.Api.Controllers
             return Ok(await _expensesService.ExpensesByIdAsync(expenseId));
         }
 
+        //Get Expense Category By Id
         [HttpGet("ExpenseCategoryById/{expenseCategoryId}")]
-        public async Task<IActionResult> ExpenseCategoryByIdAsync(long expenseCategoryId)
+        public async Task<IActionResult> ExpensesByCategoryIdAync(long expenseCategoryId)
         {
             return Ok(await _expensesService.ExpensesByCategoryIdAync(expenseCategoryId));
         }

@@ -37,7 +37,7 @@ namespace ExpenseManagement.Api.Repository
             {
                 @FromDate = fromDate,
                 @ToDate = toDate
-            }; ;
+            }; 
 
             if (!fromAmount.Equals(0) && toAmount.Equals(0))
             {
@@ -97,7 +97,13 @@ namespace ExpenseManagement.Api.Repository
         {
             string sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
                             e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt ";
-
+            object sqlParam = new
+            {
+                @FromDate = fromDate,
+                @ToDate = toDate,
+                @CategoryId = expenseCategoryId,
+                @PaymentMethod = paymentype.ToString()
+            };
             if (!fromAmount.Equals(0) && toAmount.Equals(0))
             {
                 sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
@@ -109,7 +115,14 @@ namespace ExpenseManagement.Api.Repository
                           AND e.ExpenseAmount >= @FromAmount
                           AND e.ExpenseCategoryId = @CategoryId
                           AND e.PaymentMethod = @PaymentMethod";
-
+                sqlParam = new
+                {
+                    @FromAmount = fromAmount,
+                    @FromDate = fromDate,
+                    @ToDate = toDate,
+                    @CategoryId = expenseCategoryId,
+                    @PaymentMethod = paymentype.ToString()
+                };
             }
 
             if (!toAmount.Equals(0))
@@ -124,6 +137,15 @@ namespace ExpenseManagement.Api.Repository
                            AND e.ExpenseAmount <= @ToAmount
                            AND e.ExpenseCategoryId = @CategoryId
                            AND e.PaymentMethod = @PaymentMethod";
+                sqlParam = new
+                {
+                    @FromAmount = fromAmount,
+                    @ToAmount = toAmount,
+                    @FromDate = fromDate,
+                    @ToDate = toDate,
+                    @CategoryId = expenseCategoryId,
+                    @PaymentMethod = paymentype.ToString()
+                };
             }
 
             if (fromAmount.Equals(0) && toAmount.Equals(0))
@@ -136,55 +158,18 @@ namespace ExpenseManagement.Api.Repository
                            AND CAST(e.ExpenseDate AS DATE) <= @ToDate
                            AND e.ExpenseCategoryId = @CategoryId
                            AND e.PaymentMethod = @PaymentMethod";
-            }
-            _connection.Open();
-            var expenses = await _connection.QueryAsync(sql,
-                map: (ExpensesViewModel e, ExpenseCategoriesViewModel ec) =>
+                sqlParam = new
                 {
-                    e.ExpenseCategories = ec;
-                    return e;
-                },
-                splitOn: "ExpenseCategoryId",
-                param: new
-                {
-                    @FromAmount = fromAmount,
-                    @ToAmount = toAmount,
                     @FromDate = fromDate,
                     @ToDate = toDate,
                     @CategoryId = expenseCategoryId,
                     @PaymentMethod = paymentype.ToString()
-                });
+                };
+            }
+            _connection.Open();
+            var expennses = await _connection.QueryAsync<ExpensesViewModel>(sql: sql, param: sqlParam);
             _connection.Close();
-            return expenses.ToList();
+            return expennses.ToList();
         }
-
-        //private async Task<List<ExpensesViewModel>> ExecuteExpenseSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate, EnumPaymentType paymentType, long expenseCategoryId)
-        //{ 
-        //    const string sql = @"SELECT e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
-        //                    e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
-        //             FROM Expenses e
-        //             INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
-        //             WHERE e.ExpenseDate >= @FromDate
-        //               AND e.ExpenseDate < DATEADD(DAY, 1, @ToDate)
-        //               AND e.ExpenseAmount >= @FromAmount
-        //               AND e.ExpenseAmount <= @ToAmount
-        //               AND e.ExpenseCategoryId = @CategoryId
-        //               AND e.PaymentMethod = @PaymentMethod";
-
-        //    _connection.Open();
-        //    var parameters = new
-        //    {
-        //        FromAmount = fromAmount,
-        //        ToAmount = toAmount,
-        //        FromDate = fromDate,
-        //        ToDate = toDate,
-        //        CategoryId = expenseCategoryId, 
-        //        PaymentMethod = (int)paymentType
-        //    };
-        //    var expenses = await _connection.QueryAsync<ExpensesViewModel>(sql, parameters);
-        //    _connection.Close();
-        //    return expenses.ToList();
-        //}
-
     }
 }
