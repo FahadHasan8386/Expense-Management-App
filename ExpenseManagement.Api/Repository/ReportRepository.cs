@@ -37,7 +37,7 @@ namespace ExpenseManagement.Api.Repository
             {
                 @FromDate = fromDate,
                 @ToDate = toDate
-            }; 
+            };
 
             if (!fromAmount.Equals(0) && toAmount.Equals(0))
             {
@@ -95,11 +95,18 @@ namespace ExpenseManagement.Api.Repository
 
         private async Task<List<ExpensesViewModel>> ExecuteExpenseSearch(decimal fromAmount, decimal toAmount, DateTime fromDate, DateTime toDate, EnumPaymentType paymentype, long expenseCategoryId)
         {
-            string sql = @"SELECT e.ExpenseId, e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
-                            e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt FROM Expenses e
-                            INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
-                            WHERE CAST(e.ExpenseDate AS DATE) >= CAST(@FromDate AS DATE)
-                              AND CAST(ExpenseDate AS DATE) <= CAST(@ToDate AS DATE)" ;
+            string sql = @"SELECT	e.ExpenseId,
+		                            e.Remarks,
+		                            e.ExpenseDate,
+		                            e.PaymentMethod,
+		                            e.ExpenseAmount,
+		                            ec.ExpenseCategoryId,
+		                            ec.ExpenseCategoryName
+                            FROM
+                            Expenses AS e
+                            INNER JOIN ExpenseCategories AS ec
+	                            ON e.ExpenseCategoryId = ec.ExpenseCategoryId";
+
             object sqlParam = new
             {
                 @FromDate = fromDate,
@@ -107,17 +114,87 @@ namespace ExpenseManagement.Api.Repository
                 @CategoryId = expenseCategoryId,
                 @PaymentMethod = paymentype.ToString()
             };
+
+            
+
+
             if (!fromAmount.Equals(0) && toAmount.Equals(0))
             {
-                sql = @"SELECT e.ExpenseId, e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
-                        e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
-                        FROM Expenses e
-                        INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
-                        WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
-                          AND CAST(ExpenseDate AS DATE) <= @ToDate
-                          AND e.ExpenseAmount >= @FromAmount
-                          AND e.ExpenseCategoryId = @CategoryId
-                          AND e.PaymentMethod = @PaymentMethod";
+                sql = @"IF @CategoryId > 0
+							BEGIN
+								IF @PaymentMethod = 'NONE'
+								BEGIN
+									SELECT	e.ExpenseId,
+											e.Remarks,
+											e.ExpenseDate,
+											e.PaymentMethod,
+											e.ExpenseAmount,
+											ec.ExpenseCategoryId,
+											ec.ExpenseCategoryName
+									FROM
+									Expenses AS e
+									INNER JOIN ExpenseCategories AS ec
+										ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+									 WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+									 AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+									 AND e.ExpenseAmount >= @FromAmount
+									 AND ec.ExpenseCategoryId = @CategoryId
+								END
+								ELSE
+									SELECT	e.ExpenseId,
+											e.Remarks,
+											e.ExpenseDate,
+											e.PaymentMethod,
+											e.ExpenseAmount,
+											ec.ExpenseCategoryId,
+											ec.ExpenseCategoryName
+									FROM
+									Expenses AS e
+									INNER JOIN ExpenseCategories AS ec
+										ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+									 WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+									 AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+									 AND e.ExpenseAmount >= @FromAmount
+									 AND ec.ExpenseCategoryId = @CategoryId
+									 AND e.PaymentMethod = @PaymentMethod
+		                    END
+                    ELSE
+	                    BEGIN
+		                    IF @PaymentMethod = 'NONE'
+		                    BEGIN
+			                    SELECT	e.ExpenseId,
+					                    e.Remarks,
+					                    e.ExpenseDate,
+					                    e.PaymentMethod,
+					                    e.ExpenseAmount,
+					                    ec.ExpenseCategoryId,
+					                    ec.ExpenseCategoryName
+			                    FROM
+			                    Expenses AS e
+			                    INNER JOIN ExpenseCategories AS ec
+				                    ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+			                     WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+			                     AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+			                     AND e.ExpenseAmount >= @FromAmount
+			                     AND e.PaymentMethod = @PaymentMethod
+		                    END
+		                    ELSE
+			                    SELECT	e.ExpenseId,
+					                    e.Remarks,
+					                    e.ExpenseDate,
+					                    e.PaymentMethod,
+					                    e.ExpenseAmount,
+					                    ec.ExpenseCategoryId,
+					                    ec.ExpenseCategoryName
+			                    FROM
+			                    Expenses AS e
+			                    INNER JOIN ExpenseCategories AS ec
+				                    ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+			                     WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+			                     AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+			                     AND e.ExpenseAmount >= @FromAmount
+			                     AND e.PaymentMethod = @PaymentMethod
+	                    END";
                 sqlParam = new
                 {
                     @FromAmount = fromAmount,
@@ -130,16 +207,86 @@ namespace ExpenseManagement.Api.Repository
 
             if (!toAmount.Equals(0))
             {
-                sql = @"SELECT e.ExpenseId, e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
-                         e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
-                         FROM Expenses e
-                         INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
-                         WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
-                           AND CAST(e.ExpenseDate AS DATE) <= @ToDate
-                           AND e.ExpenseAmount >= @FromAmount
-                           AND e.ExpenseAmount <= @ToAmount
-                           AND e.ExpenseCategoryId = @CategoryId
-                           AND e.PaymentMethod = @PaymentMethod";
+                sql = @"IF @CategoryId > 0
+							BEGIN
+								IF @PaymentMethod = 'NONE'
+								BEGIN
+									SELECT	e.ExpenseId,
+											e.Remarks,
+											e.ExpenseDate,
+											e.PaymentMethod,
+											e.ExpenseAmount,
+											ec.ExpenseCategoryId,
+											ec.ExpenseCategoryName
+									FROM
+									Expenses AS e
+									INNER JOIN ExpenseCategories AS ec
+										ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+									 WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+									 AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+									 AND e.ExpenseAmount >= @FromAmount
+									 AND e.ExpenseAmount <= @ToAmount
+									 AND ec.ExpenseCategoryId = @CategoryId
+								END
+								ELSE
+									SELECT	e.ExpenseId,
+											e.Remarks,
+											e.ExpenseDate,
+											e.PaymentMethod,
+											e.ExpenseAmount,
+											ec.ExpenseCategoryId,
+											ec.ExpenseCategoryName
+									FROM
+									Expenses AS e
+									INNER JOIN ExpenseCategories AS ec
+										ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+									 WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+									 AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+									 AND e.ExpenseAmount >= @FromAmount
+									 AND e.ExpenseAmount <= @ToAmount
+									 AND ec.ExpenseCategoryId = @CategoryId
+									 AND e.PaymentMethod = @PaymentMethod
+		                    END
+                    ELSE
+	                    BEGIN
+		                    IF @PaymentMethod = 'NONE'
+		                    BEGIN
+			                    SELECT	e.ExpenseId,
+					                    e.Remarks,
+					                    e.ExpenseDate,
+					                    e.PaymentMethod,
+					                    e.ExpenseAmount,
+					                    ec.ExpenseCategoryId,
+					                    ec.ExpenseCategoryName
+			                    FROM
+			                    Expenses AS e
+			                    INNER JOIN ExpenseCategories AS ec
+				                    ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+			                     WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+			                     AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+			                     AND e.ExpenseAmount >= @FromAmount
+								 AND e.ExpenseAmount <= @ToAmount
+			                     AND e.PaymentMethod = @PaymentMethod
+		                    END
+		                    ELSE
+			                    SELECT	e.ExpenseId,
+					                    e.Remarks,
+					                    e.ExpenseDate,
+					                    e.PaymentMethod,
+					                    e.ExpenseAmount,
+					                    ec.ExpenseCategoryId,
+					                    ec.ExpenseCategoryName
+			                    FROM
+			                    Expenses AS e
+			                    INNER JOIN ExpenseCategories AS ec
+				                    ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+			                     WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+			                     AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+			                     AND e.ExpenseAmount >= @FromAmount
+								 AND e.ExpenseAmount <= @ToAmount
+			                     AND e.PaymentMethod = @PaymentMethod
+	                    END";
+
                 sqlParam = new
                 {
                     @FromAmount = fromAmount,
@@ -153,14 +300,78 @@ namespace ExpenseManagement.Api.Repository
 
             if (fromAmount.Equals(0) && toAmount.Equals(0))
             {
-                sql = @"SELECT e.ExpenseId, e.ExpenseAmount, e.ExpenseDate, e.Remarks,c.ExpenseCategoryName AS ExpenseCategory,
-                         e.PaymentMethod, e.CreatedBy, e.ModifiedBy, e.CreatedAt, e.ModifiedAt 
-                         FROM Expenses e
-                         INNER JOIN ExpenseCategories c ON e.ExpenseCategoryId = c.ExpenseCategoryId
-                         WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
-                           AND CAST(e.ExpenseDate AS DATE) <= @ToDate
-                           AND e.ExpenseCategoryId = @CategoryId
-                           AND e.PaymentMethod = @PaymentMethod";
+                sql = @"IF @CategoryId > 0
+							BEGIN
+								IF @PaymentMethod = 'NONE'
+								BEGIN
+									SELECT	e.ExpenseId,
+											e.Remarks,
+											e.ExpenseDate,
+											e.PaymentMethod,
+											e.ExpenseAmount,
+											ec.ExpenseCategoryId,
+											ec.ExpenseCategoryName
+									FROM
+									Expenses AS e
+									INNER JOIN ExpenseCategories AS ec
+										ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+									 WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+									 AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+									 AND ec.ExpenseCategoryId = @CategoryId
+								END
+								ELSE
+									SELECT	e.ExpenseId,
+											e.Remarks,
+											e.ExpenseDate,
+											e.PaymentMethod,
+											e.ExpenseAmount,
+											ec.ExpenseCategoryId,
+											ec.ExpenseCategoryName
+									FROM
+									Expenses AS e
+									INNER JOIN ExpenseCategories AS ec
+										ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+									 WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+									 AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+									 AND ec.ExpenseCategoryId = @CategoryId
+									 AND e.PaymentMethod = @PaymentMethod
+		                    END
+                    ELSE
+	                    BEGIN
+		                    IF @PaymentMethod = 'NONE'
+		                    BEGIN
+			                    SELECT	e.ExpenseId,
+					                    e.Remarks,
+					                    e.ExpenseDate,
+					                    e.PaymentMethod,
+					                    e.ExpenseAmount,
+					                    ec.ExpenseCategoryId,
+					                    ec.ExpenseCategoryName
+			                    FROM
+			                    Expenses AS e
+			                    INNER JOIN ExpenseCategories AS ec
+				                    ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+			                     WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+			                     AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+			                    AND e.PaymentMethod = @PaymentMethod
+		                    END
+		                    ELSE
+			                    SELECT	e.ExpenseId,
+					                    e.Remarks,
+					                    e.ExpenseDate,
+					                    e.PaymentMethod,
+					                    e.ExpenseAmount,
+					                    ec.ExpenseCategoryId,
+					                    ec.ExpenseCategoryName
+			                    FROM
+			                    Expenses AS e
+			                    INNER JOIN ExpenseCategories AS ec
+				                    ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+			                     WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+			                     AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+			                     AND e.PaymentMethod = @PaymentMethod
+	                    END";
+
                 sqlParam = new
                 {
                     @FromDate = fromDate,
@@ -169,10 +380,73 @@ namespace ExpenseManagement.Api.Repository
                     @PaymentMethod = paymentype.ToString()
                 };
             }
+
+            if (!toAmount.Equals(0) && expenseCategoryId.Equals(0) && paymentype.Equals(EnumPaymentType.NONE))
+            {
+                sql = @"SELECT	e.ExpenseId,
+					                    e.Remarks,
+					                    e.ExpenseDate,
+					                    e.PaymentMethod,
+					                    e.ExpenseAmount,
+					                    ec.ExpenseCategoryId,
+					                    ec.ExpenseCategoryName
+			                    FROM
+			                    Expenses AS e
+			                    INNER JOIN ExpenseCategories AS ec
+				                    ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+			                    WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+			                    AND CAST(e.ExpenseDate AS DATE) <= @ToDate
+								AND e.ExpenseAmount >= @FromAmount
+								AND e.ExpenseAmount <= @ToAmount";
+
+                sqlParam = new
+                {
+                    @FromDate = fromDate,
+                    @ToDate = toDate,
+                    @FromAmount = fromAmount,
+                    @ToAmount = toAmount
+                };
+            }
+
+            if (toAmount.Equals(0) && expenseCategoryId.Equals(0) && paymentype.Equals(EnumPaymentType.NONE))
+            {
+                sql = @"SELECT	e.ExpenseId,
+					                    e.Remarks,
+					                    e.ExpenseDate,
+					                    e.PaymentMethod,
+					                    e.ExpenseAmount,
+					                    ec.ExpenseCategoryId,
+					                    ec.ExpenseCategoryName
+			                    FROM
+			                    Expenses AS e
+			                    INNER JOIN ExpenseCategories AS ec
+				                    ON e.ExpenseCategoryId = ec.ExpenseCategoryId
+			                    WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
+			                    AND CAST(e.ExpenseDate AS DATE) <= @ToDate";
+
+                sqlParam = new
+                {
+                    @FromDate = fromDate,
+                    @ToDate = toDate
+                };
+            }
+
             _connection.Open();
-            var expennses = await _connection.QueryAsync<ExpensesViewModel>(sql: sql, param: sqlParam);
+            var expennses = await _connection.QueryAsync(sql: sql,
+                map: (ExpensesViewModel e, ExpenseCategoriesViewModel ec) =>
+                {
+                    e.ExpenseCategories = ec;
+                    return e;
+                },
+                 param: sqlParam,
+                splitOn: "ExpenseCategoryId");
             _connection.Close();
             return expennses.ToList();
         }
+
+
+
+
+
     }
 }

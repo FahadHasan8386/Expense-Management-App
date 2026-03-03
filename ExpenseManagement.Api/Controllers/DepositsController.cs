@@ -2,6 +2,7 @@
 using ExpenseManagement.Api.Services;
 using ExpenseManagement.Shared.Models;
 using ExpenseManagement.Shared.Models.DtoModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseManagement.Api.Controllers
@@ -9,7 +10,7 @@ namespace ExpenseManagement.Api.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize]
     public class DepositsController : ControllerBase
     {
         public readonly IDepositsService _DepositsService;
