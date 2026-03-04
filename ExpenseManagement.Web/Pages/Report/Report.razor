@@ -8,13 +8,13 @@
 			<i class="bi bi-arrow-left"></i> Back
 		</a>
 
-		<button class="btn btn-primary shadow-sm">
+		<button class="btn btn-primary shadow-sm" @onclick="PrintPage">
 			<i class="bi bi-printer"></i> Print
 		</button>
 	</div>
 
 	<!-- Invoice Card -->
-	<div class="card shadow-sm invoice-card">
+	<div class="card shadow-sm invoice-card" >
 		<div class="card-body p-4 p-md-5">
 
 			<!-- Header -->
@@ -175,5 +175,9 @@
 	private async Task LoadReportData()
 	{
 		ReportViewModels = await ReportApiService.SearchUserAsync(QueryDto);
+	}
+	private async Task PrintPage()
+	{
+		await JS.InvokeVoidAsync("window.print");
 	}
 }

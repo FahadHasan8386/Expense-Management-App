@@ -175,3 +175,24 @@ code {
     color: #F5F5F7;
     font-family: 'Segoe UI', sans-serif;
 }*/
+@media print {
+
+    body * {
+        visibility: hidden;
+    }
+
+    .invoice-card, .invoice-card * {
+        visibility: visible;
+    }
+
+    .invoice-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}

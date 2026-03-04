@@ -10,7 +10,6 @@ namespace ExpenseManagement.Api.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class DepositsController : ControllerBase
     {
         public readonly IDepositsService _DepositsService;
