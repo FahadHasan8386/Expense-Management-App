@@ -176,7 +176,6 @@ namespace ExpenseManagement.Api.Repository
 			                     WHERE CAST(e.ExpenseDate AS DATE) >= @FromDate
 			                     AND CAST(e.ExpenseDate AS DATE) <= @ToDate
 			                     AND e.ExpenseAmount >= @FromAmount
-			                     AND e.PaymentMethod = @PaymentMethod
 		                    END
 		                    ELSE
 			                    SELECT	e.ExpenseId,
@@ -408,7 +407,7 @@ namespace ExpenseManagement.Api.Repository
                 };
             }
 
-            if (toAmount.Equals(0) && expenseCategoryId.Equals(0) && paymentype.Equals(EnumPaymentType.NONE))
+            if (fromAmount.Equals(0) && toAmount.Equals(0) && expenseCategoryId.Equals(0) && paymentype.Equals(EnumPaymentType.NONE))
             {
                 sql = @"SELECT	e.ExpenseId,
 					                    e.Remarks,
