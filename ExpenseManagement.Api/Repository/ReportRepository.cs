@@ -442,10 +442,6 @@ namespace ExpenseManagement.Api.Repository
             _connection.Close();
             return expennses.ToList();
         }
-
-
-
-
-
+////ggggggg
     }
 }
