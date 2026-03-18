@@ -16,7 +16,6 @@ namespace ExpenseManagement.Api.Repository
             _connection = connection;
         }
 
-
         public async Task<ReportViewModel> ExecuteResultSerachByUserAsync(QueryDto queryDto)
         {
             var viewModel = new ReportViewModel();
@@ -38,7 +37,6 @@ namespace ExpenseManagement.Api.Repository
                 @FromDate = fromDate,
                 @ToDate = toDate
             };
-
             if (!fromAmount.Equals(0) && toAmount.Equals(0))
             {
                 sql = @"SELECT DepositId, DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt 
@@ -54,7 +52,6 @@ namespace ExpenseManagement.Api.Repository
                     @ToDate = toDate
                 };
             }
-
             if (!toAmount.Equals(0))
             {
                 sql = @"SELECT DepositId, DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt
@@ -72,7 +69,6 @@ namespace ExpenseManagement.Api.Repository
                     @ToDate = toDate
                 };
             }
-
             if (fromAmount.Equals(0) && toAmount.Equals(0))
             {
                 sql = @"SELECT DepositId, DepositAmount, DepositDate, Remarks,CreatedBy,ModifiedBy,CreatedAt, ModifiedAt
@@ -86,7 +82,6 @@ namespace ExpenseManagement.Api.Repository
                     @ToDate = toDate
                 };
             }
-
             _connection.Open();
             var deposits = await _connection.QueryAsync<DepositViewModel>(sql: sql, param: sqlParam);
             _connection.Close();
@@ -114,10 +109,6 @@ namespace ExpenseManagement.Api.Repository
                 @CategoryId = expenseCategoryId,
                 @PaymentMethod = paymentype.ToString()
             };
-
-            
-
-
             if (!fromAmount.Equals(0) && toAmount.Equals(0))
             {
                 sql = @"IF @CategoryId > 0
@@ -203,7 +194,6 @@ namespace ExpenseManagement.Api.Repository
                     @PaymentMethod = paymentype.ToString()
                 };
             }
-
             if (!toAmount.Equals(0))
             {
                 sql = @"IF @CategoryId > 0
@@ -296,7 +286,6 @@ namespace ExpenseManagement.Api.Repository
                     @PaymentMethod = paymentype.ToString()
                 };
             }
-
             if (fromAmount.Equals(0) && toAmount.Equals(0))
             {
                 sql = @"IF @CategoryId > 0
@@ -379,7 +368,6 @@ namespace ExpenseManagement.Api.Repository
                     @PaymentMethod = paymentype.ToString()
                 };
             }
-
             if (!toAmount.Equals(0) && expenseCategoryId.Equals(0) && paymentype.Equals(EnumPaymentType.NONE))
             {
                 sql = @"SELECT	e.ExpenseId,
@@ -406,7 +394,6 @@ namespace ExpenseManagement.Api.Repository
                     @ToAmount = toAmount
                 };
             }
-
             if (fromAmount.Equals(0) && toAmount.Equals(0) && expenseCategoryId.Equals(0) && paymentype.Equals(EnumPaymentType.NONE))
             {
                 sql = @"SELECT	e.ExpenseId,
@@ -442,6 +429,5 @@ namespace ExpenseManagement.Api.Repository
             _connection.Close();
             return expennses.ToList();
         }
-////ggggggg
     }
 }
